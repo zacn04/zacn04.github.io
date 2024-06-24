@@ -39,6 +39,16 @@ nav ul li a {
     font-weight: bold;
 }
 
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
+    background-color: #f4f4f4; 
+}
+
 
 .timeline {
     max-width: 800px;
