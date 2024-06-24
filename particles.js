@@ -1,6 +1,6 @@
 tsParticles.load("particles-js", {
     background: {
-        color: "#f4f4f4",
+        color: "#aaaaaa",
     },
     particles: {
         number: {
