@@ -111,3 +111,14 @@ nav ul li a {
     margin: 0;
     color: #666;
 }
+
+.scroll-container {
+    background-color: #333;
+    overflow: auto;
+    white-space: nowrap;
+    padding: 10px;
+  }
+
+.scroll-container img {
+padding: 10px;
+}
