@@ -122,3 +122,14 @@ nav ul li a {
 .scroll-container img {
 padding: 10px;
 }
+
+main {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left; /* keep bullets aligned left within the main block */
+}
+
+main h1,
+main p {
+  text-align: center; /* just center the headings and intro text */
+}
