@@ -1,139 +1,230 @@
-
+/* ──────────────────────────────────────────────────────────────
+   1. Base / Body
+────────────────────────────────────────────────────────────── */
 body {
-    font-family: 'Roboto Mono', monospace;
-    margin: 0;
-    background-color: #f4f4f4;
-    padding: 20px;
-    padding-top: 60px; 
+  font-family: 'Roboto Mono', monospace;
+  margin: 0;
+  background-color: #f4f4f4;
+  padding: 20px;
+  padding-top: 60px; 
+  color: #333;
 }
 
-
-
+/* ──────────────────────────────────────────────────────────────
+   2. Navigation Bar
+────────────────────────────────────────────────────────────── */
 nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    background-color: #fff;
-    padding: 10px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    z-index: 1000; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+  padding: 10px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
 
 nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: inline-flex;
-    gap: 20px;
-}
-
-nav ul li {
-    display: inline;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  gap: 20px;
 }
 
 nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   3. Particles Background
+────────────────────────────────────────────────────────────── */
 #particles-js {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; 
-    background-color: #f4f4f4; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #f4f4f4;
 }
 
-
+/* ──────────────────────────────────────────────────────────────
+   4. Timeline (if you use it elsewhere)
+────────────────────────────────────────────────────────────── */
 .timeline {
-    max-width: 800px;
-    margin: 80px auto 20px; 
-    padding: 0 20px;
+  max-width: 800px;
+  margin: 80px auto 20px;
+  padding: 0 20px;
 }
 
 .timeline h1 {
-    font-size: 2.5rem;
-    margin-bottom: 40px;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
 }
 
 .timeline-container {
-    position: relative;
-    padding: 10px 0;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 8px;
+  position: relative;
+  padding: 10px 0;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
 }
 
 .timeline-item {
-    padding: 10px 20px;
-    border-left: 4px solid #0073e6;
-    margin: 20px 0;
-    position: relative;
-    background: #f9f9f9;
-    border-radius: 4px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  padding: 10px 20px;
+  border-left: 4px solid #0073e6;
+  margin: 20px 0;
+  position: relative;
+  background: #f9f9f9;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .timeline-item.visible {
-    opacity: 1;
-    transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -8px;
-    top: 0;
-    bottom: 0;
-    width: 16px;
-    background: #0073e6;
-    border-radius: 8px;
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  background: #0073e6;
+  border-radius: 8px;
 }
 
 .timeline-content {
-    text-align: left;
+  text-align: left;
 }
 
 .timeline-content h2 {
-    margin: 0 0 10px;
-    font-size: 1.5rem;
-    color: #333;
+  margin: 0 0 10px;
+  font-size: 1.5rem;
+  color: #333;
 }
 
 .timeline-content p {
-    margin: 0;
-    color: #666;
+  margin: 0;
+  color: #666;
 }
 
-.scroll-container {
-    background-color: #333;
-    overflow: auto;
-    white-space: nowrap;
-    padding: 10px;
-  }
-
-.scroll-container img {
-padding: 10px;
-}
-
+/* ──────────────────────────────────────────────────────────────
+   5. Main Content & Lists
+────────────────────────────────────────────────────────────── */
 main {
   max-width: 600px;
-  margin: 0 auto;
-  text-align: left; 
+  margin: 100px auto 40px; 
+  text-align: left;
+  padding: 0 20px;
 }
 
 main h1,
 main p {
-  text-align: center; /* just center the headings and intro text */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+main ul {
+  margin-left: 2em;
+  padding-left: 0;
 }
 
 main ul ul {
   margin-left: 1.5em;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   6. Video Gallery & Research Pages
+────────────────────────────────────────────────────────────── */
+.video-gallery,
+.research-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.video-item {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.video-item h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.video-item iframe {
+  width: 100%;
+  max-width: 560px;
+  height: 315px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.research-page h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.research-page h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.research-page h3 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.research-page p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.research-page a {
+  display: inline-block;
+  margin-top: 5px;
+  text-decoration: none;
+  color: #0073e6;
+  font-weight: bold;
+}
+
+.research-page a:hover {
+  text-decoration: underline;
+}
+
+.summary-item,
+.preprint {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   7. Utility / Scroll Container
+────────────────────────────────────────────────────────────── */
+.scroll-container {
+  background-color: #333;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+}
+
+.scroll-container img {
+  padding: 10px;
 }
