@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header id="site-nav"><h1>Research</h1></header
   <div class="research-page">
-    <h1>Research</h1>
+    
 
     <section class="preprint">
       <h2>Poissonization-based collision threshold derivation for random walks on lattices</h2>
@@ -40,5 +41,12 @@
 
     </section>
   </div>
+<script>
+  fetch('nav.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('site-nav').innerHTML = html;
+    });
+</script>
 </body>
 </html>
