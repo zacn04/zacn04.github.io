@@ -3,10 +3,10 @@ body {
     font-family: 'Roboto Mono', monospace;
     margin: 0;
     background-color: #f4f4f4;
-    text-align: center;
     padding: 20px;
     padding-top: 60px; 
 }
+
 
 
 nav {
@@ -126,10 +126,14 @@ padding: 10px;
 main {
   max-width: 600px;
   margin: 0 auto;
-  text-align: left; /* keep bullets aligned left within the main block */
+  text-align: left; 
 }
 
 main h1,
 main p {
   text-align: center; /* just center the headings and intro text */
+}
+
+main ul ul {
+  margin-left: 1.5em;
 }
