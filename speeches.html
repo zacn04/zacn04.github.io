@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header id="site-nav">Assorted Speeches</header>
   <div class="video-gallery">
     <div class="video-item">
       <h2>"Being Black At Tonbridge" (2021)</h2>
@@ -43,5 +44,12 @@
       </iframe>
     </div>
   </div>
+<script>
+  fetch('nav.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('site-nav').innerHTML = html;
+    });
+</script>
 </body>
 </html>
