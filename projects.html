@@ -24,5 +24,12 @@
             <p>Autocomplete for mathematical handwriting.</p>
         </div>
     </main>
+<script>
+  fetch('nav.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('site-nav').innerHTML = html;
+    });
+</script>
 </body>
 </html>
