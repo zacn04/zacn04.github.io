@@ -10,30 +10,35 @@
     <div id="particles-js"></div>
     <header id="site-nav"></header>
     <main>
-  <h1>Zachary Burton</h1>
-  <p>Hi! My name is Zac Burton. I'm a senior at MIT majoring in Mathematics (Course 18).</p>
-  <ul>
-    <li>Born in NYC</li>
-    <li>Grew up in the UK</li>
-    <li>Interested in:
-      <ul>
-        <li><b>Social sciences:</b> Psychology, sociology, political science, game theory</li>
-        <li><b>Physical sciences:</b> Quantum mechanics, astrophysics, organic synthesis</li>
-        <li><b>Computer science:</b> Algorithms, machine learning, complexity theory</li>
-        <li>...and more!</li>
-      </ul>
-    </li>
-  </ul>
-  <p>Hit the links to see my hijinks.</p>
-</main>
-
-<script>
-  fetch('nav.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('site-nav').innerHTML = html;
-    });
-</script>
+        <div class="intro-section">
+            <div class="profile-content">
+                <h1>Zachary Burton</h1>
+                <p class="tagline">Research engineer working at the intersection of symbolic reasoning and machine learning.</p>
+                <p>I'm a mathematics major at MIT developing reinforcement learning systems for automated theorem proving. Currently exploring how RL agents can discover novel proof strategies in symbolic systems.</p>
+                <div class="research-areas">
+                    <h2>Research Focus</h2>
+                    <p><strong>Automated reasoning:</strong> Training RL agents to generate symbolic proofs, with emphasis on proof search strategies and mathematical insight discovery.</p>
+                    <p><strong>Systems at scale:</strong> Building reinforcement learning infrastructure that can handle complex mathematical environments and large proof search spaces.</p>
+                    <p><strong>Astrophysics & planetary science:</strong> Computational modeling of stellar dynamics and planetary formation processes.</p>
+                </div>
+                <div class="background">
+                    <h2>Background</h2>
+                    <p>Born in NYC, raised in the UK. </p>
+                    <p>I ran track for 10 years, and have a personal best time of 10.63 for the 100m. You will never catch me running a 5k. </p>
+                    <p></p>I also sing, and work out relatively frequently.</p>
+                    <p><strong>Other interests:</strong> Political science, game theory, sociology, psychology, quantum mechanics, representation theory, probability theory.</p>
+                </div>
+                <p class="cta">Explore my research, speeches, and projects — or check out more about me.</p>
+            </div>
+        </div>
+    </main>
+    <script>
+        fetch('nav.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('site-nav').innerHTML = html;
+            });
+    </script>
     <footer>
         <p>&copy; 2025 Zachary Burton</p>
     </footer>
