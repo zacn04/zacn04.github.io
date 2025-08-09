@@ -13,11 +13,46 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --panel-bg: rgba(0, 0, 0, 0.8);
+            --panel-border: rgba(255, 255, 255, 0.2);
+            --node-panel-bg: rgba(0, 0, 0, 0.9);
+            --node-panel-border: rgba(0, 255, 255, 0.3);
+            --close-btn-color: #ff0000;
+            --gradient-start: #00ffff;
+            --gradient-end: #0064ff;
+            --hint-opacity: 0.6;
+            --content-opacity: 0.9;
+            --theme-toggle-bg: rgba(255, 255, 255, 0.1);
+            --theme-toggle-border: rgba(255, 255, 255, 0.3);
+            --theme-icon: "🌙";
+        }
+        
+        body.light-mode {
+            --bg-color: #f0f4f8;
+            --text-color: #1a202c;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --panel-border: rgba(0, 0, 0, 0.1);
+            --node-panel-bg: rgba(255, 255, 255, 0.98);
+            --node-panel-border: rgba(0, 100, 255, 0.3);
+            --close-btn-color: #e53e3e;
+            --gradient-start: #0088cc;
+            --gradient-end: #0056b3;
+            --hint-opacity: 0.7;
+            --content-opacity: 0.85;
+            --theme-toggle-bg: rgba(0, 0, 0, 0.1);
+            --theme-toggle-border: rgba(0, 0, 0, 0.3);
+            --theme-icon: "☀️";
+        }
+        
         body {
             font-family: 'Space Mono', monospace;
-            background: #000;
-            color: #fff;
+            background: var(--bg-color);
+            color: var(--text-color);
             overflow: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         
         #canvas {
@@ -28,24 +63,53 @@
             height: 100%;
         }
         
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 340px;
+            z-index: 101;
+            background: var(--theme-toggle-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--theme-toggle-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        #theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--theme-toggle-border);
+        }
+        
+        #theme-toggle::after {
+            content: var(--theme-icon);
+        }
+        
         #info {
             position: fixed;
             top: 20px;
             left: 20px;
             z-index: 100;
-            background: rgba(0, 0, 0, 0.8);
+            background: var(--panel-bg);
             padding: 20px;
             border-radius: 15px;
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--panel-border);
             max-width: 300px;
+            transition: all 0.3s ease;
         }
         
         #info h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 24px;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #00ffff, #0064ff);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -60,7 +124,7 @@
         
         .hint {
             font-size: 11px;
-            opacity: 0.6;
+            opacity: var(--hint-opacity);
             margin: 5px 0;
         }
         
@@ -69,13 +133,14 @@
             top: 20px;
             right: 20px;
             z-index: 100;
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--node-panel-bg);
             padding: 20px;
             border-radius: 15px;
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 255, 255, 0.3);
+            border: 1px solid var(--node-panel-border);
             max-width: 500px;
             display: none;
+            transition: all 0.3s ease;
         }
         
         #current-node.show {
@@ -83,14 +148,22 @@
         }
         
         #current-node h2 {
-            color: #00ffff;
+            color: var(--gradient-start);
             margin-bottom: 15px;
             font-size: 20px;
         }
         
         #current-node p {
             line-height: 1.6;
-            opacity: 0.9;
+            opacity: var(--content-opacity);
+        }
+        
+        #current-node a {
+            transition: opacity 0.3s ease;
+        }
+        
+        #current-node a:hover {
+            opacity: 0.8;
         }
         
         .close-btn {
@@ -98,8 +171,13 @@
             top: 10px;
             right: 10px;
             cursor: pointer;
-            color: #ff0000;
+            color: var(--close-btn-color);
             font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
         }
         
         .node-label {
@@ -110,10 +188,28 @@
             text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
             transform: translate(-50%, -50%);
         }
+        
+        /* Light mode specific adjustments for embedded content */
+        body.light-mode #current-node h3 {
+            filter: brightness(0.7);
+        }
+        
+        body.light-mode #current-node strong {
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            #theme-toggle {
+                top: 80px;
+                left: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    
+    <div id="theme-toggle" onclick="toggleTheme()"></div>
     
     <div id="info">
         <h1>Zachary Burton</h1>
@@ -132,8 +228,46 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+        // Theme management
+        let isLightMode = false;
+        
+        function toggleTheme() {
+            isLightMode = !isLightMode;
+            document.body.classList.toggle('light-mode');
+            
+            // Update Three.js scene colors
+            if (isLightMode) {
+                scene.fog = new THREE.Fog(0xf0f4f8, 10, 100);
+                renderer.setClearColor(0xf0f4f8);
+                ambientLight.intensity = 2.0;
+                pointLight1.intensity = 0.8;
+                pointLight2.intensity = 0.3;
+                edgeMaterial.opacity = 0.4;
+                particleMaterial.opacity = 0.3;
+            } else {
+                scene.fog = new THREE.Fog(0x000000, 10, 100);
+                renderer.setClearColor(0x000000);
+                ambientLight.intensity = 1.5;
+                pointLight1.intensity = 1;
+                pointLight2.intensity = 0.5;
+                edgeMaterial.opacity = 0.8;
+                particleMaterial.opacity = 0.6;
+            }
+            
+            // Store preference
+            localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+        }
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            isLightMode = true;
+            document.body.classList.add('light-mode');
+        }
+        
+        // Three.js setup
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x000000, 10, 100);
+        scene.fog = new THREE.Fog(isLightMode ? 0xf0f4f8 : 0x000000, 10, 100);
         
         const camera = new THREE.PerspectiveCamera(
             75,
@@ -150,15 +284,16 @@
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setClearColor(isLightMode ? 0xf0f4f8 : 0x000000);
         
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        const ambientLight = new THREE.AmbientLight(0x404040, isLightMode ? 2.0 : 1.5);
         scene.add(ambientLight);
         
-        const pointLight1 = new THREE.PointLight(0xffffff, 1);
+        const pointLight1 = new THREE.PointLight(0xffffff, isLightMode ? 0.8 : 1);
         pointLight1.position.set(10, 10, 10);
         scene.add(pointLight1);
         
-        const pointLight2 = new THREE.PointLight(0x00ffff, 0.5);
+        const pointLight2 = new THREE.PointLight(0x00ffff, isLightMode ? 0.3 : 0.5);
         pointLight2.position.set(-10, -10, -10);
         scene.add(pointLight2);
         
@@ -397,10 +532,9 @@
                   </a>
                 </div>
               `},
-            { id: 'llm-social', label: 'LLMs in Social Media', pos: [-8, 1, 3], color: 0xff00ff, size: 0.5,
+            { id: 'llm-social', label: 'Persuasiveness of LLMs in Social Media', pos: [-8, 1, 3], color: 0xff00ff, size: 0.5,
               content: `
                 <div>
-                  <h3 style="color: #ff00ff; margin-bottom: 10px;">Persuasiveness of LLMs in Social Media</h3>
                   <p style="margin-bottom: 15px;">17.279 Final Paper - Political Information in the Age of Social Media</p>
                   <p style="margin-bottom: 20px;">Investigation into how large language models can shape political discourse and persuasion in social media contexts.</p>
                   <a href="https://drive.google.com/file/d/1A0UiC6z3Udbn-D7P9Vp2BhTOHjAHcRvA/view?usp=share_link" 
@@ -417,10 +551,9 @@
                 </div>
               `},
 
-            { id: 'singapore-research', label: 'SIPGA Research', pos: [-5, 0, 5], color: 0xff00ff, size: 0.5,
+            { id: 'singapore-research', label: 'SIPGA Scholar Research (2023)', pos: [-5, 0, 5], color: 0xff00ff, size: 0.5,
               content: `
                 <div>
-                  <h3 style="color: #ff00ff; margin-bottom: 10px;">SIPGA Scholar Research (2023)</h3>
                   <p style="margin-bottom: 15px;">Summer research in Singapore under Dr. Haiyan Yin</p>
                   <p style="margin-bottom: 20px;">Reinforcement learning research conducted as a SIPGA scholarship recipient.</p>
                   <a href="https://drive.google.com/drive/folders/1T71rAHhji8ok6YP1fN3_MQgVUo2PyiNS" 
@@ -439,7 +572,6 @@
             { id: 'astrophysics', label: 'Astrophysics', pos: [-5, 2, 5], color: 0xff00ff, size: 0.5,
               content: `
                 <div>
-                  <h3 style="color: #ff00ff; margin-bottom: 10px;">Astrophysics & Planetary Science</h3>
                   <p style="margin-bottom: 15px;">MIT EAPS - December 2022</p>
                   <p style="margin-bottom: 20px;">Working under Jordan Steckloff and Jason Soderblom on sensitivity studies of comet outbursts. Computational modeling of stellar dynamics and planetary formation processes.</p>
                 </div>
@@ -460,7 +592,7 @@
             ['projects', 'algotrackr'],
             ['projects', 'scribe'],
             ['research', 'rl-proofs'],
-            ['research', 'collison'],
+            ['research', 'collision'],
             ['research', 'llm-social'],
             ['research', 'singapore-research'],
             ['research', 'astrophysics'],
@@ -505,7 +637,7 @@
         const edgeMaterial = new THREE.LineBasicMaterial({ 
             color: 0x00ffff,
             transparent: true,
-            opacity: 0.8,
+            opacity: isLightMode ? 0.4 : 0.8,
             linewidth: 2
         });
         const edgeLines = new THREE.LineSegments(edgeGeometry, edgeMaterial);
@@ -523,7 +655,7 @@
             color: 0x0088ff,
             size: 0.1,
             transparent: true,
-            opacity: 0.6
+            opacity: isLightMode ? 0.3 : 0.6
         });
         const particles = new THREE.Points(particleGeometry, particleMaterial);
         scene.add(particles);
