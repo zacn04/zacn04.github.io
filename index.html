@@ -173,7 +173,13 @@
               content: 'Working on RL for proofs, automated reasoning, and machine learning in education.' },
             
             { id: 'projects', label: 'Projects', pos: [3, -3, -5], color: 0x00ff64, size: 0.7,
-              content: 'PIEFACE (RLHF for TCS), AlgoTrackr (LeetCode tracker), Scribe AI (Math handwriting autocomplete).' },
+              content: `
+                <div>
+                  <p><strong>Technical Projects:</strong></p>
+                  <p style="margin-top: 15px;">Building tools at the intersection of AI, education, and productivity.</p>
+                  <p style="margin-top: 15px; opacity: 0.7;">Click connected nodes to explore each project.</p>
+                </div>
+              `},
             
            { id: 'speaking', label: 'Public Speaking', pos: [-4, -2, -3], color: 0xff6400, size: 0.7,
               content: `
@@ -251,9 +257,27 @@
               content: 'SB Degree in Mathematics (2022-present).' },
             
             { id: 'pieface', label: 'PIEFACE', pos: [4, -4, -6], color: 0x00ff64, size: 0.5,
-              content: 'RLHF tool for theoretical computer science research.' },
+              content: `
+                <div>
+                  <h3 style="color: #00ff64; margin-bottom: 10px;">PIEFACE</h3>
+                  <p style="margin-bottom: 15px;"><strong>World's first research sandbox for theoretical CS</strong></p>
+                  <p style="margin-bottom: 20px;">Builds off the work done in RL for hardness proofs, originally designed as a debugger/visualiser.</p>
+                  <a href="https://pieface.ai" 
+                     target="_blank" 
+                     style="background: linear-gradient(135deg, #00ff64, #00cc52); 
+                            color: white; 
+                            padding: 10px 20px; 
+                            border-radius: 20px; 
+                            text-decoration: none; 
+                            display: inline-block; 
+                            font-weight: bold;
+                            margin-bottom: 10px;">
+                    Use PIEFACE...
+                  </a>
+                </div>
+              `},
             
-            { id: 'rl-proofs', label: 'RL for Proofs', pos: [-7, 3, 4], color: 0xff00ff, size: 0.5,
+            { id: 'rl-proofs', label: 'RL for Hardness Proofs', pos: [-7, 3, 4], color: 0xff00ff, size: 0.5,
                   content: `
                     <div>
                       <h3 style="color: #ff00ff; margin-bottom: 10px;">Reinforcement Learning for Hardness Proofs</h3>
@@ -273,6 +297,48 @@
                       </a>
                     </div>
                   `},
+
+            { id: 'algotrackr', label: 'AlgoTrackr', pos: [5, -2, -4], color: 0x00ff64, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #00ff64; margin-bottom: 10px;">AlgoTrackr</h3>
+                  <p style="margin-bottom: 15px;"><strong>Personal LeetCode Performance Tracker</strong></p>
+                  <p style="margin-bottom: 20px;">Comprehensive analytics platform for tracking algorithmic problem-solving progress. Are you on the early access list?</p>
+                  <a href="https://algotrackr.com" 
+                     target="_blank" 
+                     style="background: linear-gradient(135deg, #00ff64, #00cc52); 
+                            color: white; 
+                            padding: 10px 20px; 
+                            border-radius: 20px; 
+                            text-decoration: none; 
+                            display: inline-block; 
+                            font-weight: bold;
+                            margin-bottom: 10px;">
+                    Get cracked at LC.
+                  </a>
+                </div>
+              `},
+
+            { id: 'scribe', label: 'Scribe AI', pos: [2, -5, -7], color: 0x00ff64, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #00ff64; margin-bottom: 10px;">Scribe AI</h3>
+                  <p style="margin-bottom: 15px;"><strong>Autocomplete for Mathematical Handwriting</strong></p>
+                  <p style="margin-bottom: 20px;"> We built this before big tech co-opted this fyi</p>
+                  <a href="https://devpost.com/software/scribe-slo6iw" 
+                     target="_blank" 
+                     style="background: linear-gradient(135deg, #00ff64, #00cc52); 
+                            color: white; 
+                            padding: 10px 20px; 
+                            border-radius: 20px; 
+                            text-decoration: none; 
+                            display: inline-block; 
+                            font-weight: bold;
+                            margin-bottom: 10px;">
+                    View on Devpost.
+                  </a>
+                </div>
+              `},
 
             { id: 'resume', label: 'Resume', pos: [-2, 4, -4], color: 0xffff00, size: 0.6,
             content: 'View my full resume with experience, skills, and education.<br><br><a href="https://drive.google.com/file/d/1f3B3fp7PV5VY7rBn8Y7WJZzGb8hmXkVd/view?usp=sharing" target="_blank" style="background: #00ffff; color: #000; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: inline-block; font-weight: bold;">View Resume</a>' },
@@ -391,6 +457,8 @@
             ['about', 'linkedin'],
             ['about', 'github'],
             ['projects', 'pieface'],
+            ['projects', 'algotrackr'],
+            ['projects', 'scribe'],
             ['research', 'rl-proofs'],
             ['research', 'collison'],
             ['research', 'llm-social'],
