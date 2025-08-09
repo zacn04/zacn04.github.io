@@ -253,8 +253,26 @@
             { id: 'pieface', label: 'PIEFACE', pos: [4, -4, -6], color: 0x00ff64, size: 0.5,
               content: 'RLHF tool for theoretical computer science research.' },
             
-            { id: 'rl-proofs', label: 'RL Proofs', pos: [-7, 3, 4], color: 0xff00ff, size: 0.5,
-              content: 'Research with Jayson Lynch at MIT CSAIL on reinforcement learning for hardness proofs.' },
+            { id: 'rl-proofs', label: 'RL for Proofs', pos: [-7, 3, 4], color: 0xff00ff, size: 0.5,
+                  content: `
+                    <div>
+                      <h3 style="color: #ff00ff; margin-bottom: 10px;">Reinforcement Learning for Hardness Proofs</h3>
+                      <p style="margin-bottom: 15px;">Research under Jayson Lynch at MIT CSAIL (FutureTech)</p>
+                      <p style="margin-bottom: 20px;">Developing RL approaches for automated complexity-theoretic gadget reductions and proof generation in NL/PSPACE.</p>
+                      <a href="https://openreview.net/forum?id=50w4SZTl2V&noteId=50w4SZTl2V" 
+                         target="_blank" 
+                         style="background: linear-gradient(135deg, #ff00ff, #ff66ff); 
+                                color: white; 
+                                padding: 10px 20px; 
+                                border-radius: 20px; 
+                                text-decoration: none; 
+                                display: inline-block; 
+                                font-weight: bold;
+                                margin-bottom: 10px;">
+                        View on OpenReview!
+                      </a>
+                    </div>
+                  `},
 
             { id: 'resume', label: 'Resume', pos: [-2, 4, -4], color: 0xffff00, size: 0.6,
             content: 'View my full resume with experience, skills, and education.<br><br><a href="https://drive.google.com/file/d/1f3B3fp7PV5VY7rBn8Y7WJZzGb8hmXkVd/view?usp=sharing" target="_blank" style="background: #00ffff; color: #000; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: inline-block; font-weight: bold;">View Resume</a>' },
@@ -294,6 +312,72 @@
                   </a>
                 </div>
               `},
+            { id: 'collision', label: 'Collision Thresholds', pos: [-6, 4, 2], color: 0xff00ff, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #ff00ff; margin-bottom: 10px;">Poissonization-based Collision Thresholds</h3>
+                  <p style="margin-bottom: 15px;">Threshold behavior of collisions in random walks on ℤ³</p>
+                  <p style="margin-bottom: 20px;">Using Poissonization and generating function asymptotics to re-derive sharp thresholds for pairwise collisions via the Laplace method.</p>
+                  <a href="https://arxiv.org/abs/2505.02973" 
+                     target="_blank" 
+                     style="background: linear-gradient(135deg, #ff00ff, #ff66ff); 
+                            color: white; 
+                            padding: 10px 20px; 
+                            border-radius: 20px; 
+                            text-decoration: none; 
+                            display: inline-block; 
+                            font-weight: bold;">
+                    View Preprint on arXiv
+                  </a>
+                </div>
+              `},
+            { id: 'llm-social', label: 'LLMs in Social Media', pos: [-8, 1, 3], color: 0xff00ff, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #ff00ff; margin-bottom: 10px;">Persuasiveness of LLMs in Social Media</h3>
+                  <p style="margin-bottom: 15px;">17.279 Final Paper - Political Information in the Age of Social Media</p>
+                  <p style="margin-bottom: 20px;">Investigation into how large language models can shape political discourse and persuasion in social media contexts.</p>
+                  <a href="https://drive.google.com/file/d/1A0UiC6z3Udbn-D7P9Vp2BhTOHjAHcRvA/view?usp=share_link" 
+                     target="_blank" 
+                     style="background: linear-gradient(135deg, #ff00ff, #ff66ff); 
+                            color: white; 
+                            padding: 10px 20px; 
+                            border-radius: 20px; 
+                            text-decoration: none; 
+                            display: inline-block; 
+                            font-weight: bold;">
+                    Read Paper
+                  </a>
+                </div>
+              `},
+
+            { id: 'singapore-research', label: 'SIPGA Research', pos: [-5, 0, 5], color: 0xff00ff, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #ff00ff; margin-bottom: 10px;">SIPGA Scholar Research (2023)</h3>
+                  <p style="margin-bottom: 15px;">Summer research in Singapore under Dr. Haiyan Yin</p>
+                  <p style="margin-bottom: 20px;">Reinforcement learning research conducted as a SIPGA scholarship recipient.</p>
+                  <a href="https://drive.google.com/drive/folders/1T71rAHhji8ok6YP1fN3_MQgVUo2PyiNS" 
+                     target="_blank" 
+                     style="background: linear-gradient(135deg, #ff00ff, #ff66ff); 
+                            color: white; 
+                            padding: 10px 20px; 
+                            border-radius: 20px; 
+                            text-decoration: none; 
+                            display: inline-block; 
+                            font-weight: bold;">
+                    📁 View Research Materials →
+                  </a>
+                </div>
+              `},
+            { id: 'astrophysics', label: 'Astrophysics', pos: [-5, 2, 5], color: 0xff00ff, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #ff00ff; margin-bottom: 10px;">Astrophysics & Planetary Science</h3>
+                  <p style="margin-bottom: 15px;">MIT EAPS - December 2022</p>
+                  <p style="margin-bottom: 20px;">Working under Jordan Steckloff and Jason Soderblom on sensitivity studies of comet outbursts. Computational modeling of stellar dynamics and planetary formation processes.</p>
+                </div>
+              `},
         ];
         
         const edges = [
@@ -308,6 +392,10 @@
             ['about', 'github'],
             ['projects', 'pieface'],
             ['research', 'rl-proofs'],
+            ['research', 'collison'],
+            ['research', 'llm-social'],
+            ['research', 'singapore-research'],
+            ['research', 'astrophysics'],
             ['speaking', 'black-tonbridge'],
             ['speaking', 'n-word'],
             ['speaking', 'gauss'],
