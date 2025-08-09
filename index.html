@@ -74,7 +74,7 @@
             border-radius: 15px;
             backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 255, 255, 0.3);
-            max-width: 400px;
+            max-width: 500px;
             display: none;
         }
         
@@ -175,8 +175,77 @@
             { id: 'projects', label: 'Projects', pos: [3, -3, -5], color: 0x00ff64, size: 0.7,
               content: 'PIEFACE (RLHF for TCS), AlgoTrackr (LeetCode tracker), Scribe AI (Math handwriting autocomplete).' },
             
-            { id: 'speaking', label: 'Speaking', pos: [-4, -2, -3], color: 0xff6400, size: 0.7,
-              content: 'Public speeches on diversity, education, and science topics.' },
+           { id: 'speaking', label: 'Public Speaking', pos: [-4, -2, -3], color: 0xff6400, size: 0.7,
+              content: `
+                <p>Speeches I gave as a high-schooler / secondary school student..</p>
+                <p style="margin-top: 15px; opacity: 0.7;">Click the connected nodes to watch!</p>
+              `},
+
+            { id: 'black-tonbridge', label: 'Being Black at Tonbridge', pos: [-5, -3, -4], color: 0xff6400, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #ff6400; margin-bottom: 10px;">Being Black At Tonbridge (2021)</h3>
+                  <p style="margin-bottom: 15px;">Yeah...</p>
+                  <iframe
+                    width="100%"
+                    height="215"
+                    src="https://www.youtube.com/embed/olbr9p6eVsw"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    style="border-radius: 10px;">
+                  </iframe>
+                  <a href="https://www.youtube.com/watch?v=olbr9p6eVsw" 
+                     target="_blank" 
+                     style="display: inline-block; margin-top: 10px; color: #ff6400; text-decoration: none;">
+                    Watch on YouTube →
+                  </a>
+                </div>
+              `},
+            
+            { id: 'n-word', label: 'Why White People Shouldn\'t Use the N-Word', pos: [-6, -1, -2], color: 0xff6400, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #ff6400; margin-bottom: 10px;">Why White People Should No Longer Say the N-Word (2022)"</h3>
+                  <p style="margin-bottom: 15px;"Self explantatory?".</p>
+                  <iframe
+                    width="100%"
+                    height="215"
+                    src="https://www.youtube.com/embed/q132uRqVpqA"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    style="border-radius: 10px;">
+                  </iframe>
+                  <a href="https://www.youtube.com/watch?v=q132uRqVpqA" 
+                     target="_blank" 
+                     style="display: inline-block; margin-top: 10px; color: #ff6400; text-decoration: none;">
+                    Watch on YouTube →
+                  </a>
+                </div>
+              `},
+            
+            { id: 'gauss', label: 'Magnetic Gauss Law', pos: [-3, -4, -5], color: 0xff6400, size: 0.5,
+              content: `
+                <div>
+                  <h3 style="color: #ff6400; margin-bottom: 10px;">Magnetic Gauss' Law (2022)</h3>
+                  <p style="margin-bottom: 15px;">Gauss' law means we can't have magnetic monopoles :(.</p>
+                  <iframe
+                    width="100%"
+                    height="215"
+                    src="https://www.youtube.com/embed/gsVf2ywt7VQ"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    style="border-radius: 10px;">
+                  </iframe>
+                  <a href="https://www.youtube.com/watch?v=gsVf2ywt7VQ" 
+                     target="_blank" 
+                     style="display: inline-block; margin-top: 10px; color: #ff6400; text-decoration: none;">
+                    Watch on YouTube →
+                  </a>
+                </div>
+              `},
             
             { id: 'meta', label: 'Meta', pos: [7, 4, 1], color: 0x0064ff, size: 0.5,
               content: 'Software Engineer Intern (May 2025) - Rebuilt entire copyright enforcement logic.' },
@@ -241,7 +310,10 @@
             ['about', 'linkedin'],
             ['about', 'github'],
             ['projects', 'pieface'],
-            ['research', 'rl-proofs']
+            ['research', 'rl-proofs'],
+            ['speaking', 'black-tonbridge'],
+            ['speaking', 'n-word'],
+            ['speaking', 'gauss'],
         ];
         
         const nodeMaterials = {};
