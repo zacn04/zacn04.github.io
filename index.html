@@ -4,43 +4,386 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zachary Burton</title>
-    <link rel="stylesheet" href="style.css"> 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 300px;
+        }
+        
+        #info h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00ffff, #0064ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        #info p {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .hint {
+            font-size: 11px;
+            opacity: 0.6;
+            margin: 5px 0;
+        }
+        
+        #current-node {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            max-width: 400px;
+            display: none;
+        }
+        
+        #current-node.show {
+            display: block;
+        }
+        
+        #current-node h2 {
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        #current-node p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #ff0000;
+            font-size: 20px;
+        }
+        
+        .node-label {
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            transform: translate(-50%, -50%);
+        }
+    </style>
 </head>
 <body>
-    <div id="particles-js"></div>
-    <header id="site-nav"></header>
-    <main>
-        <div class="intro-section">
-            <div class="profile-content">
-                <h1>Zachary Burton</h1>
-                <p class="tagline">Research engineer working at the intersection of theoretical CS and applied ML.</p>
-                <p>I'm a mathematics major at MIT developing RL for proofs. Currently exploring how RL agents can discover novel proof strategies in NL/PSPACE.</p>
-                <div class="research-areas">
-                    <h2>Research Focus</h2>
-                    <p><strong>Automated reasoning:</strong> Training RL agents to generate symbolic proofs, with emphasis on proof search strategies and mathematical insight discovery.</p>
-                    <p><strong>Machine learning in education:</strong> Interspersing spaced repetition and metacognitive techniques to enhance learning.
-                    <p><strong>Astrophysics & planetary science:</strong> Computational modeling of stellar dynamics and planetary formation processes.</p>
-                </div>
-                <div class="background">
-                    <h2>Background</h2>
-                    <p>Born in NYC, raised in the UK. </p>
-                    <p>I ran track for 10 years, and have a personal best time of 10.63 for the 100m. You will never catch me running a 5k. </p>
-                    <p></p>I also sing, and work out relatively frequently.</p>
-                    <p><strong>Other interests:</strong> Political science, game theory, sociology, psychology, quantum mechanics, representation theory, probability theory.</p>
-                </div>
-                <p class="cta">Explore my research, speeches, and projects — or check out more about me.</p>
-            </div>
-        </div>
-    </main>
+    <canvas id="canvas"></canvas>
+    
+    <div id="info">
+        <h1>Zachary Burton</h1>
+        <p>The "Egocentric" Universe</p>
+        <div class="hint">🖱️ Left-click and drag to rotate</div>
+        <div class="hint">📜 Scroll to zoom</div>
+        <div class="hint">👆 Click a sphere to explore</div>
+        <div class="hint">⌨️ Press R to reset view</div>
+    </div>
+    
+    <div id="current-node">
+        <span class="close-btn" onclick="closePanel()">✕</span>
+        <h2 id="node-title"></h2>
+        <div id="node-content"></div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        fetch('nav.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('site-nav').innerHTML = html;
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x000000, 10, 100);
+        
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.set(15, 10, 15);
+        camera.lookAt(0, 0, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: document.getElementById('canvas'),
+            antialias: true 
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+        
+        const pointLight1 = new THREE.PointLight(0xffffff, 1);
+        pointLight1.position.set(10, 10, 10);
+        scene.add(pointLight1);
+        
+        const pointLight2 = new THREE.PointLight(0x00ffff, 0.5);
+        pointLight2.position.set(-10, -10, -10);
+        scene.add(pointLight2);
+        
+        const nodes = [
+            { id: 'home', label: 'Zachary Burton', pos: [0, 0, 0], color: 0x00ffff, size: 1, 
+              content: 'Research engineer at the intersection of theoretical CS and applied ML. Mathematics major at MIT.' },
+            
+            { id: 'about', label: 'About', pos: [5, 2, 0], color: 0x0064ff, size: 0.7,
+              content: 'Mathematics major at MIT. Born in NYC, raised in the UK. Ran track for 10 years (10.63s 100m PB).' },
+            
+            { id: 'research', label: 'Research', pos: [-5, 2, 3], color: 0xff00ff, size: 0.7,
+              content: 'Working on RL for proofs, automated reasoning, and machine learning in education.' },
+            
+            { id: 'projects', label: 'Projects', pos: [3, -3, -5], color: 0x00ff64, size: 0.7,
+              content: 'PIEFACE (RLHF for TCS), AlgoTrackr (LeetCode tracker), Scribe AI (Math handwriting autocomplete).' },
+            
+            { id: 'speaking', label: 'Speaking', pos: [-4, -2, -3], color: 0xff6400, size: 0.7,
+              content: 'Public speeches on diversity, education, and science topics.' },
+            
+            { id: 'meta', label: 'Meta', pos: [7, 4, 1], color: 0x0064ff, size: 0.5,
+              content: 'Software Engineer Intern (May 2025) - Copyright enforcement ML and image similarity.' },
+            
+            { id: 'mit-node', label: 'MIT', pos: [6, 3, -2], color: 0x0064ff, size: 0.5,
+              content: 'SB Degree in Mathematics (2022-present).' },
+            
+            { id: 'pieface', label: 'PIEFACE', pos: [4, -4, -6], color: 0x00ff64, size: 0.5,
+              content: 'RLHF tool for theoretical computer science research.' },
+            
+            { id: 'rl-proofs', label: 'RL Proofs', pos: [-7, 3, 4], color: 0xff00ff, size: 0.5,
+              content: 'Research with Jayson Lynch at MIT CSAIL on reinforcement learning for hardness proofs.' }
+        ];
+        
+        const edges = [
+            ['home', 'about'],
+            ['home', 'research'],
+            ['home', 'projects'],
+            ['home', 'speaking'],
+            ['about', 'meta'],
+            ['about', 'mit-node'],
+            ['projects', 'pieface'],
+            ['research', 'rl-proofs']
+        ];
+        
+        const nodeMaterials = {};
+        nodes.forEach(node => {
+            nodeMaterials[node.id] = new THREE.MeshPhongMaterial({
+                color: node.color,
+                emissive: node.color,
+                emissiveIntensity: 0.3,
+                shininess: 100
             });
+        });
+        
+        const nodeMeshes = {};
+        nodes.forEach(node => {
+            const geometry = new THREE.SphereGeometry(node.size, 32, 32);
+            const mesh = new THREE.Mesh(geometry, nodeMaterials[node.id]);
+            mesh.position.set(...node.pos);
+            mesh.userData = { id: node.id, label: node.label, content: node.content };
+            scene.add(mesh);
+            nodeMeshes[node.id] = mesh;
+        });
+        
+        // Create edges
+        const edgeGeometry = new THREE.BufferGeometry();
+        const positions = [];
+        edges.forEach(([source, target]) => {
+            const sourceNode = nodeMeshes[source];
+            const targetNode = nodeMeshes[target];
+            if (sourceNode && targetNode) {
+                positions.push(...sourceNode.position.toArray());
+                positions.push(...targetNode.position.toArray());
+            }
+        });
+        edgeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+        
+        const edgeMaterial = new THREE.LineBasicMaterial({ 
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.8,
+            linewidth: 2
+        });
+        const edgeLines = new THREE.LineSegments(edgeGeometry, edgeMaterial);
+        scene.add(edgeLines);
+        
+        const particleGeometry = new THREE.BufferGeometry();
+        const particleCount = 500;
+        const particlePositions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount * 3; i++) {
+            particlePositions[i] = (Math.random() - 0.5) * 50;
+        }
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x0088ff,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.6
+        });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+        
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+        let isDragging = false;
+        let previousMouseX = 0, previousMouseY = 0;
+        let rotationX = 0, rotationY = 0;
+        let zoom = 20;
+        
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            if (isDragging) {
+                const deltaX = event.clientX - previousMouseX;
+                const deltaY = event.clientY - previousMouseY;
+                rotationY += deltaX * 0.01;
+                rotationX += deltaY * 0.01;
+                previousMouseX = event.clientX;
+                previousMouseY = event.clientY;
+            }
+        }
+        
+        function onMouseDown(event) {
+            isDragging = true;
+            previousMouseX = event.clientX;
+            previousMouseY = event.clientY;
+        }
+        
+        function onMouseUp() {
+            isDragging = false;
+        }
+        
+        function onMouseClick(event) {
+            if (event.target.id !== 'canvas') return;
+            
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(Object.values(nodeMeshes));
+            
+            if (intersects.length > 0) {
+                const clickedObject = intersects[0].object;
+                const nodeData = clickedObject.userData;
+                showNodeInfo(nodeData);
+                
+                clickedObject.scale.set(1.5, 1.5, 1.5);
+                setTimeout(() => {
+                    clickedObject.scale.set(1, 1, 1);
+                }, 300);
+            }
+        }
+        
+        function onWheel(event) {
+            zoom += event.deltaY * 0.01;
+            zoom = Math.max(5, Math.min(30, zoom));
+        }
+        
+        function showNodeInfo(nodeData) {
+            const panel = document.getElementById('current-node');
+            const title = document.getElementById('node-title');
+            const content = document.getElementById('node-content');
+            
+            title.textContent = nodeData.label;
+            content.innerHTML = `<p>${nodeData.content}</p>`;
+            panel.classList.add('show');
+        }
+        
+        function closePanel() {
+            document.getElementById('current-node').classList.remove('show');
+        }
+        
+        function onKeyDown(event) {
+            if (event.key === 'r' || event.key === 'R') {
+                rotationX = 0;
+                rotationY = 0;
+                zoom = 20;
+                closePanel();
+            }
+        }
+        
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mousedown', onMouseDown);
+        document.addEventListener('mouseup', onMouseUp);
+        document.addEventListener('click', onMouseClick);
+        document.addEventListener('wheel', onWheel);
+        document.addEventListener('keydown', onKeyDown);
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        window.addEventListener('resize', onWindowResize);
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            camera.position.x = Math.sin(rotationY) * Math.cos(rotationX) * zoom;
+            camera.position.y = Math.sin(rotationX) * zoom;
+            camera.position.z = Math.cos(rotationY) * Math.cos(rotationX) * zoom;
+            camera.lookAt(0, 0, 0);
+            
+            particles.rotation.y += 0.0005;
+            const mainNode = nodeMeshes['home'];
+            if (mainNode) {
+                const scale = 1 + Math.sin(Date.now() * 0.001) * 0.1;
+                mainNode.scale.set(scale, scale, scale);
+            }
+            
+            Object.values(nodeMeshes).forEach(mesh => {
+                if (mesh.userData.id !== 'home') {
+                    mesh.rotation.y += 0.01;
+                }
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
     </script>
-    <footer>
-        <p>&copy; 2025 Zachary Burton</p>
-    </footer>
 </body>
 </html>
