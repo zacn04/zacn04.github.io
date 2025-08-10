@@ -299,13 +299,13 @@
         
         const nodes = [
             { id: 'home', label: 'Zachary Burton', pos: [0, 0, 0], color: 0x00ffff, size: 1, 
-              content: 'Research engineer at the intersection of theoretical CS and applied ML. Mathematics major at MIT.' },
+              content: 'I'm a math major at MIT passionate about building infrastructure to advance AI research which in turn can advance human knowledge.' },
             
             { id: 'about', label: 'About', pos: [5, 2, 0], color: 0x0064ff, size: 0.7,
-              content: 'Mathematics major at MIT. Born in NYC, raised in the UK. Ran track for 10 years (10.63s 100m PB).' },
+              content: 'Born in NYC, raised in the UK. Ran track for 10 years (10.63s 100m PB).' },
             
             { id: 'research', label: 'Research', pos: [-5, 2, 3], color: 0xff00ff, size: 0.7,
-              content: 'Working on RL for proofs, automated reasoning, and machine learning in education.' },
+              content: 'A variety!' },
             
             { id: 'projects', label: 'Projects', pos: [3, -3, -5], color: 0x00ff64, size: 0.7,
               content: `
@@ -386,7 +386,7 @@
               `},
             
             { id: 'meta', label: 'Meta', pos: [7, 4, 1], color: 0x0064ff, size: 0.5,
-              content: 'Software Engineer Intern (May 2025) - Rebuilt entire copyright enforcement logic.' },
+              content: 'Software Engineer Intern (May-Aug 2025) - Rebuilt entire copyright enforcement logic, 97% consistency with prod, fixed a 16% FP rate in internal tooling.' },
             
             { id: 'mit-node', label: 'MIT', pos: [6, 3, -2], color: 0x0064ff, size: 0.5,
               content: 'SB Degree in Mathematics (2022-present).' },
@@ -396,7 +396,7 @@
                 <div>
                   <h3 style="color: #00ff64; margin-bottom: 10px;">PIEFACE</h3>
                   <p style="margin-bottom: 15px;"><strong>World's first research sandbox for theoretical CS</strong></p>
-                  <p style="margin-bottom: 20px;">Builds off the work done in RL for hardness proofs, originally designed as a debugger/visualiser.</p>
+                  <p style="margin-bottom: 20px;">Builds off the work done in RL for hardness proofs, originally designed as a debugger/visualiser. Working on serving an online RLHF component for true human+AI research.</p>
                   <a href="https://pieface.ai" 
                      target="_blank" 
                      style="background: linear-gradient(135deg, #00ff64, #00cc52); 
@@ -415,7 +415,6 @@
             { id: 'rl-proofs', label: 'RL for Hardness Proofs', pos: [-7, 3, 4], color: 0xff00ff, size: 0.5,
                   content: `
                     <div>
-                      <h3 style="color: #ff00ff; margin-bottom: 10px;">Reinforcement Learning for Hardness Proofs</h3>
                       <p style="margin-bottom: 15px;">Research under Jayson Lynch at MIT CSAIL (FutureTech)</p>
                       <p style="margin-bottom: 20px;">Developing RL approaches for automated complexity-theoretic gadget reductions and proof generation in NL/PSPACE.</p>
                       <a href="https://openreview.net/forum?id=50w4SZTl2V&noteId=50w4SZTl2V" 
@@ -436,7 +435,6 @@
             { id: 'algotrackr', label: 'AlgoTrackr', pos: [5, -2, -4], color: 0x00ff64, size: 0.5,
               content: `
                 <div>
-                  <h3 style="color: #00ff64; margin-bottom: 10px;">AlgoTrackr</h3>
                   <p style="margin-bottom: 15px;"><strong>Personal LeetCode Performance Tracker</strong></p>
                   <p style="margin-bottom: 20px;">Comprehensive analytics platform for tracking algorithmic problem-solving progress. Are you on the early access list?</p>
                   <a href="https://algotrackr.com" 
@@ -470,7 +468,7 @@
                             display: inline-block; 
                             font-weight: bold;
                             margin-bottom: 10px;">
-                    View on Devpost.
+                    View on Devpost.  
                   </a>
                 </div>
               `},
@@ -513,12 +511,11 @@
                   </a>
                 </div>
               `},
-            { id: 'collision', label: 'Collision Thresholds', pos: [-6, 4, 2], color: 0xff00ff, size: 0.5,
+            { id: 'collision', label: 'Math preprint', pos: [-6, 4, 2], color: 0xff00ff, size: 0.5,
               content: `
                 <div>
-                  <h3 style="color: #ff00ff; margin-bottom: 10px;">Poissonization-based Collision Thresholds</h3>
-                  <p style="margin-bottom: 15px;">Threshold behavior of collisions in random walks on ℤ³</p>
-                  <p style="margin-bottom: 20px;">Using Poissonization and generating function asymptotics to re-derive sharp thresholds for pairwise collisions via the Laplace method.</p>
+                  <h3 style="color: #ff00ff; margin-bottom: 10px;">Poissonization-based collision threshold derivation for random walks on lattices</h3>
+                  <p style="margin-bottom: 20px;">Using Poissonization and generating function asymptotics to re-derive sharp thresholds for pairwise collisions via the Laplace method. Disclaimer: it's an expository note! </p>
                   <a href="https://arxiv.org/abs/2505.02973" 
                      target="_blank" 
                      style="background: linear-gradient(135deg, #ff00ff, #ff66ff); 
