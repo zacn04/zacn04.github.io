@@ -701,7 +701,8 @@
                 shininess: 100
             });
         });
-        
+
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const nodeMeshes = {};
         nodes.forEach(node => {
             const segments = isMobile ? 16 : 32;
@@ -736,7 +737,6 @@
         scene.add(edgeLines);
         
         const particleGeometry = new THREE.BufferGeometry();
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const particleCount = isMobile ? 100 : 500; // Reduce particles on mobile
         const particlePositions = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount * 3; i++) {
