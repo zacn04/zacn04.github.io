@@ -1,822 +1,311 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zachary Burton</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --bg-color: #000;
-            --text-color: #fff;
-            --panel-bg: rgba(0, 0, 0, 0.8);
-            --panel-border: rgba(255, 255, 255, 0.2);
-            --node-panel-bg: rgba(0, 0, 0, 0.9);
-            --node-panel-border: rgba(0, 255, 255, 0.3);
-            --close-btn-color: #ff0000;
-            --gradient-start: #00ffff;
-            --gradient-end: #0064ff;
-            --hint-opacity: 0.6;
-            --content-opacity: 0.9;
-            --theme-toggle-bg: rgba(255, 255, 255, 0.1);
-            --theme-toggle-border: rgba(255, 255, 255, 0.3);
-            --theme-icon: "🌙";
-        }
-        
-        body.light-mode {
-            --bg-color: #f0f4f8;
-            --text-color: #1a202c;
-            --panel-bg: rgba(255, 255, 255, 0.95);
-            --panel-border: rgba(0, 0, 0, 0.1);
-            --node-panel-bg: rgba(255, 255, 255, 0.98);
-            --node-panel-border: rgba(0, 100, 255, 0.3);
-            --close-btn-color: #e53e3e;
-            --gradient-start: #0088cc;
-            --gradient-end: #0056b3;
-            --hint-opacity: 0.7;
-            --content-opacity: 0.85;
-            --theme-toggle-bg: rgba(0, 0, 0, 0.1);
-            --theme-toggle-border: rgba(0, 0, 0, 0.3);
-            --theme-icon: "☀️";
-        }
-        
-        body {
-            font-family: 'Space Mono', monospace;
-            background: var(--bg-color);
-            color: var(--text-color);
-            overflow: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
-            position: fixed;
-            width: 100%;
-            height: 100vh;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        #canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        #theme-toggle {
-            position: fixed;
-            top: 20px;
-            left: 340px;
-            z-index: 101;
-            background: var(--theme-toggle-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--theme-toggle-border);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 24px;
-            transition: all 0.3s ease;
-        }
-        
-        #theme-toggle:hover {
-            transform: scale(1.1);
-            background: var(--theme-toggle-border);
-        }
-        
-        #theme-toggle::after {
-            content: var(--theme-icon);
-        }
-        
-        #info {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-            background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--panel-border);
-            max-width: 300px;
-            transition: all 0.3s ease;
-        }
-        
-        #info h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        #info p {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .hint {
-            font-size: 11px;
-            opacity: var(--hint-opacity);
-            margin: 5px 0;
-        }
-        
-        #current-node {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            background: var(--node-panel-bg);
-            padding: 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--node-panel-border);
-            max-width: 500px;
-            display: none;
-            transition: all 0.3s ease;
-        }
-        
-        #current-node.show {
-            display: block;
-        }
-        
-        #current-node h2 {
-            color: var(--gradient-start);
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-        
-        #current-node p {
-            line-height: 1.6;
-            opacity: var(--content-opacity);
-        }
-        
-        #current-node a {
-            transition: opacity 0.3s ease;
-        }
-        
-        #current-node a:hover {
-            opacity: 0.8;
-        }
-        
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            color: var(--close-btn-color);
-            font-size: 20px;
-            transition: transform 0.3s ease;
-        }
-        
-        .close-btn:hover {
-            transform: rotate(90deg);
-        }
-        
-        .node-label {
-            position: absolute;
-            color: white;
-            font-size: 12px;
-            pointer-events: none;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-            transform: translate(-50%, -50%);
-        }
-        
-        body.light-mode #current-node h3 {
-            filter: brightness(0.7);
-        }
-        
-        body.light-mode #current-node strong {
-            color: var(--text-color);
-        }
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-       
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-        
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-        }
-        
-        @media (max-width: 768px) {
-            #info {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                max-width: none;
-                padding: 15px;
-            }
-            
-            #info h1 {
-                font-size: 20px;
-            }
-            
-            #theme-toggle {
-                position: fixed;
-                top: auto;
-                bottom: 20px;
-                right: 20px;
-                left: auto;
-                z-index: 102;
-            }
-            
-            #current-node {
-                top: auto;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                max-width: none;
-                max-height: 50vh;
-                overflow-y: auto;
-                border-radius: 15px 15px 0 0;
-            }
-            
-            #current-node.show {
-                animation: slideUp 0.3s ease;
-            }
-            
-            @keyframes slideUp {
-                from {
-                    transform: translateY(100%);
-                }
-                to {
-                    transform: translateY(0);
-                }
-            }
-            
-            .hint {
-                display: none; 
-            }
-            
-            #info::after {
-                content: "Tap nodes to explore ... Pinch to zoom";
-                font-size: 11px;
-                opacity: 0.6;
-                display: block;
-                margin-top: 10px;
-            }
-        }
-    </style>
+  <title>Zachary Burton</title>
+
+  <meta name="author" content="Zachary Burton">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+  <style>
+    /* Minimal CSS to match the Jon Barron style without external files */
+    body {
+      background-color: #ffffff;
+      font-family: 'Lato', Verdana, Helvetica, sans-serif;
+      font-size: 14px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      max-width: 800px;
+    }
+    h1, h2, h3, h4 { font-weight: 400; }
+    h2 { font-size: 20px; margin-bottom: 10px; margin-top: 20px; }
+    p { line-height: 1.5; margin-bottom: 10px; }
+    a { color: #1772d0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { font-weight: bold; }
+    .name { font-size: 30px; line-height: 1.1; font-family: "Courier New", Courier, monospace; font-weight: bold; }
+    .papertitle { font-weight: 700; font-size: 15px; }
+    
+    /* Layout tables */
+    table { width: 100%; border: 0; border-spacing: 0; border-collapse: separate; }
+    td { vertical-align: middle; }
+    
+    /* Image styling */
+    img.profile-img { width: 100%; max-width: 250px; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    img.project-img { width: 160px; height: auto; border-radius: 4px; border: 1px solid #eee; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  </style>
 </head>
+
 <body>
-    <canvas id="canvas"></canvas>
-    
-    <div id="theme-toggle" onclick="toggleTheme()"></div>
-    
-    <div id="info">
-        <h1>Zachary Burton</h1>
-        <p>The "Egocentric" Universe</p>
-        <div class="hint">🖱️ Left-click and drag to rotate</div>
-        <div class="hint">📜 Scroll to zoom</div>
-        <div class="hint">👆 Click a sphere to explore</div>
-        <div class="hint">⌨️ Press R to reset view</div>
-    </div>
-    
-    <div id="current-node">
-        <span class="close-btn" onclick="closePanel()">✕</span>
-        <h2 id="node-title"></h2>
-        <div id="node-content"></div>
-    </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        // Theme management
-        let isLightMode = false;
-        
-        function toggleTheme() {
-            isLightMode = !isLightMode;
-            document.body.classList.toggle('light-mode');
-            
-            // Update Three.js scene colors
-            if (isLightMode) {
-                scene.fog = new THREE.Fog(0xf0f4f8, 10, 100);
-                renderer.setClearColor(0xf0f4f8);
-                ambientLight.intensity = 2.0;
-                pointLight1.intensity = 0.8;
-                pointLight2.intensity = 0.3;
-                edgeMaterial.opacity = 0.4;
-                particleMaterial.opacity = 0.3;
-            } else {
-                scene.fog = new THREE.Fog(0x000000, 10, 100);
-                renderer.setClearColor(0x000000);
-                ambientLight.intensity = 1.5;
-                pointLight1.intensity = 1;
-                pointLight2.intensity = 0.5;
-                edgeMaterial.opacity = 0.8;
-                particleMaterial.opacity = 0.6;
-            }
-            
-            // Store preference
-            localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
-        }
-        
-        // Check for saved theme preference
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            isLightMode = true;
-            document.body.classList.add('light-mode');
-        }
-        
-        // Three.js setup
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(isLightMode ? 0xf0f4f8 : 0x000000, 10, 100);
-        
-        const camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
-        camera.position.set(15, 10, 15);
-        camera.lookAt(0, 0, 0);
-        
-        const renderer = new THREE.WebGLRenderer({ 
-            canvas: document.getElementById('canvas'),
-            antialias: true 
-        });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setClearColor(isLightMode ? 0xf0f4f8 : 0x000000);
-        
-        const ambientLight = new THREE.AmbientLight(0x404040, isLightMode ? 2.0 : 1.5);
-        scene.add(ambientLight);
-        
-        const pointLight1 = new THREE.PointLight(0xffffff, isLightMode ? 0.8 : 1);
-        pointLight1.position.set(10, 10, 10);
-        scene.add(pointLight1);
-        
-        const pointLight2 = new THREE.PointLight(0x00ffff, isLightMode ? 0.3 : 0.5);
-        pointLight2.position.set(-10, -10, -10);
-        scene.add(pointLight2);
-        
-       const nodes = [
-        // ——— Home ———
-        { id: 'home', label: 'Zachary Burton', pos: [0, 0, 0], color: 0x00ffff, size: 1,
-          content: `MIT Math. I build systems at the intersection of symbolic reasoning, RL, and program synthesis.` },
-    
-        // ——— About ———
-        { id: 'about', label: 'About', pos: [5, 2, 0], color: 0x0064ff, size: 0.7,
-          content: `Born in NYC, raised in the UK. Track athlete (10.63s 100m).  
-                    Currently finishing my SB in Mathematics at MIT.  
-                    Interested in AI for mathematics, neurosymbolic methods, and infrastructure for research.` },
-    
-        // ——— Research hub ———
-        { id: 'research', label: 'Research', pos: [-5, 2, 3], color: 0xff00ff, size: 0.7,
-          content: `My work spans RL for proofs, complexity-theoretic reasoning, SMT-guided synthesis engines,
-                    collision asymptotics, and online RLHF systems.` },
-    
-        // RL For Proofs
-        { id: 'rl-proofs', label: 'RL for Hardness Proofs', pos: [-7, 3, 4], color: 0xff00ff, size: 0.5,
-          content: `
-            <div>
-              <p>MIT CSAIL (FutureTech). Worked on RL agents that discover gadget reductions and 
-                 complexity-theoretic proof strategies. Uses PIEFACE for interactive environments.</p>
-              <a href="https://pieface.ai" target="_blank">Explore PIEFACE</a>
-            </div>
-          `},
-    
-        // Math preprint
-        { id: 'collision', label: 'Random Walk Preprint', pos: [-6, 4, 2], color: 0xff00ff, size: 0.5,
-          content: `
-            <div>
-              <h3>Collision thresholds on lattices</h3>
-              <p>Expository derivation using Poissonization + Laplace asymptotics.</p>
-              <a href="https://arxiv.org/abs/2505.02973" target="_blank">View on arXiv</a>
-            </div>
-          `},
-    
-        // Persuasiveness paper
-        { id: 'llm-social', label: 'Persuasiveness of LLMs', pos: [-8, 1, 3], color: 0xff00ff, size: 0.5,
-          content: `
-            <p>Study of how LLM-generated content shapes political persuasion in social media discussions.</p>
-            <a href="https://drive.google.com/file/d/1A0UiC6z3Udbn-D7P9Vp2BhTOHjAHcRvA/view" target="_blank">
-              Read Paper
-            </a>
-          `},
-    
-        // SIPGA research
-        { id: 'singapore-research', label: 'SIPGA Scholar (2023)', pos: [-5, 0, 5], color: 0xff00ff, size: 0.5,
-          content: `
-            <p>Reinforcement learning research conducted as a SIPGA scholarship recipient in Singapore.</p>
-            <a href="https://drive.google.com/drive/folders/1T71rAHhji8ok6YP1fN3_MQgVUo2PyiNS" target="_blank">
-              Research Materials
-            </a>
-          `},
-    
-        // Astrophysics
-        { id: 'astrophysics', label: 'Astrophysics Research', pos: [-5, 2, 5], color: 0xff00ff, size: 0.5,
-          content: `
-            <p>MIT EAPS (2022): sensitivity studies on comet outbursts + dynamical modeling.</p>
-          `},
-    
-        // ——— Projects hub ———
-        { id: 'projects', label: 'Projects', pos: [3, -3, -5], color: 0x00ff64, size: 0.7,
-          content: `A mix of research tools, experiments, and useful side projects.
-                    Everything is a work-in-progress until it isn’t.` },
-    
-        // Synthesis engine
-        { id: 'synthesis-engine', label: 'Synthesis Engine (C++)', pos: [4, -4, -6], color: 0x00ff64, size: 0.5,
-          content: `
-            <p>C++ neurosymbolic synthesizer with custom AST, evaluator, stochastic/beam/SMT backends, 
-               warm-start heuristics, and CVC5 integration.</p>
-          `},
-    
-        // RL Algebra
-        { id: 'algotrackr', label: 'RL Algebra Solver', pos: [5, -2, -4], color: 0x00ff64, size: 0.5,
-          content: `
-            <p>Custom algebra environment with PPO, Q-learning, SARSA baselines.
-               Tracks solve rates, reward shaping, and generalization across rule families.</p>
-          `},
-    
-        // PIEFACE
-        { id: 'pieface', label: 'PIEFACE', pos: [2, -5, -7], color: 0x00ff64, size: 0.5,
-          content: `
-            <h3>Online RLHF Sandbox</h3>
-            <p>Flask backend, UI, trace parser, SQL logging, reward models, and distributed PPO loop.</p>
-            <a href="https://pieface.ai" target="_blank">Launch PIEFACE</a>
-          `},
-    
-        // AlgoTrackr
-        { id: 'programming-site', label: 'AlgoTrackr', pos: [5, -2, -6], color: 0x00ff64, size: 0.5,
-          content: `
-            <p>Analytics dashboard for personal algorithm practice. Early access tool for progress tracking.</p>
-            <a href="https://algotrackr.com" target="_blank">Check It Out</a>
-          `},
-    
-        // Scribe AI
-        { id: 'scribe', label: 'Scribe AI', pos: [2, -6, -7], color: 0x00ff64, size: 0.5,
-          content: `
-            <h3>Autocomplete for Math Handwriting</h3>
-            <p>Built before big tech adopted similar ideas.</p>
-            <a href="https://devpost.com/software/scribe-slo6iw" target="_blank">View Devpost</a>
-          `},
-    
-        // ——— Speaking hub ———
-        { id: 'speaking', label: 'Speaking', pos: [-4, -2, -3], color: 0xff6400, size: 0.7,
-          content: `Talks I gave as a teenager. A snapshot of early attempts to articulate complicated things.` },
-    
-        { id: 'black-tonbridge', label: 'Being Black at Tonbridge', pos: [-5, -3, -4], color: 0xff6400, size: 0.5,
-          content: `
-            <p>A reflection on my experience navigating race at a UK boarding school.</p>
-            <div class="video-container">
-              <iframe src="https://www.youtube.com/embed/olbr9p6eVsw" allowfullscreen></iframe>
-            </div>
-          `},
-    
-        { id: 'n-word', label: 'Why White People Shouldn’t Say the N-Word', pos: [-6, -1, -2], color: 0xff6400, size: 0.5,
-          content: `
-            <p>A talk on language, power, and context.</p>
-            <div class="video-container">
-              <iframe src="https://www.youtube.com/embed/q132uRqVpqA" allowfullscreen></iframe>
-            </div>
-          `},
-    
-        { id: 'gauss', label: 'Magnetic Gauss Law', pos: [-3, -4, -5], color: 0xff6400, size: 0.5,
-          content: `
-            <p>A physics microlecture I gave in high school.</p>
-            <div class="video-container">
-              <iframe src="https://www.youtube.com/embed/gsVf2ywt7VQ" allowfullscreen></iframe>
-            </div>
-          `},
-    
-        // ——— Experience ———
-        { id: 'meta', label: 'Meta', pos: [7, 4, 1], color: 0x0064ff, size: 0.5,
-          content: `SWE Intern (2025). Refactored copyright enforcement pipeline for 2B+ uploads/day.
-                    Achieved 97% consistency + fixed a 16% false-positive bug.` },
-    
-        { id: 'mit-node', label: 'MIT', pos: [6, 3, -2], color: 0x0064ff, size: 0.5,
-          content: `SB Mathematics. Coursework in RL, program synthesis, real analysis, abstract algebra.` },
-    
-        // ——— Links ———
-        { id: 'resume', label: 'Resume', pos: [-2, 4, -4], color: 0xffff00, size: 0.6,
-          content: `
-            <a href="https://drive.google.com/file/d/1Ai2LxrT0FRoA5Np5i_7jqIYwie3UCvNK/view?usp=share_link" target="_blank"
-               style="background: #00ffff; color: #000; padding: 10px 20px; border-radius: 20px;">
-              View Resume
-            </a>
-          `},
-    
-        { id: 'linkedin', label: 'LinkedIn', pos: [8, 2, -1], color: 0x0077b5, size: 0.4,
-          content: `<a href="https://linkedin.com/in/zac-burton" target="_blank">Connect on LinkedIn</a>` },
-    
-        { id: 'github', label: 'GitHub', pos: [7, 1, 2], color: 0x1a1f3a, size: 0.4,
-          content: `<a href="https://github.com/zacn04" target="_blank">View GitHub</a>` },
-    
-        { id: 'blog', label: 'Blog', pos: [7, 3, -4], color: 0xe3242b, size:0.5,
-          content: `<a href="/blog_base.html" target="_blank">Read my blog</a>` },
-    ];
+  <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+    <tbody>
+      <tr style="padding:0px">
+        <td style="padding:0px">
+          
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              <tr style="padding:0px">
+                <td style="padding:2.5%;width:63%;vertical-align:middle">
+                  <p class="name" style="text-align: center;">
+                    Zachary Burton
+                  </p>
+                  <p>
+                    I am a senior at <strong>MIT</strong> pursuing an SB in Mathematics.
+                  </p>
+                  <p>
+                    I build systems at the intersection of symbolic reasoning, Reinforcement Learning (RL), and program synthesis. 
+                    Most recently, I was a Software Engineering Intern at <strong>Meta</strong> (2025), where I refactored copyright enforcement pipelines. 
+                  </p>
+                  <p>
+                    My research interests span RL for proofs, complexity-theoretic reasoning, SMT-guided synthesis engines, and collision asymptotics.
+                    I was born in NYC and raised in the UK. Outside of research, I am a track athlete (10.63s 100m).
+                  </p>
+                  <p style="text-align:center">
+                    <a href="mailto:your-email@mit.edu">Email</a> &nbsp;|&nbsp;
+                    <a href="https://drive.google.com/file/d/1Ai2LxrT0FRoA5Np5i_7jqIYwie3UCvNK/view?usp=share_link">CV</a> &nbsp;|&nbsp;
+                    <a href="https://github.com/zacn04">GitHub</a> &nbsp;|&nbsp;
+                    <a href="https://linkedin.com/in/zac-burton">LinkedIn</a> &nbsp;|&nbsp;
+                    <a href="/blog_base.html">Blog</a>
+                  </p>
+                </td>
+                <td style="padding:2.5%;width:40%;max-width:40%">
+                  <img class="profile-img" src="images/profile.jpg" alt="Zachary Burton">
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              <tr>
+                <td style="padding:20px;width:100%;vertical-align:middle">
+                  <h2>Research</h2>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-        
-        const edges = [
-            ['home', 'about'],
-            ['home', 'research'],
-            ['home', 'projects'],
-            ['home', 'speaking'],
-            ['home', 'resume'],
-            ['about', 'meta'],
-            ['about', 'mit-node'],
-            ['about', 'linkedin'],
-            ['about', 'github'],
-            ['about', 'blog'],
-            ['projects', 'pieface'],
-            ['projects', 'algotrackr'],
-            ['projects', 'scribe'],
-            ['research', 'rl-proofs'],
-            ['research', 'collision'],
-            ['research', 'llm-social'],
-            ['research', 'singapore-research'],
-            ['research', 'astrophysics'],
-            ['speaking', 'black-tonbridge'],
-            ['speaking', 'n-word'],
-            ['speaking', 'gauss'],
-        ];
-        
-        const nodeMaterials = {};
-        nodes.forEach(node => {
-            nodeMaterials[node.id] = new THREE.MeshPhongMaterial({
-                color: node.color,
-                emissive: node.color,
-                emissiveIntensity: 0.3,
-                shininess: 100
-            });
-        });
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
 
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const nodeMeshes = {};
-        nodes.forEach(node => {
-            const segments = isMobile ? 16 : 32;
-            const geometry = new THREE.SphereGeometry(node.size, segments, segments);
-            const mesh = new THREE.Mesh(geometry, nodeMaterials[node.id]);
-            mesh.position.set(...node.pos);
-            mesh.userData = { id: node.id, label: node.label, content: node.content };
-            scene.add(mesh);
-            nodeMeshes[node.id] = mesh;
-        });
-        
-        // Create edges
-        const edgeGeometry = new THREE.BufferGeometry();
-        const positions = [];
-        edges.forEach(([source, target]) => {
-            const sourceNode = nodeMeshes[source];
-            const targetNode = nodeMeshes[target];
-            if (sourceNode && targetNode) {
-                positions.push(...sourceNode.position.toArray());
-                positions.push(...targetNode.position.toArray());
-            }
-        });
-        edgeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-        
-        const edgeMaterial = new THREE.LineBasicMaterial({ 
-            color: 0x00ffff,
-            transparent: true,
-            opacity: isLightMode ? 0.4 : 0.8,
-            linewidth: 2
-        });
-        const edgeLines = new THREE.LineSegments(edgeGeometry, edgeMaterial);
-        scene.add(edgeLines);
-        
-        const particleGeometry = new THREE.BufferGeometry();
-        const particleCount = isMobile ? 100 : 500; // Reduce particles on mobile
-        const particlePositions = new Float32Array(particleCount * 3);
-        for (let i = 0; i < particleCount * 3; i++) {
-            particlePositions[i] = (Math.random() - 0.5) * 50;
-        }
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0x0088ff,
-            size: 0.1,
-            transparent: true,
-            opacity: isLightMode ? 0.3 : 0.6
-        });
-        const particles = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particles);
-        
-        let mouseX = 0, mouseY = 0;
-        let targetX = 0, targetY = 0;
-        let isDragging = false;
-        let previousMouseX = 0, previousMouseY = 0;
-        let rotationX = 0, rotationY = 0;
-        let zoom = 20;
-        
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-        
-        function onMouseMove(event) {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            
-            if (isDragging) {
-                const deltaX = event.clientX - previousMouseX;
-                const deltaY = event.clientY - previousMouseY;
-                rotationY += deltaX * 0.01;
-                rotationX += deltaY * 0.01;
-                previousMouseX = event.clientX;
-                previousMouseY = event.clientY;
-            }
-        }
-        
-        function onMouseDown(event) {
-            isDragging = true;
-            previousMouseX = event.clientX;
-            previousMouseY = event.clientY;
-        }
-        
-        function onMouseUp() {
-            isDragging = false;
-        }
-        
-        function onMouseClick(event) {
-            if (event.target.id !== 'canvas') return;
-            
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(Object.values(nodeMeshes));
-            
-            if (intersects.length > 0) {
-                const clickedObject = intersects[0].object;
-                const nodeData = clickedObject.userData;
-                showNodeInfo(nodeData);
-                
-                clickedObject.scale.set(1.5, 1.5, 1.5);
-                setTimeout(() => {
-                    clickedObject.scale.set(1, 1, 1);
-                }, 300);
-            }
-        }
-        
-        function onWheel(event) {
-            zoom += event.deltaY * 0.01;
-            zoom = Math.max(5, Math.min(30, zoom));
-        }
-        
-        function showNodeInfo(nodeData) {
-            const panel = document.getElementById('current-node');
-            const title = document.getElementById('node-title');
-            const content = document.getElementById('node-content');
-            
-            title.textContent = nodeData.label;
-            content.innerHTML = `<p>${nodeData.content}</p>`;
-            panel.classList.add('show');
-        }
-        
-        function closePanel() {
-            document.getElementById('current-node').classList.remove('show');
-        }
-        
-        function onKeyDown(event) {
-            if (event.key === 'r' || event.key === 'R') {
-                rotationX = 0;
-                rotationY = 0;
-                zoom = 20;
-                closePanel();
-            }
-        }
-        
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mousedown', onMouseDown);
-        document.addEventListener('mouseup', onMouseUp);
-        document.addEventListener('click', onMouseClick);
-        document.addEventListener('wheel', onWheel);
-        document.addEventListener('keydown', onKeyDown);
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:center">
+                  <img class="project-img" src="images/placeholder.png" alt="RL Proofs">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:middle">
+                  <span class="papertitle">RL for Hardness Proofs</span>
+                  <br>
+                  <em>MIT CSAIL (FutureTech)</em>
+                  <br>
+                  <a href="https://pieface.ai">project page</a>
+                  <p>
+                    Worked on RL agents that discover gadget reductions and complexity-theoretic proof strategies. 
+                    Utilizes <strong>PIEFACE</strong>, a custom environment I built for interactive complexity environments.
+                  </p>
+                </td>
+              </tr>
 
-        let touchStartX = 0, touchStartY = 0;
-        let lastTouchDistance = 0;
-        
-        function onTouchStart(event) {
-            event.preventDefault();
-            if (event.touches.length === 1) {
-                isDragging = true;
-                touchStartX = event.touches[0].clientX;
-                touchStartY = event.touches[0].clientY;
-                previousMouseX = touchStartX;
-                previousMouseY = touchStartY;
-            } else if (event.touches.length === 2) {
-                // For pinch zoom
-                const dx = event.touches[0].clientX - event.touches[1].clientX;
-                const dy = event.touches[0].clientY - event.touches[1].clientY;
-                lastTouchDistance = Math.sqrt(dx * dx + dy * dy);
-            }
-        }
-        
-        function onTouchMove(event) {
-            event.preventDefault();
-            if (event.touches.length === 1 && isDragging) {
-                const deltaX = event.touches[0].clientX - previousMouseX;
-                const deltaY = event.touches[0].clientY - previousMouseY;
-                rotationY += deltaX * 0.01;
-                rotationX += deltaY * 0.01;
-                previousMouseX = event.touches[0].clientX;
-                previousMouseY = event.touches[0].clientY;
-            } else if (event.touches.length === 2) {
-                // Pinch zoom
-                const dx = event.touches[0].clientX - event.touches[1].clientX;
-                const dy = event.touches[0].clientY - event.touches[1].clientY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                const delta = distance - lastTouchDistance;
-                zoom -= delta * 0.05;
-                zoom = Math.max(5, Math.min(30, zoom));
-                lastTouchDistance = distance;
-            }
-        }
-        
-        function onTouchEnd(event) {
-            isDragging = false;
-        }
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:center">
+                  <img class="project-img" src="images/placeholder.png" alt="Collision">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:middle">
+                  <span class="papertitle">Collision Thresholds on Lattices</span>
+                  <br>
+                  <em>Preprint</em>
+                  <br>
+                  <a href="https://arxiv.org/abs/2505.02973">arXiv</a>
+                  <p>
+                    An expository derivation using Poissonization and Laplace asymptotics to analyze random walks on lattices.
+                  </p>
+                </td>
+              </tr>
 
-        function onTouchTap(event) {
-            if (event.touches.length === 1) {
-                const touch = event.touches[0];
-                mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
-                
-                raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObjects(Object.values(nodeMeshes));
-                
-                if (intersects.length > 0) {
-                    const clickedObject = intersects[0].object;
-                    const nodeData = clickedObject.userData;
-                    showNodeInfo(nodeData);
-                    
-                    // Visual feedback
-                    clickedObject.scale.set(1.5, 1.5, 1.5);
-                    setTimeout(() => {
-                        clickedObject.scale.set(1, 1, 1);
-                    }, 300);
-                }
-            }
-        }
-        
-        document.addEventListener('touchstart', onTouchStart, { passive: false });
-        document.addEventListener('touchmove', onTouchMove, { passive: false });
-        document.addEventListener('touchend', onTouchEnd);
-        document.addEventListener('touchstart', function(event) {
-            if (event.touches.length === 1) {
-                setTimeout(() => {
-                    if (!isDragging) {
-                        onTouchTap(event);
-                    }
-                }, 200); 
-            }
-        });
-        
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        window.addEventListener('resize', onWindowResize);
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            camera.position.x = Math.sin(rotationY) * Math.cos(rotationX) * zoom;
-            camera.position.y = Math.sin(rotationX) * zoom;
-            camera.position.z = Math.cos(rotationY) * Math.cos(rotationX) * zoom;
-            camera.lookAt(0, 0, 0);
-            
-            particles.rotation.y += 0.0005;
-            const mainNode = nodeMeshes['home'];
-            if (mainNode) {
-                const scale = 1 + Math.sin(Date.now() * 0.001) * 0.1;
-                mainNode.scale.set(scale, scale, scale);
-            }
-            
-            Object.values(nodeMeshes).forEach(mesh => {
-                if (mesh.userData.id !== 'home') {
-                    mesh.rotation.y += 0.01;
-                }
-            });
-            
-            renderer.render(scene, camera);
-        }
-        
-        animate();
-        
-    </script>
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:center">
+                  <img class="project-img" src="images/placeholder.png" alt="LLM Persuasion">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:middle">
+                  <span class="papertitle">Persuasiveness of LLMs in Political Discourse</span>
+                  <br>
+                  <a href="https://drive.google.com/file/d/1A0UiC6z3Udbn-D7P9Vp2BhTOHjAHcRvA/view">paper</a>
+                  <p>
+                    A study of how LLM-generated content shapes political persuasion and argumentation in social media discussions.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:center">
+                  <img class="project-img" src="images/placeholder.png" alt="SIPGA">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:middle">
+                  <span class="papertitle">SIPGA Scholar Research</span>
+                  <br>
+                  <em>Singapore Agency for Science, Technology and Research (A*STAR)</em>, 2023
+                  <br>
+                  <a href="https://drive.google.com/drive/folders/1T71rAHhji8ok6YP1fN3_MQgVUo2PyiNS">materials</a>
+                  <p>
+                    Conducted Reinforcement Learning research as a scholarship recipient.
+                  </p>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              <tr>
+                <td style="padding:20px;width:100%;vertical-align:middle">
+                  <h2>Selected Projects</h2>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:top">
+                   <img class="project-img" src="images/placeholder.png" alt="Synthesis Engine">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:top">
+                  <span class="papertitle">Neurosymbolic Synthesis Engine</span>
+                  <br>
+                  <p>
+                    A C++ synthesizer featuring a custom AST, evaluator, and stochastic/beam search backends. 
+                    Includes warm-start heuristics and integration with the CVC5 SMT solver.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:top">
+                   <img class="project-img" src="images/placeholder.png" alt="AlgoTrackr">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:top">
+                  <span class="papertitle">AlgoTrackr & RL Algebra Solver</span>
+                  <br>
+                  <a href="https://algotrackr.com">website</a>
+                  <p>
+                    Developed a custom algebra environment with PPO, Q-learning, and SARSA baselines to track solve rates and generalization across rule families. 
+                    Also built an analytics dashboard for personal algorithm practice.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:top">
+                   <img class="project-img" src="images/placeholder.png" alt="PIEFACE">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:top">
+                  <span class="papertitle">PIEFACE: Online RLHF Sandbox</span>
+                  <br>
+                  <a href="https://pieface.ai">website</a>
+                  <p>
+                    An online sandbox for RLHF research. Built with a Flask backend, it includes a trace parser, SQL logging, reward modeling, and a distributed PPO training loop.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:top">
+                   <img class="project-img" src="images/placeholder.png" alt="Scribe">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:top">
+                  <span class="papertitle">Scribe AI</span>
+                  <br>
+                  <a href="https://devpost.com/software/scribe-slo6iw">devpost</a>
+                  <p>
+                    Autocomplete for math handwriting, built to assist in digitizing mathematical notes in real-time.
+                  </p>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              <tr>
+                <td style="padding:20px;width:100%;vertical-align:middle">
+                  <h2>Speaking</h2>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:top">
+                  <img class="project-img" src="https://img.youtube.com/vi/olbr9p6eVsw/0.jpg" alt="Tonbridge Talk">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:top">
+                  <span class="papertitle">Being Black at Tonbridge</span>
+                  <br>
+                  <a href="https://www.youtube.com/watch?v=olbr9p6eVsw">video</a>
+                  <p>
+                    A reflection on my experience navigating race at a UK boarding school.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:top">
+                  <img class="project-img" src="https://img.youtube.com/vi/q132uRqVpqA/0.jpg" alt="N-Word Talk">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:top">
+                  <span class="papertitle">Why White People Shouldn’t Say the N-Word</span>
+                  <br>
+                  <a href="https://www.youtube.com/watch?v=q132uRqVpqA">video</a>
+                  <p>
+                    A talk on language, power, and context.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:20px;width:25%;vertical-align:top">
+                  <img class="project-img" src="https://img.youtube.com/vi/gsVf2ywt7VQ/0.jpg" alt="Gauss Law">
+                </td>
+                <td style="padding:20px;width:75%;vertical-align:top">
+                  <span class="papertitle">Magnetic Gauss Law</span>
+                  <br>
+                  <a href="https://www.youtube.com/watch?v=gsVf2ywt7VQ">video</a>
+                  <p>
+                    A physics microlecture on electromagnetism.
+                  </p>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+            <tbody>
+              <tr>
+                <td style="padding:0px">
+                  <br>
+                  <p style="text-align:right;font-size:small;">
+                    <a href="https://github.com/jonbarron/website">Website Template</a>
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
+
 </html>
