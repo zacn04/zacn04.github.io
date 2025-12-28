@@ -18,7 +18,7 @@
       margin-left: auto;
       margin-right: auto;
       width: 100%;
-      max-width: 800px;
+      max-width: 900px; /* Slightly increased max-width to accommodate side-by-side layout */
     }
     h1, h2, h3, h4 { font-weight: 400; }
     h2 { font-size: 20px; margin-bottom: 10px; margin-top: 20px; }
@@ -35,12 +35,13 @@
     
     /* Image styling */
     img.profile-img { width: 100%; max-width: 250px; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-    img.project-img { width: 160px; height: auto; border-radius: 4px; border: 1px solid #eee; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    /* Adjusted project image size slightly for the two-column view to prevent cramping */
+    img.project-img { width: 140px; height: auto; border-radius: 4px; border: 1px solid #eee; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
   </style>
 </head>
 
 <body>
-  <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+  <table style="width:100%;max-width:900px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
     <tbody>
       <tr style="padding:0px">
         <td style="padding:0px">
@@ -81,132 +82,140 @@
           <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
             <tbody>
               <tr>
-                <td style="padding:20px;width:100%;vertical-align:middle">
-                  <h2>Research</h2>
+                <td style="width:50%; vertical-align:top; padding-right:15px;">
+                  
+                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
+                    <tbody>
+                      <tr>
+                        <td style="padding:20px 0px;width:100%;vertical-align:middle">
+                          <h2>Research</h2>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
+                    <tbody>
+                      <tr>
+                        <td style="padding:10px;width:30%;vertical-align:center">
+                          <img class="project-img" src="collision.png" alt="Collision">
+                        </td>
+                        <td style="padding:10px;width:70%;vertical-align:middle">
+                          <span class="papertitle">Collision Thresholds on Lattices</span>
+                          <br>
+                          <em>Preprint</em>
+                          <br>
+                          <a href="https://arxiv.org/abs/2505.02973">arXiv</a>
+                          <p>
+                            An expository derivation using Poissonization and Laplace asymptotics to analyze random walks on lattices.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:10px;width:30%;vertical-align:center">
+                          <img class="project-img" src="placeholder.png" alt="LLM Persuasion">
+                        </td>
+                        <td style="padding:10px;width:70%;vertical-align:middle">
+                          <span class="papertitle">Persuasiveness of LLMs in Political Discourse</span>
+                          <br>
+                          <a href="https://drive.google.com/file/d/1A0UiC6z3Udbn-D7P9Vp2BhTOHjAHcRvA/view">paper</a>
+                          <p>
+                            A study of how LLM-generated content shapes political persuasion and argumentation.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:10px;width:30%;vertical-align:center">
+                          <img class="project-img" src="placeholder.png" alt="SIPGA">
+                        </td>
+                        <td style="padding:10px;width:70%;vertical-align:middle">
+                          <span class="papertitle">SIPGA Scholar Research</span>
+                          <br>
+                          <em>A*STAR</em>, 2023
+                          <br>
+                          <a href="https://drive.google.com/drive/folders/1T71rAHhji8ok6YP1fN3_MQgVUo2PyiNS">materials</a>
+                          <p>
+                            Conducted Reinforcement Learning research as a scholarship recipient.
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+
+                <td style="width:50%; vertical-align:top; padding-left:15px;">
+                  
+                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
+                    <tbody>
+                      <tr>
+                        <td style="padding:20px 0px;width:100%;vertical-align:middle">
+                          <h2>Selected Projects</h2>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
+                    <tbody>
+                      <tr>
+                        <td style="padding:10px;width:30%;vertical-align:top">
+                           <img class="project-img" src="zOSdemo.mp4" alt="not an OS">
+                        </td>
+                        <td style="padding:10px;width:70%;vertical-align:top">
+                          <span class="papertitle">zOS</span>
+                          <br>
+                          <p>
+                            Local LLM self-training loop with step-by-step feedback, written with Rust & Tauri.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:10px;width:30%;vertical-align:top">
+                           <img class="project-img" src="placeholder.png" alt="Synthesis Engine">
+                        </td>
+                        <td style="padding:10px;width:70%;vertical-align:top">
+                          <span class="papertitle">Neurosymbolic Synthesis Engine</span>
+                          <br>
+                          <p>
+                            A C++ synthesizer featuring a custom AST, evaluator, and stochastic/beam search backends. 
+                          </p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:10px;width:30%;vertical-align:top">
+                           <img class="project-img" src="pieface.png" alt="PIEFACE">
+                        </td>
+                        <td style="padding:10px;width:70%;vertical-align:top">
+                          <span class="papertitle">PIEFACE: Online RLHF Sandbox</span>
+                          <br>
+                          <a href="https://pieface.ai">website</a>
+                          <p>
+                            An online sandbox for RLHF research. Built with a Flask backend and distributed PPO training loop.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding:10px;width:30%;vertical-align:top">
+                           <img class="project-img" src="scribe.png" alt="Scribe">
+                        </td>
+                        <td style="padding:10px;width:70%;vertical-align:top">
+                          <span class="papertitle">Scribe AI</span>
+                          <br>
+                          <a href="https://devpost.com/software/scribe-slo6iw">devpost</a>
+                          <p>
+                            Autocomplete for math handwriting.
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </td>
               </tr>
-            </tbody>
-          </table>
-
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:center">
-                  <img class="project-img" src="collision.png" alt="Collision">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:middle">
-                  <span class="papertitle">Collision Thresholds on Lattices</span>
-                  <br>
-                  <em>Preprint</em>
-                  <br>
-                  <a href="https://arxiv.org/abs/2505.02973">arXiv</a>
-                  <p>
-                    An expository derivation using Poissonization and Laplace asymptotics to analyze random walks on lattices.
-                  </p>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:center">
-                  <img class="project-img" src="placeholder.png" alt="LLM Persuasion">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:middle">
-                  <span class="papertitle">Persuasiveness of LLMs in Political Discourse</span>
-                  <br>
-                  <a href="https://drive.google.com/file/d/1A0UiC6z3Udbn-D7P9Vp2BhTOHjAHcRvA/view">paper</a>
-                  <p>
-                    A study of how LLM-generated content shapes political persuasion and argumentation in social media discussions.
-                  </p>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:center">
-                  <img class="project-img" src="placeholder.png" alt="SIPGA">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:middle">
-                  <span class="papertitle">SIPGA Scholar Research</span>
-                  <br>
-                  <em>Singapore Agency for Science, Technology and Research (A*STAR)</em>, 2023
-                  <br>
-                  <a href="https://drive.google.com/drive/folders/1T71rAHhji8ok6YP1fN3_MQgVUo2PyiNS">materials</a>
-                  <p>
-                    Conducted Reinforcement Learning research as a scholarship recipient.
-                  </p>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:20px;width:100%;vertical-align:middle">
-                  <h2>Selected Projects</h2>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:top">
-                   <img class="project-img" src="zOS demo.mp4" alt="not an OS">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:top">
-                  <span class="papertitle">zOS</span>
-                  <br>
-                  <p>
-                    Local LLM self-training loop with step-by-step feedback, written with Rust & Tauri, with token repair/regen. A tinsy bit slower than the video.
-                  </p>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:top">
-                   <img class="project-img" src="placeholder.png" alt="Synthesis Engine For Arithmetic Sequences">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:top">
-                  <span class="papertitle">Neurosymbolic Synthesis Engine</span>
-                  <br>
-                  <p>
-                    A C++ synthesizer featuring a custom AST, evaluator, and stochastic/beam search backends. 
-                    Includes warm-start heuristics and integration with the CVC5 SMT solver.
-                  </p>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:top">
-                   <img class="project-img" src="pieface.png" alt="PIEFACE">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:top">
-                  <span class="papertitle">PIEFACE: Online RLHF Sandbox</span>
-                  <br>
-                  <a href="https://pieface.ai">website</a>
-                  <p>
-                    An online sandbox for RLHF research. Built with a Flask backend, it includes a trace parser, SQL logging, reward modeling, and a distributed PPO training loop.
-                  </p>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:top">
-                   <img class="project-img" src="scribe.png" alt="Scribe">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:top">
-                  <span class="papertitle">Scribe AI</span>
-                  <br>
-                  <a href="https://devpost.com/software/scribe-slo6iw">devpost</a>
-                  <p>
-                    Autocomplete for math handwriting, built to assist in digitizing mathematical notes in real-time.
-                  </p>
-                </td>
-              </tr>
-
             </tbody>
           </table>
 
@@ -222,7 +231,6 @@
 
           <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
             <tbody>
-              
               <tr>
                 <td style="padding:20px;width:25%;vertical-align:top">
                   <img class="project-img" src="https://img.youtube.com/vi/olbr9p6eVsw/0.jpg" alt="Tonbridge Talk">
@@ -236,7 +244,6 @@
                   </p>
                 </td>
               </tr>
-
               <tr>
                 <td style="padding:20px;width:25%;vertical-align:top">
                   <img class="project-img" src="https://img.youtube.com/vi/q132uRqVpqA/0.jpg" alt="N-Word Talk">
@@ -250,7 +257,6 @@
                   </p>
                 </td>
               </tr>
-
               <tr>
                 <td style="padding:20px;width:25%;vertical-align:top">
                   <img class="project-img" src="https://img.youtube.com/vi/gsVf2ywt7VQ/0.jpg" alt="Gauss Law">
@@ -264,7 +270,6 @@
                   </p>
                 </td>
               </tr>
-
             </tbody>
           </table>
 
