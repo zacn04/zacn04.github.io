@@ -264,12 +264,12 @@
         </div>
 
         <div class="tldr">
-            <strong>TL;DR:</strong> AlphaProof solves IMO problems, but can vanilla RL solve <code>ax + b = c</code>? We systematically test tabular Q-learning, SARSA, PPO, and neural baselines to find the exact complexity threshold where RL breaks. Spoiler: it's embarrassingly low—depth-2 equations (~8th grade algebra). Even with 50,000 training episodes and neural encoders, solve rates stay below 5%. The problem isn't sample complexity—it's that flat representations can't capture compositional structure.
+            <strong>TL;DR:</strong> AlphaProof (and many other labs) solves IMO problems, but can vanilla RL solve <code>ax + b = c</code>? We systematically test tabular Q-learning, SARSA, PPO, and neural baselines to find the exact complexity threshold where RL breaks. Spoiler: it's embarrassingly low—depth-2 equations (~8th grade algebra). Even with 50,000 training episodes and neural encoders, solve rates stay below 5%. The problem isn't sample complexity—it's that flat representations can't capture compositional structure.
         </div>
 
         <h2>The Question</h2>
 
-        <p>Modern AI systems like AlphaProof and GPT-4 can tackle International Math Olympiad problems. Meanwhile, I wanted to know: <span class="highlight">what's the simplest math problem where reinforcement learning completely falls apart?</span></p>
+        <p>Modern AI systems like AlphaProof, Harmonic's Aristotle, and AxiomMath's AxiomProver can tackle most International Math Olympiad or Putnam problems alike, with ease. Meanwhile, I wanted to know: <span class="highlight">what's the simplest math problem where reinforcement learning completely falls apart?</span></p>
 
         <p>Not because scaling up is impossible (obviously throw enough compute and you can brute-force anything), but because I wanted to understand the <em>fundamental</em> failure modes. Where does the representation break? Is it a data problem or an architecture problem?</p>
 
