@@ -26,32 +26,6 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-:root {
-    --bg-color: #0a0a0a;
-    --text-color: #e2e2e2;
-    --panel-bg: rgba(15, 15, 15, 0.88);
-    --panel-border: rgba(90, 90, 90, 0.25);
-    --node-panel-bg: rgba(20, 20, 20, 0.95);
-    --node-panel-border: rgba(120, 120, 120, 0.35);
-    --close-btn-color: #ff4d4d;
-
-    --gradient-start: #7f7f7f;
-    --gradient-end: #b3b3b3;
-
-    --theme-toggle-bg: rgba(255, 255, 255, 0.06);
-    --theme-toggle-border: rgba(255, 255, 255, 0.2);
-
-    --hint-opacity: 0.5;
-    --content-opacity: 0.85;
-}
-
-nodeMaterials emissiveIntensity: 0.18;
-
-#canvas {
-    filter: contrast(1) brightness(0.9) saturate(0.9);
-}
-
-
 * {
   margin: 0;
   padding: 0;
