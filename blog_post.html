@@ -1,580 +1,360 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>When Does Tabular RL Actually Break? | Zac Burton</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: #3949ab;
-            background: linear-gradient(135deg, #f8faff 0%, #e3f2fd 100%);
-            line-height: 1.7;
-            padding: 20px;
-            margin: 0;
-        }
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>When Does Tabular RL Actually Break? | Zachary Burton</title>
+  <meta name="author" content="Zachary Burton">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 60px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(25, 118, 210, 0.15);
-        }
-
-        h1 {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1976d2;
-            margin-bottom: 10px;
-            line-height: 1.2;
-        }
-
-        h2 {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #1565c0;
-            margin-top: 50px;
-            margin-bottom: 20px;
-            border-left: 4px solid #42a5f5;
-            padding-left: 15px;
-        }
-
-        h3 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1976d2;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #5c6bc0;
-            margin-bottom: 40px;
-            font-style: italic;
-        }
-
-        .meta {
-            color: #5c6bc0;
-            font-size: 0.95rem;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e3f2fd;
-        }
-
-        .tldr {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border-left: 4px solid #1976d2;
-            padding: 25px;
-            border-radius: 8px;
-            margin: 30px 0;
-            font-weight: 500;
-        }
-
-        .tldr strong {
-            color: #0d47a1;
-            font-size: 1.1rem;
-        }
-
-        p {
-            margin-bottom: 20px;
-            font-size: 1.05rem;
-        }
-
-        code {
-            background: #f8faff;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9em;
-            color: #1565c0;
-            border: 1px solid #e3f2fd;
-        }
-
-        pre {
-            background: #1a237e;
-            color: #e3f2fd;
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin: 25px 0;
-            box-shadow: 0 4px 20px rgba(25, 118, 210, 0.1);
-        }
-
-        pre code {
-            background: transparent;
-            border: none;
-            color: inherit;
-            padding: 0;
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, #42a5f5 0%, transparent 100%);
-            background-position: 0 100%;
-            background-size: 100% 3px;
-            background-repeat: no-repeat;
-            padding-bottom: 3px;
-            font-weight: 600;
-            color: #0d47a1;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin: 30px 0;
-            box-shadow: 0 4px 20px rgba(25, 118, 210, 0.15);
-        }
-
-        .figure {
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        .figure img {
-            margin-bottom: 15px;
-        }
-
-        .caption {
-            font-size: 0.95rem;
-            color: #5c6bc0;
-            font-style: italic;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(25, 118, 210, 0.1);
-        }
-
-        th {
-            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e3f2fd;
-        }
-
-        tr:hover {
-            background: #f8faff;
-        }
-
-        .key-finding {
-            background: #fff3cd;
-            border-left: 4px solid #ff9800;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 25px 0;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .key-finding strong {
-            color: #e65100;
-        }
-
-        ul, ol {
-            margin: 20px 0;
-            padding-left: 30px;
-        }
-
-        li {
-            margin-bottom: 12px;
-            font-size: 1.05rem;
-        }
-
-        a {
-            color: #1976d2;
-            text-decoration: none;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.3s ease;
-        }
-
-        a:hover {
-            border-bottom-color: #42a5f5;
-        }
-
-        .nav-links {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .nav-links a {
-            margin: 0 15px;
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: #5c6bc0;
-            font-size: 0.95rem;
-        }
-
-        .back-link:hover {
-            color: #1976d2;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+  <style>
+    body {
+      background-color: #ffffff;
+      font-family: 'Lato', Verdana, Helvetica, sans-serif;
+      font-size: 14px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1, h2, h3, h4 { font-weight: 400; color: #333; }
+    h1 { font-size: 28px; font-family: "Courier New", Courier, monospace; font-weight: bold; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 10px; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+    h3 { font-size: 16px; margin-bottom: 10px; margin-top: 25px; }
+    p { line-height: 1.6; margin-bottom: 15px; }
+    a { color: #1772d0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { font-weight: bold; }
+    em { font-style: italic; }
+    code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 20px 0;
+    }
+    pre code { background: none; padding: 0; }
+    .meta { color: #666; font-size: 13px; margin-bottom: 25px; }
+    .tldr {
+      background: #f8f8f8;
+      border-left: 3px solid #1772d0;
+      padding: 15px 20px;
+      margin: 25px 0;
+    }
+    .tldr strong { color: #1772d0; }
+    .key-finding {
+      background: #fffbf0;
+      border-left: 3px solid #e6a000;
+      padding: 15px 20px;
+      margin: 25px 0;
+    }
+    .key-finding strong { color: #b37800; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th { background: #f5f5f5; font-weight: bold; }
+    tr:hover { background: #fafafa; }
+    ul, ol { margin: 15px 0; padding-left: 25px; }
+    li { margin-bottom: 8px; }
+    .figure {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .figure img {
+      max-width: 100%;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+    .caption {
+      font-size: 13px;
+      color: #666;
+      font-style: italic;
+      margin-top: 10px;
+    }
+    .back-link { font-size: 13px; color: #666; }
+    .back-link:hover { color: #1772d0; }
+    hr { border: none; border-top: 1px solid #eee; margin: 40px 0; }
+    .footer { text-align: center; color: #666; font-size: 13px; margin-top: 40px; }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <a href="/" class="back-link">← Back to Home</a>
+  <p><a href="/" class="back-link">&larr; Back to Home</a></p>
 
-        <h1>When Does Tabular RL Actually Break?</h1>
-        <div class="subtitle">Testing representation bottlenecks on high school algebra</div>
+  <h1>When Does Tabular RL Actually Break?</h1>
+  <p style="color: #666; font-style: italic; margin-bottom: 5px;">Testing representation bottlenecks on high school algebra</p>
+  <p class="meta">Zac Burton &middot; December 31, 2025</p>
 
-        <div class="meta">
-            Zac Burton • December 31, 2025 • 15 min read
-        </div>
+  <div class="tldr">
+    <strong>TL;DR:</strong> AlphaProof solves IMO problems, but can vanilla RL solve <code>ax + b = c</code>? We systematically test tabular Q-learning, SARSA, PPO, and neural baselines to find the exact complexity threshold where RL breaks. Spoiler: it's embarrassingly low&mdash;depth-2 equations (~8th grade algebra). Even with 50,000 training episodes and neural encoders, solve rates stay below 5%. The problem isn't sample complexity&mdash;it's that flat representations can't capture compositional structure.
+  </div>
 
-        <div class="tldr">
-            <strong>TL;DR:</strong> AlphaProof (and many other labs) solves IMO problems, but can vanilla RL solve <code>ax + b = c</code>? We systematically test tabular Q-learning, SARSA, PPO, and neural baselines to find the exact complexity threshold where RL breaks. Spoiler: it's embarrassingly low—depth-2 equations (~8th grade algebra). Even with 50,000 training episodes and neural encoders, solve rates stay below 5%. The problem isn't sample complexity—it's that flat representations can't capture compositional structure.
-        </div>
+  <h2>The Question</h2>
 
-        <h2>The Question</h2>
+  <p>Modern AI systems like AlphaProof, Harmonic's Aristotle, and AxiomMath's AxiomProver can tackle most International Math Olympiad or Putnam problems alike, with ease. Meanwhile, I wanted to know: <strong>what's the simplest math problem where reinforcement learning completely falls apart?</strong></p>
 
-        <p>Modern AI systems like AlphaProof, Harmonic's Aristotle, and AxiomMath's AxiomProver can tackle most International Math Olympiad or Putnam problems alike, with ease. Meanwhile, I wanted to know: <span class="highlight">what's the simplest math problem where reinforcement learning completely falls apart?</span></p>
+  <p>Not because scaling up is impossible (obviously throw enough compute and you can brute-force anything), but because I wanted to understand the <em>fundamental</em> failure modes. Where does the representation break? Is it a data problem or an architecture problem?</p>
 
-        <p>Not because scaling up is impossible (obviously throw enough compute and you can brute-force anything), but because I wanted to understand the <em>fundamental</em> failure modes. Where does the representation break? Is it a data problem or an architecture problem?</p>
+  <p>So I picked the most trivial symbolic task I could think of: <strong>solving single-variable linear equations</strong>.</p>
 
-        <p>So I picked the most trivial symbolic task I could think of: <strong>solving single-variable linear equations</strong>.</p>
-
-        <pre>2x = 4        # depth-1: one operation
+  <pre>2x = 4        # depth-1: one operation
 3x + 5 = 11   # depth-2: two operations
 2x - 3 = x + 7  # depth-3: three operations</pre>
 
-        <p>The task: given an equation, apply algebraic rewrite rules (like "move constant across equality" or "divide both sides by coefficient") until you isolate <code>x</code>.</p>
-
-        <p>High schoolers solve depth-3 equations in their sleep. Can RL?</p>
-
-        <h2>The Setup</h2>
-
-        <h3>Environment</h3>
-
-        <p>Each equation is represented as an abstract syntax tree (AST). The agent sees the equation as a string (e.g., <code>"Equals(Mul(Const(2), Var(x)), Const(4))"</code>) and picks from a set of rewrite rules:</p>
-
-        <ul>
-            <li><code>divide_linear</code>: <code>kx = c</code> → <code>x = c/k</code></li>
-            <li><code>move_const_l_to_r</code>: <code>x + b = c</code> → <code>x = c - b</code></li>
-            <li><code>combine_like_terms</code>: <code>ax + bx</code> → <code>(a+b)x</code></li>
-            <li>...and a few more</li>
-        </ul>
-
-        <p>Episodes end when the agent reaches a solved form (<code>x = k</code>) or hits 100 steps. Reward is +1 for solving, 0 otherwise (I also test with reward shaping but it doesn't help).</p>
-
-        <h3>Agents</h3>
-
-        <p>I tested four approaches:</p>
-
-        <ol>
-            <li><strong>Tabular Q-learning</strong>: Standard ε-greedy with string-based state representation</li>
-            <li><strong>SARSA</strong>: On-policy variant, same representation</li>
-            <li><strong>PPO</strong>: Policy gradient with GRU encoder over the stringified AST</li>
-            <li><strong>Random baseline</strong>: Uniform sampling over valid actions</li>
-        </ol>
-
-        <p>All agents use <span class="highlight">action masking</span> to only select valid rewrites at each step (no illegal moves).</p>
-
-        <h2>Initial Results: Complete Failure at Depth-2</h2>
-
-        <p>I trained each agent for 20,000 episodes on equations of varying depths. Here's what happened:</p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Agent</th>
-                    <th>Depth-1</th>
-                    <th>Depth-2</th>
-                    <th>Depth-3</th>
-                    <th>Depth-4</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>PPO</strong></td>
-                    <td>38%</td>
-                    <td>19%</td>
-                    <td>4%</td>
-                    <td>1%</td>
-                </tr>
-                <tr>
-                    <td><strong>Q-Learning</strong></td>
-                    <td>4%</td>
-                    <td>5%</td>
-                    <td>4%</td>
-                    <td>1%</td>
-                </tr>
-                <tr>
-                    <td><strong>SARSA</strong></td>
-                    <td>4%</td>
-                    <td>5%</td>
-                    <td>4%</td>
-                    <td>1%</td>
-                </tr>
-                <tr>
-                    <td><strong>Random</strong></td>
-                    <td>4%</td>
-                    <td>5%</td>
-                    <td>1%</td>
-                    <td>1%</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="key-finding">
-            <strong>Key Finding:</strong> Tabular Q-learning and SARSA are <em>statistically indistinguishable from random</em> across all depths. They never learn anything.
-        </div>
-
-        <p>PPO does better on depth-1 (38%), but by depth-3 it's back to random performance. And depth-2? A measly 19%.</p>
-
-        <p>Why? The obvious hypothesis: <strong>state sparsity</strong>. Because states are represented as raw strings, <code>"Equals(Mul(Const(2), Var(x)), Const(4))"</code> and <code>"Equals(Mul(Const(3), Var(x)), Const(6))"</code> are treated as completely unrelated—even though they have identical solution structure.</p>
-
-        <p>The Q-table almost never sees the same state twice, so it can't propagate value. The agent is just doing a random walk through valid actions.</p>
-
-        <h2>The Investigation: Data vs. Representation</h2>
-
-        <p>But wait—is this a <em>data problem</em> or a <em>representation problem</em>?</p>
-
-        <p>Maybe 20,000 episodes isn't enough. Maybe the agent just needs more experience to stumble into the right patterns. Or maybe the representation is fundamentally broken and no amount of data will help.</p>
-
-        <p>To test this, I ran two follow-up experiments:</p>
-
-        <h3>Experiment 1: Coefficient Normalization</h3>
-
-        <p>What if we explicitly remove the coefficient information? Instead of treating <code>2x = 4</code> and <code>3x = 6</code> as different states, normalize them both to <code>C·x = C</code> (where <code>C</code> is a placeholder for any constant).</p>
-
-        <p>This should massively reduce state space. For depth-1 equations, the state space collapses from ~341 unique states down to just 2.</p>
-
-        <p>I trained normalized Q-learning for <strong>50,000 episodes</strong> (2.5× more data than before).</p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Method</th>
-                    <th>Depth</th>
-                    <th>Episodes</th>
-                    <th>Solve Rate</th>
-                    <th>Q-Table Size</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td rowspan="2"><strong>Regular Q-Learning</strong></td>
-                    <td>1</td>
-                    <td>20K</td>
-                    <td>5.4% ± 1.4%</td>
-                    <td>341 ± 7</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>50K</td>
-                    <td>1.3% ± 0.8%</td>
-                    <td>673 ± 13</td>
-                </tr>
-                <tr>
-                    <td rowspan="2"><strong>Normalized Q-Learning</strong></td>
-                    <td>1</td>
-                    <td>20K</td>
-                    <td>5.4% ± 1.4%</td>
-                    <td><strong>2 ± 0</strong></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>50K</td>
-                    <td>0.5% ± 1.0%</td>
-                    <td><strong>8 ± 0</strong></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="key-finding">
-            <strong>Result:</strong> Normalization achieves <strong>99% state space compression</strong> (341 → 2 states for depth-1). But performance is <em>identical</em>. Both methods completely fail on depth-2 (&lt;2% solve rate) even with 50K episodes.
-        </div>
-
-        <p>So state abstraction helps efficiency, but doesn't overcome the compositional barrier. The problem runs deeper.</p>
-
-        <div class="figure">
-            <img src="images/extended_learning_curves.png" alt="Learning curves showing plateau">
-            <div class="caption">Learning curves over 50K episodes. Both regular and normalized Q-learning plateau at &lt;2% on depth-2. More data doesn't help.</div>
-        </div>
-
-        <h3>Experiment 2: Neural Baseline (GRU Encoder)</h3>
-
-        <p>Maybe the problem is that <em>any</em> flat string representation is doomed. What if we let the agent learn its own representation?</p>
-
-        <p>I implemented a minimal neural baseline:</p>
-
-        <ul>
-            <li><strong>Character-level GRU encoder</strong>: Maps equation strings to 64-dim embeddings</li>
-            <li><strong>MLP Q-network</strong>: Predicts Q-values from (state embedding, action encoding)</li>
-            <li><strong>Experience replay</strong>: Batch size 32, buffer size 10K</li>
-        </ul>
-
-        <p>This is basically DQN with a sequence encoder. The GRU can theoretically learn to group similar equations and discover algebraic patterns.</p>
-
-        <p>After 500–1,000 training episodes:</p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Method</th>
-                    <th>Depth-1</th>
-                    <th>Depth-2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Tabular Q-Learning</td>
-                    <td>5%</td>
-                    <td>1%</td>
-                </tr>
-                <tr>
-                    <td><strong>Neural Q-Learning (GRU)</strong></td>
-                    <td><strong>10%</strong></td>
-                    <td><strong>4%</strong></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="key-finding">
-            <strong>Result:</strong> Neural encoding provides 2–4× improvement, showing learned representations help. But 4% on depth-2 is still a <em>complete failure</em>. Even with capacity for non-linear embeddings, the GRU can't capture hierarchical algebraic structure.
-        </div>
-
-        <h2>Why Does This Happen?</h2>
-
-        <p>The extended experiments rule out sample complexity. Even with:</p>
-
-        <ul>
-            <li>50,000 training episodes</li>
-            <li>99% state space compression via normalization</li>
-            <li>Learned neural representations</li>
-        </ul>
-
-        <p>...the agents still can't solve depth-2 equations (&lt;5% solve rate).</p>
-
-        <p>The problem is <span class="highlight">representations that don't capture compositional structure</span>.</p>
-
-        <h3>State Sparsity Isn't the Whole Story</h3>
-
-        <p>Yes, tabular methods see too many unique states. But even when we fix that (via normalization), performance doesn't improve. Why?</p>
-
-        <p>Because <code>ax + b = c</code> requires a <em>sequence of dependent operations</em>:</p>
-
-        <ol>
-            <li>Move <code>b</code> to right side → <code>ax = c - b</code></li>
-            <li>Divide by <code>a</code> → <code>x = (c - b)/a</code></li>
-        </ol>
-
-        <p>A flat string representation can't expose this dependency. The agent has no way to know that "the thing I do now affects what rewrites are possible later."</p>
-
-        <h3>Why Neural (GRU) Also Fails</h3>
-
-        <p>The GRU can learn some patterns (hence the 2–4× improvement), but it induces a <em>syntax-level embedding</em> without algebraic invariance. It might learn heuristics like "apply divide_linear near the end," but it can't systematically decompose multi-step problems.</p>
-
-        <p>To do that, you'd need representations that expose:</p>
-
-        <ul>
-            <li><strong>Tree structure</strong> (AST hierarchy)</li>
-            <li><strong>Algebraic equivalences</strong> (e.g., <code>2x = 4</code> ≈ <code>3x = 6</code>)</li>
-            <li><strong>Operator composition</strong> (which operations enable which future moves)</li>
-        </ul>
-
-        <p>This is why modern systems use tree-LSTMs, graph neural networks, or symbolic AST embeddings.</p>
-
-        <h2>What Would Actually Work?</h2>
-
-        <p>Based on these results, here's what you'd need to solve even depth-2 equations with RL:</p>
-
-        <ul>
-            <li><strong>Tree-structured encoder</strong>: Tree-LSTM or GNN over the AST</li>
-            <li><strong>Symbolic priors</strong>: Hard-coded knowledge of algebraic equivalences</li>
-            <li><strong>Hierarchical policies</strong>: "First isolate the variable, then simplify"</li>
-            <li><strong>Search guidance</strong>: MCTS or beam search instead of pure RL</li>
-        </ul>
-
-        <p>This is exactly what AlphaProof and similar systems do. They don't use vanilla RL—they use heavily structured architectures with symbolic reasoning baked in.</p>
-
-        <p>Our negative results explain <em>why this is necessary</em>.</p>
-
-        <h2>Key Takeaways</h2>
-
-        <ol>
-            <li><strong>Tabular RL breaks at embarrassingly low complexity</strong>: Depth-2 equations (8th grade algebra) are essentially unsolvable.</li>
-
-            <li><strong>It's not a data problem</strong>: 50K episodes, 99% state compression, and neural encoders all fail. The issue is representational.</li>
-
-            <li><strong>Flat representations can't capture composition</strong>: String-based or sequence-based encodings miss the hierarchical structure needed for multi-step reasoning.</li>
-
-            <li><strong>This motivates structured architectures</strong>: Modern neuro-symbolic systems succeed because they incorporate tree encoders, symbolic priors, and search—our results show why these aren't optional.</li>
-        </ol>
-
-        <h2>Code & Reproducibility</h2>
-
-        <p>All code is available on <a href="https://github.com/zacn04" target="_blank">GitHub</a>. The experiments ran on Azure ML with H100 GPUs (though most runs were CPU-only). Total compute cost: ~$170 for the extended experiments.</p>
-
-        <p>Key files:</p>
-        <ul>
-            <li><code>agents/q_learning_neural.py</code> - Neural Q-learning with GRU encoder</li>
-            <li><code>agents/q_learning_normalized.py</code> - Coefficient normalization</li>
-            <li><code>train_extended.py</code> - Extended training script (20K–50K episodes)</li>
-            <li><code>run_cluster.py</code> - Parallel execution across seeds</li>
-        </ul>
-
-        <h2>What's Next?</h2>
-
-        <p>This was originally a course project, but I think the negative result has value—it establishes a minimal complexity threshold where standard RL methods break.</p>
-
-        <p>Possible extensions:</p>
-        <ul>
-            <li>Implement tree-LSTM baseline to confirm structured encoders fix the problem</li>
-            <li>Test LLM baselines (Llama via Ollama) for comparison</li>
-            <li>Extend to quadratic equations or simple integrals</li>
-        </ul>
-
-        <p>But the core lesson is clear: <span class="highlight">without structural priors, RL can't even solve high school algebra</span>. And that's worth knowing.</p>
-
-        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e3f2fd;">
-
-        <div style="text-align: center; color: #5c6bc0; font-size: 0.95rem;">
-            <p><em>Thanks for reading! This work originated as a final project for 6.7920 (Reinforcement Learning, Theory and Foundations). Extended experiments were run using Azure ML compute credits.</em></p>
-            <p><a href="/">← Back to Home</a></p>
-        </div>
-    </div>
+  <p>The task: given an equation, apply algebraic rewrite rules (like "move constant across equality" or "divide both sides by coefficient") until you isolate <code>x</code>.</p>
+
+  <p>High schoolers solve depth-3 equations in their sleep. Can RL?</p>
+
+  <h2>The Setup</h2>
+
+  <h3>Environment</h3>
+
+  <p>Each equation is represented as an abstract syntax tree (AST). The agent sees the equation as a string (e.g., <code>"Equals(Mul(Const(2), Var(x)), Const(4))"</code>) and picks from a set of rewrite rules:</p>
+
+  <ul>
+    <li><code>divide_linear</code>: <code>kx = c</code> &rarr; <code>x = c/k</code></li>
+    <li><code>move_const_l_to_r</code>: <code>x + b = c</code> &rarr; <code>x = c - b</code></li>
+    <li><code>combine_like_terms</code>: <code>ax + bx</code> &rarr; <code>(a+b)x</code></li>
+    <li>...and a few more</li>
+  </ul>
+
+  <p>Episodes end when the agent reaches a solved form (<code>x = k</code>) or hits 100 steps. Reward is +1 for solving, 0 otherwise.</p>
+
+  <h3>Agents</h3>
+
+  <p>I tested four approaches:</p>
+
+  <ol>
+    <li><strong>Tabular Q-learning</strong>: Standard &epsilon;-greedy with string-based state representation</li>
+    <li><strong>SARSA</strong>: On-policy variant, same representation</li>
+    <li><strong>PPO</strong>: Policy gradient with GRU encoder over the stringified AST</li>
+    <li><strong>Random baseline</strong>: Uniform sampling over valid actions</li>
+  </ol>
+
+  <p>All agents use <strong>action masking</strong> to only select valid rewrites at each step.</p>
+
+  <h2>Initial Results: Complete Failure at Depth-2</h2>
+
+  <p>I trained each agent for 20,000 episodes on equations of varying depths:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Agent</th>
+        <th>Depth-1</th>
+        <th>Depth-2</th>
+        <th>Depth-3</th>
+        <th>Depth-4</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>PPO</strong></td>
+        <td>38%</td>
+        <td>19%</td>
+        <td>4%</td>
+        <td>1%</td>
+      </tr>
+      <tr>
+        <td><strong>Q-Learning</strong></td>
+        <td>4%</td>
+        <td>5%</td>
+        <td>4%</td>
+        <td>1%</td>
+      </tr>
+      <tr>
+        <td><strong>SARSA</strong></td>
+        <td>4%</td>
+        <td>5%</td>
+        <td>4%</td>
+        <td>1%</td>
+      </tr>
+      <tr>
+        <td><strong>Random</strong></td>
+        <td>4%</td>
+        <td>5%</td>
+        <td>1%</td>
+        <td>1%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="key-finding">
+    <strong>Key Finding:</strong> Tabular Q-learning and SARSA are <em>statistically indistinguishable from random</em> across all depths. They never learn anything.
+  </div>
+
+  <p>PPO does better on depth-1 (38%), but by depth-3 it's back to random performance. And depth-2? A measly 19%.</p>
+
+  <p>Why? The obvious hypothesis: <strong>state sparsity</strong>. Because states are represented as raw strings, <code>"Equals(Mul(Const(2), Var(x)), Const(4))"</code> and <code>"Equals(Mul(Const(3), Var(x)), Const(6))"</code> are treated as completely unrelated&mdash;even though they have identical solution structure.</p>
+
+  <h2>The Investigation: Data vs. Representation</h2>
+
+  <p>But wait&mdash;is this a <em>data problem</em> or a <em>representation problem</em>?</p>
+
+  <p>To test this, I ran two follow-up experiments:</p>
+
+  <h3>Experiment 1: Coefficient Normalization</h3>
+
+  <p>What if we explicitly remove the coefficient information? Instead of treating <code>2x = 4</code> and <code>3x = 6</code> as different states, normalize them both to <code>C&middot;x = C</code>.</p>
+
+  <p>This should massively reduce state space. For depth-1 equations, the state space collapses from ~341 unique states down to just 2.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Depth</th>
+        <th>Episodes</th>
+        <th>Solve Rate</th>
+        <th>Q-Table Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Regular Q-Learning</strong></td>
+        <td>1</td>
+        <td>20K</td>
+        <td>5.4% &plusmn; 1.4%</td>
+        <td>341 &plusmn; 7</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2</td>
+        <td>50K</td>
+        <td>1.3% &plusmn; 0.8%</td>
+        <td>673 &plusmn; 13</td>
+      </tr>
+      <tr>
+        <td><strong>Normalized Q-Learning</strong></td>
+        <td>1</td>
+        <td>20K</td>
+        <td>5.4% &plusmn; 1.4%</td>
+        <td><strong>2 &plusmn; 0</strong></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>2</td>
+        <td>50K</td>
+        <td>0.5% &plusmn; 1.0%</td>
+        <td><strong>8 &plusmn; 0</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="key-finding">
+    <strong>Result:</strong> Normalization achieves <strong>99% state space compression</strong> (341 &rarr; 2 states for depth-1). But performance is <em>identical</em>. Both methods completely fail on depth-2 (&lt;2% solve rate) even with 50K episodes.
+  </div>
+
+  <div class="figure">
+    <img src="images/extended_learning_curves.png" alt="Learning curves showing plateau">
+    <p class="caption">Learning curves over 50K episodes. Both regular and normalized Q-learning plateau at &lt;2% on depth-2.</p>
+  </div>
+
+  <h3>Experiment 2: Neural Baseline (GRU Encoder)</h3>
+
+  <p>Maybe the problem is that <em>any</em> flat string representation is doomed. What if we let the agent learn its own representation?</p>
+
+  <ul>
+    <li><strong>Character-level GRU encoder</strong>: Maps equation strings to 64-dim embeddings</li>
+    <li><strong>MLP Q-network</strong>: Predicts Q-values from (state embedding, action encoding)</li>
+    <li><strong>Experience replay</strong>: Batch size 32, buffer size 10K</li>
+  </ul>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Depth-1</th>
+        <th>Depth-2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tabular Q-Learning</td>
+        <td>5%</td>
+        <td>1%</td>
+      </tr>
+      <tr>
+        <td><strong>Neural Q-Learning (GRU)</strong></td>
+        <td><strong>10%</strong></td>
+        <td><strong>4%</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="key-finding">
+    <strong>Result:</strong> Neural encoding provides 2&ndash;4&times; improvement, but 4% on depth-2 is still a <em>complete failure</em>.
+  </div>
+
+  <h2>Why Does This Happen?</h2>
+
+  <p>The extended experiments rule out sample complexity. Even with 50,000 training episodes, 99% state space compression, and learned neural representations, agents still can't solve depth-2 equations.</p>
+
+  <p>The problem is <strong>representations that don't capture compositional structure</strong>.</p>
+
+  <p>Because <code>ax + b = c</code> requires a <em>sequence of dependent operations</em>:</p>
+
+  <ol>
+    <li>Move <code>b</code> to right side &rarr; <code>ax = c - b</code></li>
+    <li>Divide by <code>a</code> &rarr; <code>x = (c - b)/a</code></li>
+  </ol>
+
+  <p>A flat string representation can't expose this dependency. The agent has no way to know that "the thing I do now affects what rewrites are possible later."</p>
+
+  <h2>What Would Actually Work?</h2>
+
+  <p>Based on these results, here's what you'd need to solve even depth-2 equations with RL:</p>
+
+  <ul>
+    <li><strong>Tree-structured encoder</strong>: Tree-LSTM or GNN over the AST</li>
+    <li><strong>Symbolic priors</strong>: Hard-coded knowledge of algebraic equivalences</li>
+    <li><strong>Hierarchical policies</strong>: "First isolate the variable, then simplify"</li>
+    <li><strong>Search guidance</strong>: MCTS or beam search instead of pure RL</li>
+  </ul>
+
+  <p>This is exactly what AlphaProof and similar systems do. They don't use vanilla RL&mdash;they use heavily structured architectures with symbolic reasoning baked in.</p>
+
+  <h2>Key Takeaways</h2>
+
+  <ol>
+    <li><strong>Tabular RL breaks at embarrassingly low complexity</strong>: Depth-2 equations (8th grade algebra) are essentially unsolvable.</li>
+    <li><strong>It's not a data problem</strong>: 50K episodes, 99% state compression, and neural encoders all fail. The issue is representational.</li>
+    <li><strong>Flat representations can't capture composition</strong>: String-based or sequence-based encodings miss the hierarchical structure needed for multi-step reasoning.</li>
+    <li><strong>This motivates structured architectures</strong>: Modern neuro-symbolic systems succeed because they incorporate tree encoders, symbolic priors, and search.</li>
+  </ol>
+
+  <h2>Code & Reproducibility</h2>
+
+  <p>All code is available on <a href="https://github.com/zacn04">GitHub</a>. The experiments ran on Azure ML with H100 GPUs (though most runs were CPU-only). Total compute cost: ~$170 for the extended experiments.</p>
+
+  <hr>
+
+  <p class="footer">
+    <em>This work originated as a final project for 6.7920 (Reinforcement Learning, Theory and Foundations).</em><br>
+    <a href="/">&larr; Back to Home</a>
+  </p>
 </body>
+
 </html>
