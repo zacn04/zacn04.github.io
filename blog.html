@@ -9,8 +9,35 @@
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 
   <style>
+    :root {
+      --bg: #ffffff;
+      --text: #333;
+      --text-secondary: #666;
+      --text-desc: #555;
+      --link: #1772d0;
+      --border-light: #eee;
+      --border: #e0e0e0;
+      --tag-tr-bg: #e8f0fe;
+      --tag-tr-color: #1a56db;
+      --tag-sr-bg: #fef3e2;
+      --tag-sr-color: #b37800;
+    }
+    body.dark {
+      --bg: #1a1a2e;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --text-desc: #bbb;
+      --link: #5ba3e6;
+      --border-light: #333;
+      --border: #333;
+      --tag-tr-bg: #1e3a5f;
+      --tag-tr-color: #7db8f0;
+      --tag-sr-bg: #3d3020;
+      --tag-sr-color: #e6c36a;
+    }
     body {
-      background-color: #ffffff;
+      background-color: var(--bg);
+      color: var(--text);
       font-family: 'Lato', Verdana, Helvetica, sans-serif;
       font-size: 14px;
       margin-left: auto;
@@ -19,22 +46,22 @@
       max-width: 800px;
       padding: 20px;
       line-height: 1.6;
-      color: #333;
+      transition: background-color 0.3s, color 0.3s;
     }
     h1 { font-size: 28px; font-family: "Courier New", Courier, monospace; font-weight: bold; margin-bottom: 5px; }
-    a { color: #1772d0; text-decoration: none; }
+    a { color: var(--link); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .back-link { font-size: 13px; color: #666; }
-    .back-link:hover { color: #1772d0; }
+    .back-link { font-size: 13px; color: var(--text-secondary); }
+    .back-link:hover { color: var(--link); }
     .post-list { list-style: none; padding: 0; margin: 30px 0; }
     .post-list li {
       padding: 20px 0;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid var(--border-light);
     }
     .post-list li:last-child { border-bottom: none; }
     .post-title { font-weight: 700; font-size: 17px; }
-    .post-date { color: #666; font-size: 13px; margin-top: 4px; }
-    .post-desc { margin-top: 6px; color: #555; }
+    .post-date { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+    .post-desc { margin-top: 6px; color: var(--text-desc); }
     .tag {
       display: inline-block;
       font-size: 11px;
@@ -45,13 +72,34 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .tag-technical-report { background: #e8f0fe; color: #1a56db; }
-    .tag-self-reflection { background: #fef3e2; color: #b37800; }
+    .tag-technical-report { background: var(--tag-tr-bg); color: var(--tag-tr-color); }
+    .tag-self-reflection { background: var(--tag-sr-bg); color: var(--tag-sr-color); }
     .post-meta { margin-top: 4px; display: flex; align-items: center; gap: 8px; }
+
+    .dark-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--border);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 36px;
+      text-align: center;
+      padding: 0;
+      z-index: 100;
+      transition: background-color 0.3s;
+    }
+    .dark-toggle:hover { opacity: 0.8; }
   </style>
 </head>
 
 <body>
+  <button class="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode" id="dark-toggle"></button>
+
   <p><a href="/" class="back-link">&larr; Back to Home</a></p>
 
   <h1>Blog</h1>
@@ -67,6 +115,22 @@
     </li>
   </ul>
 
+  <script>
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+      var isDark = document.body.classList.contains('dark');
+      localStorage.setItem('dark-mode', isDark ? 'true' : 'false');
+      document.getElementById('dark-toggle').textContent = isDark ? '\u2600\uFE0F' : '\uD83C\uDF19';
+    }
+    (function() {
+      if (localStorage.getItem('dark-mode') === 'true') {
+        document.body.classList.add('dark');
+        document.getElementById('dark-toggle').textContent = '\u2600\uFE0F';
+      } else {
+        document.getElementById('dark-toggle').textContent = '\uD83C\uDF19';
+      }
+    })();
+  </script>
   <script data-goatcounter="https://zacn04.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 
