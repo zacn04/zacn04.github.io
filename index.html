@@ -8,22 +8,62 @@
 
   <meta name="author" content="Zachary Burton">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Zachary Burton – ML engineer at Meta, MIT Mathematics graduate. Research in AI for mathematics, theorem proving, and reinforcement learning.">
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 
+  <!-- Open Graph -->
+  <meta property="og:title" content="Zachary Burton">
+  <meta property="og:description" content="ML engineer at Meta, MIT Mathematics graduate. Research in AI for mathematics, theorem proving, and reinforcement learning.">
+  <meta property="og:image" content="https://zacn04.github.io/images/profile.jpeg">
+  <meta property="og:url" content="https://zacn04.github.io/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Zachary Burton">
+  <meta name="twitter:description" content="ML engineer at Meta, MIT Mathematics graduate. Research in AI for mathematics, theorem proving, and reinforcement learning.">
+  <meta name="twitter:image" content="https://zacn04.github.io/images/profile.jpeg">
+
   <style>
+    :root {
+      --bg: #ffffff;
+      --text: #333333;
+      --text-secondary: #666666;
+      --link: #1772d0;
+      --border: #e0e0e0;
+      --border-light: #eee;
+      --shadow: rgba(0,0,0,0.2);
+      --shadow-light: rgba(0,0,0,0.1);
+      --tab-inactive: #666;
+      --code-bg: #f5f5f5;
+    }
+    body.dark {
+      --bg: #1a1a2e;
+      --text: #e0e0e0;
+      --text-secondary: #aaa;
+      --link: #5ba3e6;
+      --border: #333;
+      --border-light: #333;
+      --shadow: rgba(0,0,0,0.5);
+      --shadow-light: rgba(0,0,0,0.3);
+      --tab-inactive: #aaa;
+      --code-bg: #2a2a3e;
+    }
     body {
-      background-color: #ffffff;
+      background-color: var(--bg);
+      color: var(--text);
       font-family: 'Lato', Verdana, Helvetica, sans-serif;
       font-size: 14px;
       margin-left: auto;
       margin-right: auto;
       width: 100%;
       max-width: 900px;
+      transition: background-color 0.3s, color 0.3s;
     }
     h1, h2, h3, h4 { font-weight: 400; }
     h2 { font-size: 20px; margin-bottom: 10px; margin-top: 20px; }
     p { line-height: 1.5; margin-bottom: 10px; }
-    a { color: #1772d0; text-decoration: none; }
+    a { color: var(--link); text-decoration: none; }
     a:hover { text-decoration: underline; }
     strong { font-weight: bold; }
     .name { font-size: 30px; line-height: 1.1; font-family: "Courier New", Courier, monospace; font-weight: bold; }
@@ -34,14 +74,64 @@
     td { vertical-align: middle; }
 
     /* Image styling */
-    img.profile-img { width: 100%; max-width: 250px; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    img.profile-img { width: 100%; max-width: 250px; border-radius: 50%; box-shadow: 0 1px 3px var(--shadow); }
 
-    /* UPDATED: Removed 'img' prefix so this class works on video tags too */
-    .project-img { width: 140px; height: auto; border-radius: 4px; border: 1px solid #eee; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .project-img { width: 140px; height: auto; border-radius: 4px; border: 1px solid var(--border-light); box-shadow: 0 1px 3px var(--shadow-light); }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
+    .tab-btn {
+      padding: 10px 24px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--tab-inactive);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab-btn:hover { color: var(--link); }
+    .tab-btn.active {
+      color: var(--link);
+      border-bottom-color: var(--link);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Dark mode toggle */
+    .dark-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--border);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 36px;
+      text-align: center;
+      padding: 0;
+      z-index: 100;
+      transition: background-color 0.3s;
+    }
+    .dark-toggle:hover { opacity: 0.8; }
   </style>
 </head>
 
 <body>
+  <button class="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode" id="dark-toggle"></button>
+
   <table style="width:100%;max-width:900px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
     <tbody>
       <tr style="padding:0px">
@@ -54,23 +144,12 @@
                   <p class="name" style="text-align: center;">
                     Zachary Burton
                   </p>
-                  <p>
-                    I am a recent graduate of <strong>MIT</strong> with SB in Mathematics.
-                  </p>
-                  <p>
-                    Most recently, I was a Software Engineering Intern at <strong>Meta</strong> (Summer 2025), where I refactored the copyright enforcement pipeline.
-                  </p>
-                  <p>
-                    I am interested in AI for mathematics.
-                    I was born in NYC and raised in the UK. Outside of research, I've ran track for 10 years! (10.63s 100m).
-                    Feel free to reach out if you want to chat!
-                  </p>
                   <p style="text-align:center">
                     <a href="mailto:zacnwo@mit.edu">Email</a> &nbsp;|&nbsp;
                     <a href="https://drive.google.com/file/d/1vc3F2D3TrKFdYiARU2DtQcMWrTK0zHa1/view?usp=share_link">CV/Resume</a> &nbsp;|&nbsp;
                     <a href="https://github.com/zacn04">GitHub</a> &nbsp;|&nbsp;
                     <a href="https://linkedin.com/in/zac-burton">LinkedIn</a> &nbsp;|&nbsp;
-                    <a href="/blog_post.html">Blog</a>
+                    <a href="/blog.html">Blog</a>
                   </p>
                 </td>
                 <td style="padding:2.5%;width:40%;max-width:40%">
@@ -80,219 +159,219 @@
             </tbody>
           </table>
 
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="width:50%; vertical-align:top; padding-right:15px;">
+          <!-- Tab Bar -->
+          <div style="padding:0 2.5%;">
+            <div class="tab-bar">
+              <button class="tab-btn" onclick="switchTab('about')">About</button>
+              <button class="tab-btn active" onclick="switchTab('research')">Research</button>
+              <button class="tab-btn" onclick="switchTab('projects')">Projects</button>
+              <button class="tab-btn" onclick="switchTab('speaking')">Speaking</button>
+            </div>
 
-                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
-                    <tbody>
-                      <tr>
-                        <td style="padding:20px 0px;width:100%;vertical-align:middle">
-                          <h2>Research</h2>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <!-- About Tab -->
+            <div id="tab-about" class="tab-panel">
+              <p>
+                I am a machine learning engineer at <strong>Meta</strong> working on <strong>Facebook Reels</strong>.
+              </p>
+              <p>
+                I graduated from <strong>MIT</strong> with an SB in Mathematics.
+                I am interested in AI for mathematics.
+              </p>
+              <p>
+                I was born in NYC and raised in the UK. Outside of research, I've ran track for 10 years! (10.63s 100m).
+                Feel free to reach out if you want to chat!
+              </p>
+            </div>
 
-                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
-                    <tbody>
-                      <tr>
-                        <td style="padding:10px;width:30%;vertical-align:center">
-                          <img class="project-img" src="images/placeholder.png" alt="Lean Theorem Proving">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:middle">
-                          <span class="papertitle">Structured Hints for Sample-Efficient Lean Theorem Proving</span>
-                          <br>
-                          <em>Preprint</em>, 2026
-                          <br>
-                          <a href="https://arxiv.org/abs/2601.16172">arXiv</a>
-                          <p>
-                            Testing whether neural theorem provers benefit from lightweight structural guidance. Achieves 43% relative improvement on miniF2F with a simple prompt schedule.
-                          </p>
-                        </td>
-                      </tr>
+            <!-- Research Tab -->
+            <div id="tab-research" class="tab-panel active">
+              <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
+                <tbody>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:middle">
+                      <span class="papertitle">Structured Hints for Sample-Efficient Lean Theorem Proving</span>
+                      <br>
+                      <em>Preprint</em>, 2026
+                      <br>
+                      <a href="https://arxiv.org/abs/2601.16172">arXiv</a>
+                      <p>
+                        Testing whether neural theorem provers benefit from lightweight structural guidance. Achieves 43% relative improvement on miniF2F with a simple prompt schedule.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;width:30%;vertical-align:center">
+                      <img class="project-img" src="images/extended_learning_curves.png" alt="RL Failure">
+                    </td>
+                    <td style="padding:10px;width:70%;vertical-align:middle">
+                      <span class="papertitle">When Does Tabular RL Actually Break?</span>
+                      <br>
+                      <em>Blog Post</em>, 2025
+                      <br>
+                      <a href="/tabular_rl.html">post</a>
+                      <p>
+                        A systematic study of representation bottlenecks in symbolic algebra, testing where RL breaks on high school math.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;width:30%;vertical-align:center">
+                      <img class="project-img" src="images/collision.png" alt="Collision">
+                    </td>
+                    <td style="padding:10px;width:70%;vertical-align:middle">
+                      <span class="papertitle">Collision Thresholds on Lattices</span>
+                      <br>
+                      <em>Preprint</em>
+                      <br>
+                      <a href="https://arxiv.org/abs/2505.02973">arXiv</a>
+                      <p>
+                        An expository derivation using Poissonization and Laplace asymptotics to analyze random walks on lattices.
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-                      <tr>
-                        <td style="padding:10px;width:30%;vertical-align:center">
-                          <img class="project-img" src="images/extended_learning_curves.png" alt="RL Failure">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:middle">
-                          <span class="papertitle">When Does Tabular RL Actually Break?</span>
-                          <br>
-                          <em>Blog Post</em>, 2025
-                          <br>
-                          <a href="/blog_post.html">post</a>
-                          <p>
-                            A systematic study of representation bottlenecks in symbolic algebra, testing where RL breaks on high school math.
-                          </p>
-                        </td>
-                      </tr>
+            <!-- Projects Tab -->
+            <div id="tab-projects" class="tab-panel">
+              <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
+                <tbody>
+                  <tr>
+                    <td style="padding:10px;width:30%;vertical-align:top">
+                      <img class="project-img" src="images/zOSdemo.gif" alt="zOS demo">
+                    </td>
+                    <td style="padding:10px;width:70%;vertical-align:top">
+                      <span class="papertitle">zOS</span>
+                      <br>
+                      <a href="https://github.com/zacn04/zOS">github</a>
+                      <p>
+                        Local LLM self-training loop with step-by-step feedback, written with Rust & Tauri.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:top">
+                      <span class="papertitle">Neurosymbolic Synthesis Engine</span>
+                      <br>
+                      <p>
+                        A C++ synthesizer featuring a custom AST, evaluator, and stochastic/beam search backends.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;width:30%;vertical-align:top">
+                      <img class="project-img" src="images/pieface.png" alt="PIEFACE">
+                    </td>
+                    <td style="padding:10px;width:70%;vertical-align:top">
+                      <span class="papertitle">PIEFACE: Online RLHF Sandbox</span>
+                      <br>
+                      <a href="https://pieface.ai">website</a>
+                      <p>
+                        An online sandbox for RLHF research. Built with a Flask backend and distributed PPO training loop.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;width:30%;vertical-align:top">
+                      <img class="project-img" src="images/scribe.png" alt="Scribe">
+                    </td>
+                    <td style="padding:10px;width:70%;vertical-align:top">
+                      <span class="papertitle">Scribe AI</span>
+                      <br>
+                      <a href="https://devpost.com/software/scribe-slo6iw">devpost</a>
+                      <p>
+                        Autocomplete for math handwriting.
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-                      <tr>
-                        <td style="padding:10px;width:30%;vertical-align:center">
-                          <img class="project-img" src="images/collision.png" alt="Collision">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:middle">
-                          <span class="papertitle">Collision Thresholds on Lattices</span>
-                          <br>
-                          <em>Preprint</em>
-                          <br>
-                          <a href="https://arxiv.org/abs/2505.02973">arXiv</a>
-                          <p>
-                            An expository derivation using Poissonization and Laplace asymptotics to analyze random walks on lattices.
-                          </p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
+            <!-- Speaking Tab -->
+            <div id="tab-speaking" class="tab-panel">
+              <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
+                <tbody>
+                  <tr>
+                    <td style="padding:10px;width:25%;vertical-align:top">
+                      <img class="project-img" src="https://img.youtube.com/vi/olbr9p6eVsw/0.jpg" alt="Tonbridge Talk">
+                    </td>
+                    <td style="padding:10px;width:75%;vertical-align:top">
+                      <span class="papertitle">Being Black at Tonbridge</span>
+                      <br>
+                      <a href="https://www.youtube.com/watch?v=olbr9p6eVsw">video</a>
+                      <p>
+                        A reflection on my experience navigating race at a UK boarding school.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;width:25%;vertical-align:top">
+                      <img class="project-img" src="https://img.youtube.com/vi/q132uRqVpqA/0.jpg" alt="N-Word Talk">
+                    </td>
+                    <td style="padding:10px;width:75%;vertical-align:top">
+                      <span class="papertitle">Why White People Shouldn't Say the N-Word</span>
+                      <br>
+                      <a href="https://www.youtube.com/watch?v=q132uRqVpqA">video</a>
+                      <p>
+                        A talk on language, power, and context.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px;width:25%;vertical-align:top">
+                      <img class="project-img" src="https://img.youtube.com/vi/gsVf2ywt7VQ/0.jpg" alt="Gauss Law">
+                    </td>
+                    <td style="padding:10px;width:75%;vertical-align:top">
+                      <span class="papertitle">Magnetic Gauss Law</span>
+                      <br>
+                      <a href="https://www.youtube.com/watch?v=gsVf2ywt7VQ">video</a>
+                      <p>
+                        A physics microlecture on electromagnetism.
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-                <td style="width:50%; vertical-align:top; padding-left:15px;">
+          <p style="text-align:right;font-size:small;padding:0 2.5%;">
+            <a href="https://github.com/jonbarron/website">Website Template</a>
+          </p>
 
-                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
-                    <tbody>
-                      <tr>
-                        <td style="padding:20px 0px;width:100%;vertical-align:middle">
-                          <h2>Selected Projects</h2>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+          <script>
+            function switchTab(name) {
+              document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+              document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+              document.getElementById('tab-' + name).classList.add('active');
+              event.currentTarget.classList.add('active');
+            }
 
-                  <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
-                    <tbody>
-                      <tr><td style="padding:10px;width:30%;vertical-align:top">
-                              <img class="project-img" src="images/zOSdemo.gif" alt="zOS demo">
-                          </td>
-                        <td style="padding:10px;width:70%;vertical-align:top">
-                          <span class="papertitle">zOS</span>
-                          <br>
-                          <a href="https://github.com/zacn04/zOS">github</a>
-                          <p>
-                            Local LLM self-training loop with step-by-step feedback, written with Rust & Tauri.
-                          </p>
-                        </td>
-                      </tr>
+            function toggleDark() {
+              document.body.classList.toggle('dark');
+              var isDark = document.body.classList.contains('dark');
+              localStorage.setItem('dark-mode', isDark ? 'true' : 'false');
+              document.getElementById('dark-toggle').textContent = isDark ? '\u2600\uFE0F' : '\uD83C\uDF19';
+            }
 
-                      <tr>
-                        <td style="padding:10px;width:30%;vertical-align:top">
-                           <img class="project-img" src="images/placeholder.png" alt="Synthesis Engine">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:top">
-                          <span class="papertitle">Neurosymbolic Synthesis Engine</span>
-                          <br>
-                          <p>
-                            A C++ synthesizer featuring a custom AST, evaluator, and stochastic/beam search backends.
-                          </p>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td style="padding:10px;width:30%;vertical-align:top">
-                           <img class="project-img" src="images/pieface.png" alt="PIEFACE">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:top">
-                          <span class="papertitle">PIEFACE: Online RLHF Sandbox</span>
-                          <br>
-                          <a href="https://pieface.ai">website</a>
-                          <p>
-                            An online sandbox for RLHF research. Built with a Flask backend and distributed PPO training loop.
-                          </p>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td style="padding:10px;width:30%;vertical-align:top">
-                           <img class="project-img" src="images/scribe.png" alt="Scribe">
-                        </td>
-                        <td style="padding:10px;width:70%;vertical-align:top">
-                          <span class="papertitle">Scribe AI</span>
-                          <br>
-                          <a href="https://devpost.com/software/scribe-slo6iw">devpost</a>
-                          <p>
-                            Autocomplete for math handwriting.
-                          </p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:20px;width:100%;vertical-align:middle">
-                  <h2>Speaking</h2>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:top">
-                  <img class="project-img" src="https://img.youtube.com/vi/olbr9p6eVsw/0.jpg" alt="Tonbridge Talk">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:top">
-                  <span class="papertitle">Being Black at Tonbridge</span>
-                  <br>
-                  <a href="https://www.youtube.com/watch?v=olbr9p6eVsw">video</a>
-                  <p>
-                    A reflection on my experience navigating race at a UK boarding school.
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:top">
-                  <img class="project-img" src="https://img.youtube.com/vi/q132uRqVpqA/0.jpg" alt="N-Word Talk">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:top">
-                  <span class="papertitle">Why White People Shouldn't Say the N-Word</span>
-                  <br>
-                  <a href="https://www.youtube.com/watch?v=q132uRqVpqA">video</a>
-                  <p>
-                    A talk on language, power, and context.
-                  </p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:20px;width:25%;vertical-align:top">
-                  <img class="project-img" src="https://img.youtube.com/vi/gsVf2ywt7VQ/0.jpg" alt="Gauss Law">
-                </td>
-                <td style="padding:20px;width:75%;vertical-align:top">
-                  <span class="papertitle">Magnetic Gauss Law</span>
-                  <br>
-                  <a href="https://www.youtube.com/watch?v=gsVf2ywt7VQ">video</a>
-                  <p>
-                    A physics microlecture on electromagnetism.
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-            <tbody>
-              <tr>
-                <td style="padding:0px">
-                  <br>
-                  <p style="text-align:right;font-size:small;">
-                    <a href="https://github.com/jonbarron/website">Website Template</a>
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            (function() {
+              var pref = localStorage.getItem('dark-mode');
+              if (pref === 'true') {
+                document.body.classList.add('dark');
+                document.getElementById('dark-toggle').textContent = '\u2600\uFE0F';
+              } else {
+                document.getElementById('dark-toggle').textContent = '\uD83C\uDF19';
+              }
+            })();
+          </script>
 
         </td>
       </tr>
     </tbody>
   </table>
+  <script data-goatcounter="https://zacn04.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 
 </html>
