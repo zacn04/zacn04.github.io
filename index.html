@@ -1,29 +1,28 @@
-<!DOCTYPE HTML>
 <html lang="en">
-
+ 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+ 
   <title>Zachary Burton</title>
-
+ 
   <meta name="author" content="Zachary Burton">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Zachary Burton – ML engineer at Meta, MIT Mathematics graduate. Research in AI for mathematics, theorem proving, and reinforcement learning. Author of 'Structured Hints for Sample-Efficient Lean Theorem Proving' (arXiv:2601.16172).">
+  <meta name="description" content="Zachary Burton – ML engineer at Meta, MIT Mathematics graduate. Research in reinforcement learning, formal reasoning, and AI-guided proof.">
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-
+ 
   <!-- Open Graph -->
   <meta property="og:title" content="Zachary Burton">
-  <meta property="og:description" content="ML engineer at Meta, MIT Mathematics graduate. Research in AI for mathematics, theorem proving, and reinforcement learning. Author of 'Structured Hints for Sample-Efficient Lean Theorem Proving' (arXiv:2601.16172).">
+  <meta property="og:description" content="ML engineer at Meta, MIT Mathematics graduate. Research in reinforcement learning, formal reasoning, and AI-guided proof.">
   <meta property="og:image" content="https://zacn04.github.io/images/profile.jpeg">
   <meta property="og:url" content="https://zacn04.github.io/">
   <meta property="og:type" content="website">
-
+ 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Zachary Burton">
-  <meta name="twitter:description" content="ML engineer at Meta, MIT Mathematics graduate. Research in AI for mathematics, theorem proving, and reinforcement learning. Author of 'Structured Hints for Sample-Efficient Lean Theorem Proving' (arXiv:2601.16172).">
+  <meta name="twitter:description" content="ML engineer at Meta, MIT Mathematics graduate. Research in reinforcement learning, formal reasoning, and AI-guided proof.">
   <meta name="twitter:image" content="https://zacn04.github.io/images/profile.jpeg">
-
+ 
   <style>
     :root {
       --bg: #ffffff;
@@ -68,16 +67,16 @@
     strong { font-weight: bold; }
     .name { font-size: 30px; line-height: 1.1; font-family: "Courier New", Courier, monospace; font-weight: bold; }
     .papertitle { font-weight: 700; font-size: 15px; }
-
+ 
     /* Layout tables */
     table { width: 100%; border: 0; border-spacing: 0; border-collapse: separate; }
     td { vertical-align: middle; }
-
+ 
     /* Image styling */
     img.profile-img { width: 100%; max-width: 250px; border-radius: 50%; box-shadow: 0 1px 3px var(--shadow); }
-
+ 
     .project-img { width: 140px; height: auto; border-radius: 4px; border: 1px solid var(--border-light); box-shadow: 0 1px 3px var(--shadow-light); }
-
+ 
     /* Tabs */
     .tab-bar {
       display: flex;
@@ -106,7 +105,7 @@
     }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
-
+ 
     /* Dark mode toggle */
     .dark-toggle {
       position: fixed;
@@ -128,15 +127,15 @@
     .dark-toggle:hover { opacity: 0.8; }
   </style>
 </head>
-
+ 
 <body>
   <button class="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode" id="dark-toggle"></button>
-
+ 
   <table style="width:100%;max-width:900px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
     <tbody>
       <tr style="padding:0px">
         <td style="padding:0px">
-
+ 
           <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
             <tbody>
               <tr style="padding:0px">
@@ -145,7 +144,7 @@
                     Zachary Burton
                   </p>
                   <p style="text-align:center">
-                    <a href="mailto:zacnwo@mit.edu">Email</a> &nbsp;|&nbsp;
+                    <a href="mailto:zacnburton@gmail.com">Email</a> &nbsp;|&nbsp;
                     <a href="resume.pdf">CV/Resume</a> &nbsp;|&nbsp;
                     <a href="https://github.com/zacn04">GitHub</a> &nbsp;|&nbsp;
                     <a href="https://linkedin.com/in/zac-burton">LinkedIn</a>
@@ -157,7 +156,7 @@
               </tr>
             </tbody>
           </table>
-
+ 
           <!-- Tab Bar -->
           <div style="padding:0 2.5%;">
             <div class="tab-bar">
@@ -166,22 +165,25 @@
               <button class="tab-btn" onclick="switchTab('projects')">Projects</button>
               <button class="tab-btn" onclick="switchTab('speaking')">Speaking</button>
             </div>
-
+ 
             <!-- About Tab -->
             <div id="tab-about" class="tab-panel active">
               <p>
-                I am a machine learning engineer at <strong>Meta</strong> working on <strong>Facebook Reels</strong>.
-              </p>
-              <p>
+                I am a machine learning engineer at <strong>Meta</strong> working on <strong>Facebook Reels</strong> ranking.
                 I <a href="https://credentials.mit.edu/certificate/4693a429770455bb940c4d2f6770eeb1">graduated from <strong>MIT</strong> with an SB in Mathematics</a>.
-                I am interested in AI for mathematics — see my <a href="https://arxiv.org/abs/2601.16172">preprint on Lean theorem proving</a> and <a href="https://github.com/zacn04/fcs">formal complexity science</a> project.
               </p>
               <p>
-                I was born in NYC and raised in the UK. Outside of research, I've ran track for 10 years! (10.63s 100m).
+                My research interests span reinforcement learning, formal reasoning, and AI-guided proof.
+                I've built training environments for RLHF (<a href="https://pieface.ai">PIEFACE</a>),
+                studied where RL breaks on symbolic tasks (<a href="tabular_rl.html">blog</a>),
+                and explored structured prompting for neural theorem provers (<a href="https://arxiv.org/abs/2601.16172">arXiv</a>).
+              </p>
+              <p>
+                I was born in NYC and raised in the UK. Outside of work, I play goalkeeper in a Sunday football league.
                 Feel free to reach out if you want to chat!
               </p>
             </div>
-
+ 
             <!-- Research Tab -->
             <div id="tab-research" class="tab-panel">
               <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
@@ -231,18 +233,21 @@
                 </tbody>
               </table>
             </div>
-
+ 
             <!-- Projects Tab -->
             <div id="tab-projects" class="tab-panel">
               <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
                 <tbody>
                   <tr>
-                    <td colspan="2" style="padding:10px;vertical-align:top">
-                      <span class="papertitle">Formal Complexity Science</span>
+                    <td style="padding:10px;width:30%;vertical-align:top">
+                      <img class="project-img" src="images/pieface.png" alt="PIEFACE">
+                    </td>
+                    <td style="padding:10px;width:70%;vertical-align:top">
+                      <span class="papertitle">PIEFACE</span>
                       <br>
-                      <a href="https://github.com/zacn04/fcs">github</a>
+                      <a href="https://pieface.ai">website</a>
                       <p>
-                        Autoformalization of classical NP-completeness reductions in Lean 4, built on Mathlib and CSLib. Formalizes Karp reductions (SAT ≤ 3SAT ≤ 3-COLORING, with more planned) as machine-checked proofs.
+                        A full-stack platform for crowdsourcing human feedback on mathematical reasoning traces, with a Flask backend, SQL storage, trace parser, and distributed PPO training loop.
                       </p>
                     </td>
                   </tr>
@@ -261,24 +266,21 @@
                   </tr>
                   <tr>
                     <td colspan="2" style="padding:10px;vertical-align:top">
+                      <span class="papertitle">Formal Complexity Science</span>
+                      <br>
+                      <a href="https://github.com/zacn04/fcs">github</a>
+                      <p>
+                        Autoformalization of classical NP-completeness reductions in Lean 4, built on Mathlib and CSLib. Formalizes Karp reductions (SAT ≤ 3SAT ≤ 3-COLORING, with more planned) as machine-checked proofs.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:top">
                       <span class="papertitle">LLM Political Persuasion?</span>
                       <br>
                       <a href="polisci.pdf">paper</a>
                       <p>
                         17.279 (Political Misinformation in the Age of Social Media) Final Paper - independent empirical study (n=174, randomized) on AI disclosure effects on belief formation in political conspiracy-framing content.
-                      </p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:10px;width:30%;vertical-align:top">
-                      <img class="project-img" src="images/pieface.png" alt="PIEFACE">
-                    </td>
-                    <td style="padding:10px;width:70%;vertical-align:top">
-                      <span class="papertitle">PIEFACE: Online RLHF Sandbox</span>
-                      <br>
-                      <a href="https://pieface.ai">website</a>
-                      <p>
-                        An online sandbox for RLHF research. Built with a Flask backend and distributed PPO training loop.
                       </p>
                     </td>
                   </tr>
@@ -298,7 +300,7 @@
                 </tbody>
               </table>
             </div>
-
+ 
             <!-- Speaking Tab -->
             <div id="tab-speaking" class="tab-panel">
               <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
@@ -346,11 +348,11 @@
               </table>
             </div>
           </div>
-
+ 
           <p style="text-align:right;font-size:small;padding:0 2.5%;">
             <a href="https://github.com/jonbarron/website">Website Template</a>
           </p>
-
+ 
           <script>
             function switchTab(name) {
               document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
@@ -358,14 +360,14 @@
               document.getElementById('tab-' + name).classList.add('active');
               event.currentTarget.classList.add('active');
             }
-
+ 
             function toggleDark() {
               document.body.classList.toggle('dark');
               var isDark = document.body.classList.contains('dark');
               localStorage.setItem('dark-mode', isDark ? 'true' : 'false');
               document.getElementById('dark-toggle').textContent = isDark ? '\u2600\uFE0F' : '\uD83C\uDF19';
             }
-
+ 
             (function() {
               var pref = localStorage.getItem('dark-mode');
               if (pref === 'true') {
@@ -376,12 +378,12 @@
               }
             })();
           </script>
-
+ 
         </td>
       </tr>
     </tbody>
   </table>
-
+ 
 </body>
-
+ 
 </html>
