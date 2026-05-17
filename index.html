@@ -145,7 +145,7 @@
                   </p>
                   <p style="text-align:center">
                     <a href="mailto:zacnburton@gmail.com">Email</a> &nbsp;|&nbsp;
-                    <a href="Zachary_BurtonResume526.pdf">CV/Resume</a> &nbsp;|&nbsp;
+                    <a href="Zachary_BurtonResumeRE.pdf">CV/Resume</a> &nbsp;|&nbsp;
                     <a href="https://github.com/zacn04">GitHub</a> &nbsp;|&nbsp;
                     <a href="https://linkedin.com/in/zac-burton">LinkedIn</a>
                   </p>
@@ -174,9 +174,11 @@
               </p>
               <p>
                 My research interests span reinforcement learning, formal reasoning, and AI-guided proof.
-                I've built training environments for RLHF (<a href="https://pieface.ai">PIEFACE</a>),
-                studied where RL breaks on symbolic tasks (<a href="tabular_rl.html">blog</a>),
-                and explored structured prompting for neural theorem provers (<a href="https://arxiv.org/abs/2601.16172">arXiv</a>).
+                Recent work includes diagnosing inference-time mode collapse in RL-trained Lean theorem provers
+                (<a href="https://arxiv.org/abs/2601.16172">arXiv</a>, submitted to AI4Math @ ICML 2026),
+                PhD-level expert evaluation for QEDBench at <a href="https://icml.cc/virtual/2026/poster/63067">ICML 2026</a>,
+                RLHF infrastructure for interactive policy personalization (<a href="https://pieface.ai">PIEFACE</a>),
+                and a systematic study of representation bottlenecks in symbolic RL (<a href="tabular_rl.html">blog</a>).
               </p>
               <p>
                 I was born in NYC and raised in the UK. Outside of work, I play goalkeeper in a Sunday football league.
@@ -190,13 +192,25 @@
                 <tbody>
                   <tr>
                     <td colspan="2" style="padding:10px;vertical-align:middle">
-                      <span class="papertitle">Structured Hints for Sample-Efficient Lean Theorem Proving</span>
+                      <span class="papertitle">Inference-Time Diversity in RL-Trained Lean Theorem Provers: A Diagnostic Study</span>
                       <br>
-                      <em>Preprint</em>, 2026
+                      <em>Preprint</em>, 2026 &mdash; submitted to AI4Math Workshop @ ICML 2026
                       <br>
                       <a href="https://arxiv.org/abs/2601.16172">arXiv</a>
                       <p>
-                        Testing whether neural theorem provers benefit from lightweight structural guidance. Achieves 43% relative improvement on miniF2F with a simple prompt schedule.
+                        A diagnostic study of inference-time mode collapse in RL-trained Lean provers. Across 3 seeds, V1.5-RL gains +12.3 &plusmn; 4.2 theorems under a fixed 15-skeleton schedule while SFT-trained Goedel-Prover loses &minus;10.0 &plusmn; 4.4 &mdash; a 3.7&sigma; asymmetry. A direct distributional measurement (49% of miniF2F gets a deterministic single first-tactic head across 64 stochastic samples) converts &ldquo;mode collapse&rdquo; from metaphor to measurement.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:middle">
+                      <span class="papertitle">QEDBench: Quantifying the Alignment Gap in Automated Evaluation of University-Level Mathematical Proofs</span>
+                      <br>
+                      <em>ICML 2026 Main Conference (Poster)</em>
+                      <br>
+                      <a href="https://icml.cc/virtual/2026/poster/63067">poster</a>
+                      <p>
+                        Multi-institution benchmark measuring alignment between LLM judges and human experts on university-level mathematical proofs. PhD-level expert evaluator (probability, discrete mathematics, algorithms).
                       </p>
                     </td>
                   </tr>
@@ -247,7 +261,7 @@
                       <br>
                       <a href="https://pieface.ai">website</a>
                       <p>
-                        A full-stack platform for crowdsourcing human feedback on mathematical reasoning traces, with a Flask backend, SQL storage, trace parser, and distributed PPO training loop.
+                        Live RLHF platform for interactive policy personalization on an RL agent over motion-planning gadget structures. Flask + SQLAlchemy backend serving Maskable PPO models with top-K action inference over a 217-dim action space, custom PyTorch reward model trained on per-action accept/reject feedback, Cytoscape.js trace visualization frontend.
                       </p>
                     </td>
                   </tr>
@@ -270,7 +284,7 @@
                       <br>
                       <a href="https://github.com/zacn04/fcs">github</a>
                       <p>
-                        Autoformalization of classical NP-completeness reductions in Lean 4, built on Mathlib and CSLib. Formalizes Karp reductions (SAT ≤ 3SAT ≤ 3-COLORING, with more planned) as machine-checked proofs.
+                        Autoformalization of classical NP-completeness reductions in Lean 4, built on Mathlib and CSLib. Formalizes Karp reductions (SAT &le; 3SAT &le; 3-COLORING, with more planned) as machine-checked proofs.
                       </p>
                     </td>
                   </tr>
