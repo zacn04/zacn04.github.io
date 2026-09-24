@@ -7,21 +7,21 @@
  
   <meta name="author" content="Zachary Burton">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Zachary Burton – ML engineer at Meta, MIT Math grad. Researcher in AI4Math.">
+  <meta name="description" content="Zachary Burton – Research engineer at Pramaana Labs, MIT Math grad. Researcher in AI4Math.">
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
  
   <!-- Open Graph -->
   <meta property="og:title" content="Zachary Burton">
-  <meta property="og:description" content="ML engineer at Meta, MIT Math grad. Researcher in AI4Math.">
-  <meta property="og:image" content="https://zacn04.github.io/images/profile.jpeg">
-  <meta property="og:url" content="https://zacn04.github.io/">
+  <meta property="og:description" content="Research engineer at Pramaana Labs, MIT Math grad. Researcher in AI4Math.">
+  <meta property="og:image" content="https://zacburton.com/images/profile.jpeg">
+  <meta property="og:url" content="https://zacburton.com/">
   <meta property="og:type" content="website">
  
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Zachary Burton">
-  <meta name="twitter:description" content="ML engineer at Meta, MIT Math grad. Researcher in AI4Math.">
-  <meta name="twitter:image" content="https://zacn04.github.io/images/profile.jpeg">
+  <meta name="twitter:description" content="Research engineer at Pramaana Labs, MIT Math grad. Researcher in AI4Math.">
+  <meta name="twitter:image" content="https://zacburton.com/images/profile.jpeg">
  
   <style>
     :root {
@@ -168,7 +168,8 @@
             <!-- About Tab -->
             <div id="tab-about" class="tab-panel active">
               <p>
-       
+                I am a research engineer at <a href="https://pramaanalabs.ai"><strong>Pramaana Labs</strong></a>, building the verification layer for high-stakes AI.
+                Previously, I was a machine learning engineer at <strong>Meta</strong> working on <strong>Facebook Reels</strong> ranking.
                 I <a href="https://credentials.mit.edu/certificate/4693a429770455bb940c4d2f6770eeb1">graduated from <strong>MIT</strong>, Course 18 (Mathematics), in February 2026</a>. 
                 I love music; singing, DJing, theory, as well as reading about sociology, technology, politics, and more!
               </p>
@@ -177,6 +178,7 @@
                 Recent work includes diagnosing inference-time mode collapse in RL-trained Lean theorem provers
                 (<a href="https://icml.cc/virtual/2026/82534"><strong>ICML 2026 AI4Math Workshop</strong></a>),
                 PhD-level expert evaluation for QEDBench at <a href="https://icml.cc/virtual/2026/poster/63067">ICML 2026</a>,
+                a pre-registered study of whether visual-reasoning post-training transfers to math,
                 and RLHF infrastructure for interactive policy personalization (<a href="https://pieface.ai">PIEFACE</a>).
               </p>
               <p>
@@ -195,9 +197,12 @@
                       <br>
                       <em>ICML 2026 AI4Math Workshop (Poster)</em>, First Author
                       <br>
-                      <a href="https://icml.cc/virtual/2026/82534">poster</a>
+                      <a href="https://arxiv.org/abs/2601.16172">arXiv</a> /
+                      <a href="https://zacburton.com/lean_diversity.pdf">pdf</a> /
+                      <a href="https://icml.cc/virtual/2026/82534">poster</a> /
+                      <a href="https://github.com/zacn04/icml_hints_for_provers">code</a>
                       <p>
-                        A diagnostic study of inference-time mode collapse in RL-trained Lean provers. Across 3 seeds, V1.5-RL gains +12.3 &plusmn; 4.2 theorems under a fixed 15-skeleton schedule while SFT-trained Goedel-Prover loses &minus;10.0 &plusmn; 4.4, a 3.7&sigma; asymmetry. A direct distributional measurement (49% of miniF2F gets a deterministic single first-tactic head across 64 stochastic samples) converts &ldquo;mode collapse&rdquo; from metaphor to measurement.
+                        RL-trained Lean provers mode-collapse at inference time: on miniF2F-test, doubling DeepSeek-Prover-V1.5-RL's sampling budget from k=32 to k=64 solves zero additional theorems. A fixed schedule of 15 tactic skeletons breaks the plateau (+12.3 &plusmn; 4.2 theorems across 3 seeds), and a controlled ablation shows the gain comes from tactic structure, not prompt diversity.
                       </p>
                     </td>
                   </tr>
@@ -205,11 +210,21 @@
                     <td colspan="2" style="padding:10px;vertical-align:middle">
                       <span class="papertitle">QEDBench: Quantifying the Alignment Gap in Automated Evaluation of University-Level Mathematical Proofs</span>
                       <br>
-                      <em>ICML 2026 Main Conference (Poster)</em>
+                      <em>ICML 2026 Main Conference (Poster)</em>, Coauthor
                       <br>
                       <a href="https://icml.cc/virtual/2026/poster/63067">poster</a>
                       <p>
                         Multi-institution benchmark measuring alignment between LLM judges and human experts on university-level mathematical proofs. PhD-level expert evaluator (probability, discrete mathematics, algorithms).
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:middle">
+                      <span class="papertitle">Negative Transfer is the Default: Visual Reasoning to Math on Qwen2.5-VL-7B</span>
+                      <br>
+                      <em>Research study</em>, 2026
+                      <p>
+                        A pre-registered test of whether post-training on abstract visual reasoning (Raven's matrices) improves math. Eight matched-eval SFT and GRPO conditions were all negative on MATH-500 (base 66.8% &rarr; 44.0&ndash;61.6%); the damage traces to completion compression rather than format failure. Extended to from-scratch 162M pretraining, where a 1% formal-language (Dyck) warm-up cut tokens-to-threshold on compositional algebra by 12.3% against a scrambled control (3/3 seeds).
                       </p>
                     </td>
                   </tr>
@@ -245,12 +260,24 @@
                   </tr>
                 </tbody>
               </table>
+              <h2 style="padding:0 10px;">Service</h2>
+              <p style="padding:0 10px;">
+                Reviewer, ICML AI4Math Workshop (2025, 2026)
+              </p>
             </div>
  
             <!-- Projects Tab -->
             <div id="tab-projects" class="tab-panel">
               <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
                 <tbody>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:top">
+                      <span class="papertitle">Bellman</span>
+                      <p>
+                        Ingests a Python codebase, proposes what must be true for it to be correct, translates functions into Lean 4 models, differentially tests each model against the real code, and proves or refutes the claims with the Lean kernel. Screens out <code>sorry</code>, vacuous hypotheses, and unreachable counterexamples, and reports the full trust chain behind every finding.
+                      </p>
+                    </td>
+                  </tr>
                   <tr>
                     <td style="padding:10px;width:30%;vertical-align:top">
                       <img class="project-img" src="images/pieface.png" alt="PIEFACE">
@@ -279,9 +306,17 @@
                   </tr>
                   <tr>
                     <td colspan="2" style="padding:10px;vertical-align:top">
-                      <span class="papertitle">Formal Complexity Science</span>
+                      <span class="papertitle">Baller</span>
                       <br>
-                      <a href="https://github.com/zacn04/fcs">github</a>
+                      <a href="https://baller-career-sim.netlify.app">play</a>
+                      <p>
+                        A browser-based football career sim: start as a 10-year-old academy trialist and play through scholarships, contracts, transfers, and internationals. In-match decisions feed a deterministic, seeded match engine.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:top">
+                      <span class="papertitle">Formal Complexity Science</span>
                       <p>
                         Autoformalization of classical NP-completeness reductions in Lean 4, built on Mathlib and CSLib. Formalizes Karp reductions (SAT &le; 3SAT &le; 3-COLORING, with more planned) as machine-checked proofs.
                       </p>
