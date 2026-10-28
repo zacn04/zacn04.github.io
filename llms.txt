@@ -17,6 +17,12 @@
 - [zOS](https://github.com/zacn04/zOS): local LLM self-training loop (Rust & Tauri).
 - Formal Complexity Science: Lean 4 formalization of classical NP-completeness reductions.
 
+## Teaching
+
+- Grader, MIT 18.600 Probability and Random Variables (Spring 2025)
+- Mentor, MIT 18.100A Real Analysis (Fall 2024)
+- Proposed a personalised online learning platform for MIT's introductory maths classes (Eloranta Fellowship proposal)
+
 ## Contact
 
 - Email: zacnburton@gmail.com
