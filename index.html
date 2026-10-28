@@ -151,6 +151,9 @@
     details.more summary:hover { color: var(--link); }
     details.more ul { margin-top: 8px; padding-left: 20px; }
     details.more li { line-height: 1.5; margin-bottom: 6px; }
+    details.desc { margin-top: -4px; }
+    details.desc summary { cursor: pointer; color: var(--link); font-size: 13px; }
+    details.desc p { margin-top: 6px; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
  
@@ -277,8 +280,14 @@
                       <a href="https://icml.cc/virtual/2026/82534">poster</a> /
                       <a href="https://github.com/zacn04/icml_hints_for_provers">code</a>
                       <p>
-                        RL-trained Lean provers mode-collapse at inference time: on miniF2F-test, doubling DeepSeek-Prover-V1.5-RL's sampling budget from k=32 to k=64 solves zero additional theorems. A fixed schedule of 15 tactic skeletons breaks the plateau (+12.3 &plusmn; 4.2 theorems across 3 seeds), and a controlled ablation shows the gain comes from tactic structure, not prompt diversity.
+                        RL-trained Lean provers mode-collapse at inference time, and a fixed schedule of tactic skeletons breaks the plateau.
                       </p>
+                      <details class="desc">
+                        <summary>Details</summary>
+                        <p>
+                          On miniF2F-test, doubling DeepSeek-Prover-V1.5-RL's sampling budget from k=32 to k=64 solves zero additional theorems. A fixed schedule of 15 tactic skeletons adds +12.3 &plusmn; 4.2 theorems across 3 seeds, and a controlled ablation shows the gain comes from tactic structure, not prompt diversity.
+                        </p>
+                      </details>
                     </td>
                   </tr>
                   <tr>
@@ -300,8 +309,14 @@
                       <br>
                       <em>Research study</em>, 2026
                       <p>
-                        A pre-registered test of whether post-training on abstract visual reasoning (Raven's matrices) improves math. Eight matched-eval SFT and GRPO conditions were all negative on MATH-500 (base 66.8% &rarr; 44.0&ndash;61.6%); the damage traces to completion compression rather than format failure. Extended to from-scratch 162M pretraining, where a 1% formal-language (Dyck) warm-up cut tokens-to-threshold on compositional algebra by 12.3% against a scrambled control (3/3 seeds).
+                        A pre-registered test of whether post-training on abstract visual reasoning (Raven's matrices) improves math.
                       </p>
+                      <details class="desc">
+                        <summary>Details</summary>
+                        <p>
+                          Eight matched-eval SFT and GRPO conditions were all negative on MATH-500 (base 66.8% &rarr; 44.0&ndash;61.6%); the damage traces to completion compression rather than format failure. Extended to from-scratch 162M pretraining, where a 1% formal-language (Dyck) warm-up cut tokens-to-threshold on compositional algebra by 12.3% against a scrambled control (3/3 seeds).
+                        </p>
+                      </details>
                     </td>
                   </tr>
                   <tr>
@@ -370,8 +385,14 @@
                       <br>
                       <a href="https://sprintgame.net">play</a>
                       <p>
-                        A track and field career RPG in the browser, which I built and launched solo: you start at 13 with no PB and race your way toward the Olympics. Its first players came from the competitive track and field community, including athletes and creators.
+                        A track and field career RPG in the browser, which I built and launched solo.
                       </p>
+                      <details class="desc">
+                        <summary>Details</summary>
+                        <p>
+                          You start at 13 with no PB and race your way toward the Olympics. Its first players came from the competitive track and field community, including athletes and creators.
+                        </p>
+                      </details>
                     </td>
                   </tr>
                   <tr>
@@ -383,8 +404,14 @@
                       <br>
                       <a href="https://pieface.ai">website</a>
                       <p>
-                        Live RLHF platform for interactive policy personalization on an RL agent over motion-planning gadget structures. Flask + SQLAlchemy backend serving Maskable PPO models with top-K action inference over a 217-dim action space, custom PyTorch reward model trained on per-action accept/reject feedback, Cytoscape.js trace visualization frontend.
+                        Live RLHF platform for interactive policy personalization on an RL agent over motion-planning gadget structures.
                       </p>
+                      <details class="desc">
+                        <summary>Details</summary>
+                        <p>
+                          Flask + SQLAlchemy backend serving Maskable PPO models with top-K action inference over a 217-dim action space, custom PyTorch reward model trained on per-action accept/reject feedback, Cytoscape.js trace visualization frontend.
+                        </p>
+                      </details>
                     </td>
                   </tr>
                   <tr>
@@ -404,8 +431,14 @@
                     <td colspan="2" style="padding:10px;vertical-align:top">
                       <span class="papertitle">Formal Complexity Science</span>
                       <p>
-                        Autoformalization of classical NP-completeness reductions in Lean 4, built on Mathlib and CSLib. Formalizes Karp reductions (SAT &le; 3SAT &le; 3-COLORING, with more planned) as machine-checked proofs.
+                        Autoformalization of classical NP-completeness reductions in Lean 4, built on Mathlib and CSLib.
                       </p>
+                      <details class="desc">
+                        <summary>Details</summary>
+                        <p>
+                          Formalizes Karp reductions (SAT &le; 3SAT &le; 3-COLORING, with more planned) as machine-checked proofs.
+                        </p>
+                      </details>
                     </td>
                   </tr>
                   <tr>
