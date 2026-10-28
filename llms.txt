@@ -15,6 +15,7 @@
 - [the sprintgame](https://sprintgame.net): browser-based track and field career RPG, built and launched solo. Over 200 players have run more than 40,000 races.
 - [PIEFACE](https://pieface.ai): live RLHF platform for interactive policy personalization.
 - [zOS](https://github.com/zacn04/zOS): local LLM self-training loop (Rust & Tauri).
+- [Education Despite AI](https://sites.mit.edu/edudespiteai/): 24.134 Experiential Ethics final project with Ana Mata-Payerro (2025); a guide for instructors on designing courses when students can use AI.
 - Formal Complexity Science: Lean 4 formalization of classical NP-completeness reductions.
 
 ## Other research experience
