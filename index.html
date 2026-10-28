@@ -34,10 +34,10 @@
     "url": "https://zacburton.com/",
     "image": "https://zacburton.com/images/profile.jpeg",
     "email": "mailto:zacnburton@gmail.com",
-    "jobTitle": "Research Engineer",
+    "jobTitle": "Research Engineer (Member of Technical Staff)",
     "worksFor": { "@type": "Organization", "name": "Pramaana Labs", "url": "https://pramaanalabs.ai" },
     "alumniOf": { "@type": "CollegeOrUniversity", "name": "Massachusetts Institute of Technology" },
-    "knowsAbout": ["AI for mathematics", "Lean theorem proving", "Reinforcement learning", "Large language models", "Formal verification"],
+    "knowsAbout": ["AI for mathematics", "Lean theorem proving", "Reinforcement learning", "Large language models", "Formal verification", "Autoformalization"],
     "homeLocation": { "@type": "Place", "name": "Brooklyn, New York" },
     "sameAs": ["https://github.com/zacn04", "https://linkedin.com/in/zac-burton"],
     "subjectOf": [
@@ -48,7 +48,12 @@
       },
       {
         "@type": "ScholarlyArticle",
-        "name": "Collision Thresholds on Lattices",
+        "name": "QEDBench: Quantifying the Alignment Gap in Automated Evaluation of University-Level Mathematical Proofs",
+        "url": "https://openreview.net/pdf?id=Rh7mc7FdGN"
+      },
+      {
+        "@type": "ScholarlyArticle",
+        "name": "Poissonization-Based Collision Threshold Derivation for Random Walks on Lattices",
         "url": "https://arxiv.org/abs/2505.02973"
       }
     ]
@@ -135,6 +140,10 @@
       color: var(--link);
       border-bottom-color: var(--link);
     }
+    @media (max-width: 480px) {
+      .tab-btn { padding: 10px 12px; font-size: 14px; }
+      .project-img { width: 100%; max-width: 140px; }
+    }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
  
@@ -190,20 +199,21 @@
  
           <!-- Tab Bar -->
           <div style="padding:0 2.5%;">
-            <div class="tab-bar">
-              <button class="tab-btn active" onclick="switchTab('about')">About</button>
-              <button class="tab-btn" onclick="switchTab('research')">Research</button>
-              <button class="tab-btn" onclick="switchTab('projects')">Projects</button>
-              <button class="tab-btn" onclick="switchTab('speaking')">Speaking</button>
+            <div class="tab-bar" role="tablist">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-about" onclick="switchTab('about', this)">About</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-research" onclick="switchTab('research', this)">Research</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-projects" onclick="switchTab('projects', this)">Projects</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-speaking" onclick="switchTab('speaking', this)">Speaking</button>
             </div>
  
             <!-- About Tab -->
-            <div id="tab-about" class="tab-panel active">
+            <div id="tab-about" class="tab-panel active" role="tabpanel">
               <p>
-                I am a research engineer at <a href="https://pramaanalabs.ai"><strong>Pramaana Labs</strong></a>, building the verification layer for high-stakes AI.
-                Previously, I was a machine learning engineer at <strong>Meta</strong> working on <strong>Facebook Reels</strong> ranking.
+                I am a research engineer (Member of Technical Staff) at <a href="https://pramaanalabs.ai"><strong>Pramaana Labs</strong></a>, building the verification layer for high-stakes AI.
+                I work on post-training language models for autoformalization and formal reasoning, using supervised fine-tuning and reinforcement learning, and on the benchmarks and evaluation infrastructure used to measure them.
+                Previously, I was a machine learning engineer at <strong>Meta</strong> working on <strong>Facebook Reels</strong> relevance.
                 I <a href="https://credentials.mit.edu/certificate/4693a429770455bb940c4d2f6770eeb1">graduated from <strong>MIT</strong>, Course 18 (Mathematics), in February 2026</a>. 
-                I love music; singing, DJing, theory, as well as reading about sociology, technology, politics, and more!
+                I love music; singing, DJing, theory, as well as building games, thinking about how maths is taught, and reading about sociology, technology, politics, and more!
               </p>
               <p>
                 My research investigates what LLMs can and can't do in mathematics, and uses those findings to push them toward <strong>mathematical superintelligence</strong>.
@@ -214,13 +224,16 @@
                 and RLHF infrastructure for interactive policy personalization (<a href="https://pieface.ai">PIEFACE</a>).
               </p>
               <p>
+                <strong>Currently exploring:</strong> verifier-based reinforcement learning, why RL post-training improves pass@1 but often not pass@k, off-policy alternatives that keep exploration alive, and inference-time search for theorem proving.
+              </p>
+              <p>
                 I was born in NYC and raised in the UK, and am based in Brooklyn.
                 Feel free to reach out if you want to chat!
               </p>
             </div>
  
             <!-- Research Tab -->
-            <div id="tab-research" class="tab-panel">
+            <div id="tab-research" class="tab-panel" role="tabpanel">
               <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
                 <tbody>
                   <tr>
@@ -244,6 +257,7 @@
                       <br>
                       <em>ICML 2026 Main Conference (Poster)</em>, Coauthor
                       <br>
+                      <a href="https://openreview.net/pdf?id=Rh7mc7FdGN">paper</a> /
                       <a href="https://icml.cc/virtual/2026/poster/63067">poster</a>
                       <p>
                         Multi-institution benchmark measuring alignment between LLM judges and human experts on university-level mathematical proofs. PhD-level expert evaluator (probability, discrete mathematics, algorithms).
@@ -262,7 +276,7 @@
                   </tr>
                   <tr>
                     <td style="padding:10px;width:30%;vertical-align:center">
-                      <img class="project-img" src="images/extended_learning_curves.png" alt="RL Failure">
+                      <img class="project-img" src="images/extended_learning_curves.png" alt="Learning curves from the tabular RL study">
                     </td>
                     <td style="padding:10px;width:70%;vertical-align:middle">
                       <span class="papertitle">When Does Tabular RL Actually Break?</span>
@@ -277,12 +291,12 @@
                   </tr>
                   <tr>
                     <td style="padding:10px;width:30%;vertical-align:center">
-                      <img class="project-img" src="images/collision.png" alt="Collision">
+                      <img class="project-img" src="images/collision.png" alt="Random walk collision figure">
                     </td>
                     <td style="padding:10px;width:70%;vertical-align:middle">
-                      <span class="papertitle">Collision Thresholds on Lattices</span>
+                      <span class="papertitle">Poissonization-Based Collision Threshold Derivation for Random Walks on Lattices</span>
                       <br>
-                      <em>Preprint</em>
+                      <em>Preprint</em>, 2025
                       <br>
                       <a href="https://arxiv.org/abs/2505.02973">arXiv</a>
                       <p>
@@ -299,7 +313,7 @@
             </div>
  
             <!-- Projects Tab -->
-            <div id="tab-projects" class="tab-panel">
+            <div id="tab-projects" class="tab-panel" role="tabpanel">
               <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
                 <tbody>
                   <tr>
@@ -307,6 +321,16 @@
                       <span class="papertitle">Bellman</span>
                       <p>
                         Ingests a Python codebase, proposes what must be true for it to be correct, translates functions into Lean 4 models, differentially tests each model against the real code, and proves or refutes the claims with the Lean kernel. Screens out <code>sorry</code>, vacuous hypotheses, and unreachable counterexamples, and reports the full trust chain behind every finding.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:10px;vertical-align:top">
+                      <span class="papertitle">SprintGame</span>
+                      <br>
+                      <a href="https://sprintgame.net">play</a>
+                      <p>
+                        A browser-based competitive sprinting game that I built and launched independently. Its first players came from the competitive track and field community, including athletes and creators.
                       </p>
                     </td>
                   </tr>
@@ -360,13 +384,13 @@
                       <br>
                       <a href="polisci.pdf">paper</a>
                       <p>
-                        17.279 (Political Misinformation in the Age of Social Media) Final Paper - independent empirical study (n=174, randomized) on AI disclosure effects on belief formation in political conspiracy-framing content.
+                        17.279 (Political Misinformation in the Age of Social Media) Final Paper: independent empirical study (n=174, randomized) on AI disclosure effects on belief formation in political conspiracy-framing content.
                       </p>
                     </td>
                   </tr>
                   <tr>
                     <td style="padding:10px;width:30%;vertical-align:top">
-                      <img class="project-img" src="images/scribe.png" alt="Scribe">
+                      <img class="project-img" src="images/scribe.png" alt="Scribe AI handwriting demo">
                     </td>
                     <td style="padding:10px;width:70%;vertical-align:top">
                       <span class="papertitle">Scribe AI</span>
@@ -382,7 +406,7 @@
             </div>
  
             <!-- Speaking Tab -->
-            <div id="tab-speaking" class="tab-panel">
+            <div id="tab-speaking" class="tab-panel" role="tabpanel">
               <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;">
                 <tbody>
                   <tr>
@@ -438,11 +462,12 @@
           </p>
  
           <script>
-            function switchTab(name) {
+            function switchTab(name, btn) {
               document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
-              document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+              document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
               document.getElementById('tab-' + name).classList.add('active');
-              event.currentTarget.classList.add('active');
+              btn.classList.add('active');
+              btn.setAttribute('aria-selected', 'true');
             }
  
             function toggleDark() {

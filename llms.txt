@@ -1,17 +1,18 @@
 # Zachary Burton
 
-> Zachary Burton is a research engineer at Pramaana Labs, building the verification layer for high-stakes AI. He graduated from MIT in February 2026 with a degree in Mathematics (Course 18) and previously worked as a machine learning engineer at Meta on Facebook Reels ranking. His research investigates what LLMs can and can't do in mathematics (AI4Math), including formal theorem proving in Lean. Born in NYC, raised in the UK, based in Brooklyn.
+> Zachary Burton is a research engineer (Member of Technical Staff) at Pramaana Labs, building the verification layer for high-stakes AI. He works on post-training language models for autoformalization and formal reasoning, and on the benchmarks and evaluation infrastructure around them. He graduated from MIT in February 2026 with a degree in Mathematics (Course 18) and previously worked as a machine learning engineer at Meta on Facebook Reels relevance. His research investigates what LLMs can and can't do in mathematics (AI4Math), including formal theorem proving in Lean. Born in NYC, raised in the UK, based in Brooklyn.
 
 ## Research
 
 - [Inference-Time Diversity in RL-Trained Lean Theorem Provers: A Diagnostic Study](https://arxiv.org/abs/2601.16172): ICML 2026 AI4Math Workshop (poster), first author. Shows RL-trained Lean provers mode-collapse at inference time; a fixed schedule of tactic skeletons breaks the plateau. [PDF](https://zacburton.com/lean_diversity.pdf), [code](https://github.com/zacn04/icml_hints_for_provers)
-- QEDBench: Quantifying the Alignment Gap in Automated Evaluation of University-Level Mathematical Proofs: ICML 2026 main conference (poster), coauthor; PhD-level expert evaluator.
+- [QEDBench: Quantifying the Alignment Gap in Automated Evaluation of University-Level Mathematical Proofs](https://openreview.net/pdf?id=Rh7mc7FdGN): ICML 2026 main conference (poster), coauthor; PhD-level expert evaluator.
 - Negative Transfer is the Default: Visual Reasoning to Math on Qwen2.5-VL-7B: pre-registered study (2026) finding that visual-reasoning post-training hurts math performance.
 - [When Does Tabular RL Actually Break?](https://zacburton.com/tabular_rl.html): blog post (2025) on representation bottlenecks for RL in symbolic algebra.
-- [Collision Thresholds on Lattices](https://arxiv.org/abs/2505.02973): expository preprint on random walks on lattices.
+- [Poissonization-Based Collision Threshold Derivation for Random Walks on Lattices](https://arxiv.org/abs/2505.02973): expository preprint (2025) on collision thresholds for random walks on lattices.
 
 ## Projects
 
+- [SprintGame](https://sprintgame.net): browser-based competitive sprinting game, built and launched independently.
 - Bellman: translates Python functions into Lean 4 models, differentially tests them against the real code, and proves or refutes correctness claims with the Lean kernel.
 - [PIEFACE](https://pieface.ai): live RLHF platform for interactive policy personalization.
 - [zOS](https://github.com/zacn04/zOS): local LLM self-training loop (Rust & Tauri).
