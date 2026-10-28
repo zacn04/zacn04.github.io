@@ -12,7 +12,7 @@
 
 ## Projects
 
-- [SprintGame](https://sprintgame.net): browser-based competitive sprinting game, built and launched independently.
+- [SprintGame](https://sprintgame.net): browser-based track and field career RPG, built and launched solo.
 - [PIEFACE](https://pieface.ai): live RLHF platform for interactive policy personalization.
 - [zOS](https://github.com/zacn04/zOS): local LLM self-training loop (Rust & Tauri).
 - Formal Complexity Science: Lean 4 formalization of classical NP-completeness reductions.
