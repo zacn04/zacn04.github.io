@@ -144,6 +144,12 @@
       .tab-btn { padding: 10px 12px; font-size: 14px; }
       .project-img { width: 100%; max-width: 140px; }
     }
+    /* Collapsible secondary sections */
+    details.more { padding: 0 10px; margin-top: 16px; }
+    details.more summary { font-size: 20px; cursor: pointer; padding: 4px 0; }
+    details.more summary:hover { color: var(--link); }
+    details.more ul { margin-top: 8px; padding-left: 20px; }
+    details.more li { line-height: 1.5; margin-bottom: 6px; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
  
@@ -231,6 +237,16 @@
                 I was born in NYC and raised in the UK, and am based in Brooklyn.
                 Feel free to reach out if you want to chat!
               </p>
+              <details class="more" style="padding:0;">
+                <summary>Honors</summary>
+                <ul>
+                  <li>NSBE Boston Scholar (2025)</li>
+                  <li>Singapore International Pre-Graduate Award (2023)</li>
+                  <li>British Physics Olympiad, Gold (2022)</li>
+                  <li>Cambridge Senior Physics Challenge, Diamond Award (top 30)</li>
+                  <li>England U17 Indoor Championships, 60m Bronze (2020)</li>
+                </ul>
+              </details>
             </div>
  
             <!-- Research Tab -->
@@ -307,14 +323,25 @@
                   </tr>
                 </tbody>
               </table>
-              <h2 style="padding:0 10px;">Service &amp; Teaching</h2>
-              <p style="padding:0 10px;">
-                Reviewer, ICML AI4Math Workshop (2025, 2026)
-                <br>
-                Grader, MIT 18.600 Probability and Random Variables (Spring 2025)
-                <br>
-                Mentor, MIT 18.100A Real Analysis (Fall 2024)
-              </p>
+              <details class="more">
+                <summary>Other research experience</summary>
+                <ul>
+                  <li><strong>Undergraduate Researcher, MIT CSAIL</strong> (Fall 2024 &ndash; Fall 2025): reinforcement-learning-guided search over symbolic gadget constructions for complexity-theoretic reductions in PSPACE and NL.</li>
+                  <li><strong>Math Expert Evaluator, QEDBench, Yale University</strong> (Fall 2025): gold-standard correctness judgments and error taxonomies for LLM-generated proofs in probability, algorithms, and discrete mathematics.</li>
+                  <li><strong>Seminar speaker, MIT 18.604 Probability on Trees and Networks</strong> (Spring 2025): Thomson's principle, effective resistance and random walk transience; isoperimetric inequalities on graphs and return probabilities.</li>
+                  <li><strong>Research Intern, Centre for Frontier AI Research (CFAR), Singapore</strong> (Summer 2023): deep RL agents for grid-world tasks, funded by the Singapore International Pre-Graduate Award.</li>
+                </ul>
+              </details>
+              <details class="more">
+                <summary>Service &amp; teaching</summary>
+                <ul>
+                  <li>Reviewer, ICML AI4Math Workshop (2025, 2026)</li>
+                  <li>Student Representative, MIT Mathematics Department Visiting Committee Panel (Spring 2025)</li>
+                  <li>Grader, MIT 18.600 Probability and Random Variables (Spring 2025)</li>
+                  <li>Mentor, MIT 18.100A Real Analysis (Fall 2024)</li>
+                  <li>Undergraduate Teaching Assistant, MIT 6.0001 Introduction to Programming (Fall 2024)</li>
+                </ul>
+              </details>
             </div>
  
             <!-- Projects Tab -->

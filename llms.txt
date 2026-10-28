@@ -17,11 +17,29 @@
 - [zOS](https://github.com/zacn04/zOS): local LLM self-training loop (Rust & Tauri).
 - Formal Complexity Science: Lean 4 formalization of classical NP-completeness reductions.
 
-## Teaching
+## Other research experience
 
+- Undergraduate Researcher, MIT CSAIL (Fall 2024 to Fall 2025): RL-guided search over symbolic gadget constructions for complexity-theoretic reductions.
+- Math Expert Evaluator, QEDBench, Yale University (Fall 2025).
+- Seminar speaker, MIT 18.604 Probability on Trees and Networks (Spring 2025).
+- Research Intern, Centre for Frontier AI Research (CFAR), Singapore (Summer 2023).
+
+## Service and teaching
+
+- Reviewer, ICML AI4Math Workshop (2025, 2026)
+- Student Representative, MIT Mathematics Department Visiting Committee Panel (Spring 2025)
 - Grader, MIT 18.600 Probability and Random Variables (Spring 2025)
 - Mentor, MIT 18.100A Real Analysis (Fall 2024)
+- Undergraduate Teaching Assistant, MIT 6.0001 Introduction to Programming (Fall 2024)
 - Proposed a personalised online learning platform for MIT's introductory maths classes (Eloranta Fellowship proposal)
+
+## Honors
+
+- NSBE Boston Scholar (2025)
+- Singapore International Pre-Graduate Award (2023)
+- British Physics Olympiad, Gold (2022)
+- Cambridge Senior Physics Challenge, Diamond Award (top 30)
+- England U17 Indoor Championships, 60m Bronze (2020)
 
 ## Contact
 
