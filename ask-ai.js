@@ -5,7 +5,7 @@ import { buildIndex, retrieve, buildMessages, allowedClaims, verifyAnswer, clean
 const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3";
 // Tried in order. The first is the fine-tuned model; the rest are base-model fallbacks.
 const MODELS = [
-  { id: "zacn04/zac-smollm2-onnx", dtype: "q4", label: "fine-tuned SmolLM2-360M" },
+  { id: "zacnwo/zac-smollm2-onnx", dtype: "q4", label: "fine-tuned SmolLM2-360M" },
   { id: "HuggingFaceTB/SmolLM2-360M-Instruct", dtype: "q4", label: "base SmolLM2-360M" },
   { id: "HuggingFaceTB/SmolLM2-360M-Instruct", dtype: "q4f16", label: "base SmolLM2-360M" },
   { id: "onnx-community/Qwen2.5-0.5B-Instruct", dtype: "q4", label: "base Qwen2.5-0.5B" },
