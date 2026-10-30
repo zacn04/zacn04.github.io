@@ -35,6 +35,17 @@ def problems (block : List String) : List String := Id.run do
     for b in block do
       if containsStr (lower t) (lower b) then
         out := out ++ [s!"blocked term found in: {t.take 60}"]
+  for g in groups do
+    if (groups.filter (·.id == g.id)).length != 1 then
+      out := out ++ [s!"duplicate group id: {g.id}"]
+    if g.triggers.isEmpty || g.factIds.isEmpty then
+      out := out ++ [s!"group {g.id} needs triggers and facts"]
+    for t in g.triggers do
+      if t != lower t then
+        out := out ++ [s!"group {g.id} trigger must be lowercase: {t}"]
+    for i in g.factIds do
+      if !(ids.contains i) then
+        out := out ++ [s!"group {g.id} refers to unknown fact {i}"]
   for (fid, s) in bindings do
     match facts.find? (·.id == fid) with
     | none => out := out ++ [s!"binding refers to unknown fact {fid}"]
@@ -62,6 +73,12 @@ def factJson (f : Fact) : String :=
     s!"\"keywords\": {jArr (f.keywords.map jStr)}",
     s!"\"text\": {jStr f.text}"] ++ "}"
 
+def groupJson (g : Group) : String :=
+  "{" ++ ", ".intercalate [
+    s!"\"id\": {jStr g.id}",
+    s!"\"triggers\": {jArr (g.triggers.map jStr)}",
+    s!"\"facts\": {jArr (g.factIds.map jStr)}"] ++ "}"
+
 def main (args : List String) : IO UInt32 := do
   let outPath := args.headD "zac_kb.json"
   let privPath : System.FilePath := "../private_blocklist.txt"
@@ -76,6 +93,7 @@ def main (args : List String) : IO UInt32 := do
     IO.eprintln s!"{errs.length} problem(s); zac_kb.json was not written."
     return 1
   let body := ",\n".intercalate (facts.map factJson)
+  let groupsBody := ",\n".intercalate (groups.map groupJson)
   let json :=
     "{\n" ++
     "\"verifier\": \"lean\",\n" ++
@@ -83,8 +101,9 @@ def main (args : List String) : IO UInt32 := do
     s!"\"theorems\": {jArr (theoremNames.map jStr)},\n" ++
     s!"\"blocklist\": {jArr (publicBlocklist.map jStr)},\n" ++
     s!"\"system_prompt\": {jStr systemPrompt},\n" ++
+    s!"\"groups\": [\n{groupsBody}\n],\n" ++
     s!"\"facts\": [\n{body}\n]\n" ++
     "}\n"
   IO.FS.writeFile outPath json
-  IO.println s!"Checked {theoremNames.length} theorems and {bindings.length} bindings; wrote {facts.length} facts to {outPath}"
+  IO.println s!"Checked {theoremNames.length} theorems and {bindings.length} bindings; wrote {facts.length} facts and {groups.length} groups to {outPath}"
   return 0

@@ -30,7 +30,33 @@ export function buildIndex(kb) {
   return { kb, docs, df, avg, n: docs.length };
 }
 
+function escapeRe(t) {
+  return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Fact groups whose trigger phrase appears in the question, most specific (longest
+// matching trigger) first.
+export function matchGroups(kb, query) {
+  const q = query.toLowerCase().replace(/[\u2018\u2019]/g, "'");
+  const hits = [];
+  for (const g of kb.groups || []) {
+    let best = 0;
+    for (const t of g.triggers) if (new RegExp("\\b" + escapeRe(t) + "\\b").test(q)) best = Math.max(best, t.length);
+    if (best) hits.push([best, g]);
+  }
+  return hits.sort((a, b) => b[0] - a[0]).map((h) => h[1]);
+}
+
+// Facts for a question: any matched group's facts first, then BM25 results.
 export function retrieve(index, query, k = 5) {
+  const byId = new Map(index.kb.facts.map((f) => [f.id, f]));
+  const out = [];
+  for (const g of matchGroups(index.kb, query)) for (const id of g.facts) if (!out.includes(id)) out.push(id);
+  for (const f of bm25(index, query, k)) if (!out.includes(f.id)) out.push(f.id);
+  return out.slice(0, k).map((id) => byId.get(id));
+}
+
+function bm25(index, query, k) {
   const q = new Set(terms(query));
   const phrases = query.toLowerCase();
   const scored = index.docs.map((d, i) => {

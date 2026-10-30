@@ -127,7 +127,7 @@ async function modelAnswer(question, facts) {
     callback_function: (t) => { draft += t; body.textContent = draft; log.scrollTop = log.scrollHeight; },
   });
   const out = await pipe(buildMessages(kb, facts, history.slice(-4), question), {
-    max_new_tokens: 160, do_sample: false, streamer,
+    max_new_tokens: 320, do_sample: false, streamer,
   });
   const answer = cleanAnswer(out[0].generated_text.at(-1).content || draft);
   const v = verifyAnswer(answer, kb, allowed, question);
@@ -137,7 +137,7 @@ async function modelAnswer(question, facts) {
     note(done, "Checked: every number, date, and link matches the Lean-verified facts.", "ai-ok");
     history.push({ role: "user", content: question }, { role: "assistant", content: answer });
   } else {
-    const shown = factsBubble(facts.slice(0, 2), "I could not verify my answer, so here is what the verified facts say:");
+    const shown = factsBubble(facts.slice(0, 3), "I could not verify my answer, so here is what the verified facts say:");
     const why = [...v.unverified, ...v.blocked].join(", ");
     note(shown, `Withheld: the draft mentioned ${why}, which is not in the verified facts.`, "ai-bad");
   }
@@ -157,7 +157,7 @@ async function ask(question) {
     return;
   }
   if (!generator) {
-    factsBubble(facts.slice(0, 2), "From the verified facts:");
+    factsBubble(facts.slice(0, 3), "From the verified facts:");
     try { await loadModel(); } catch { return; }
   }
   try {

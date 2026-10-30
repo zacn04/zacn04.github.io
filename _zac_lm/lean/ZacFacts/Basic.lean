@@ -44,6 +44,14 @@ structure Fact where
   keywords : List String
   text : String
 
+/-- A broad question that needs several facts at once, such as "Where has Zac worked?".
+If a visitor's question contains one of `triggers` (lowercase phrases), retrieval puts
+these facts first, in this order. -/
+structure Group where
+  id : String
+  triggers : List String
+  factIds : List String
+
 /-- Render a tenths value, e.g. `tenths 668 = "66.8"`. -/
 def tenths (n : Nat) : String := s!"{n / 10}.{n % 10}"
 

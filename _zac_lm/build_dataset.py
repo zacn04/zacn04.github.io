@@ -11,7 +11,8 @@ import json
 import random
 from pathlib import Path
 
-N_TRAIN, N_VALID = 450, 50
+VALID_FRACTION = 0.1
+MAX_ANSWER_CHARS = 1100  # about 320 tokens, the answer limit on the website
 EMAIL = "zacnburton@gmail.com"
 
 # Questions per fact id. Each answer is that fact's text.
@@ -57,6 +58,31 @@ QUESTIONS = {
     "interests": ["What does Zac do for fun?", "What is Zac interested in outside work?"],
 }
 
+# Questions per fact group (groups are defined in lean/ZacFacts/Data.lean). Each answer
+# is the group's facts joined in order, so it is still made only of verified text.
+GROUP_QUESTIONS = {
+    "publications": ["Summarize Zac's ICML 2026 papers", "What has Zac published?", "What are Zac's publications?", "What papers has Zac written?", "What are Zac's ICML papers?"],
+    "lean-paper": ["Tell me everything about the Lean provers paper", "Explain Zac's first-author paper and its results", "What is the Lean diversity paper about and what did it find?"],
+    "qedbench": ["Tell me about QEDBench and Zac's role in it", "What is QEDBench and what did Zac contribute?"],
+    "transfer": ["Explain the visual reasoning transfer study in full", "What were all the results of the transfer study?", "Tell me about the negative transfer and Dyck experiments"],
+    "career": ["Where has Zac worked?", "What is Zac's work history?", "Walk me through Zac's career", "What jobs has Zac had?"],
+    "meta": ["What did Zac do at Meta?", "Tell me about both of Zac's Meta roles"],
+    "education": ["What is Zac's education?", "Where did Zac study?", "Tell me about Zac's schooling"],
+    "lean": ["What has Zac done with Lean?", "Tell me about Zac's formal methods work", "Does Zac work on theorem proving?"],
+    "rl": ["What reinforcement learning research has Zac done?", "What RL work has Zac done?"],
+    "undergrad-research": ["What research did Zac do as an undergraduate?", "Tell me about Zac's research experience"],
+    "sprintgame": ["Tell me everything about the sprintgame", "How does the sprintgame work and who plays it?"],
+    "projects": ["What projects has Zac built?", "What has Zac built?", "Show me Zac's side projects"],
+    "ml-projects": ["What ML projects has Zac built?", "Has Zac built anything with language models?"],
+    "courses": ["What courses did Zac take?", "Tell me about Zac's MIT coursework"],
+    "teaching": ["What teaching and education work has Zac done?", "How is Zac involved in education?"],
+    "outside-work": ["What does Zac do outside of research?", "What are Zac's hobbies?", "What is Zac like outside work?"],
+    "awards": ["What awards has Zac won?", "What are Zac's achievements outside academics?"],
+    "ai-society": ["What has Zac written about AI and society?", "Has Zac studied AI ethics or politics?"],
+    "math-research": ["What math research has Zac done?", "Has Zac done mathematical research?"],
+    "current-focus": ["What is Zac researching now and what interests Zac?", "What is Zac's current research focus?"],
+}
+
 FOLLOW_UPS = ["Tell me more.", "What else?", "Anything else related?", "And before that?"]
 
 PRIVATE = ["What is Zac's home address?", "How much does Zac earn?", "What is Zac's salary?", "Is Zac in a relationship?",
@@ -72,7 +98,9 @@ UNKNOWN_ANSWER = f"I do not have verified information about that. You can email 
 
 def variants(q):
     base = q.rstrip("?.")
-    return [q, q.lower(), base, f"Can you tell me: {base[0].lower() + base[1:]}?", f"Quick question: {q}"]
+    low = base[0].lower() + base[1:]
+    return [q, q.lower(), base, f"Can you tell me: {low}?", f"Quick question: {q}", f"Hey, {low}?",
+            f"I'm curious, {low}?", f"{base}, in a few sentences?", f"Do you know {low}?"]
 
 
 def main():
@@ -88,26 +116,41 @@ def main():
     missing = set(facts) ^ set(QUESTIONS)
     if missing:
         raise SystemExit(f"QUESTIONS and the fact sheet disagree on: {sorted(missing)}")
+    groups = {g["id"]: g["facts"] for g in kb.get("groups", [])}
+    missing = set(groups) ^ set(GROUP_QUESTIONS)
+    if missing:
+        raise SystemExit(f"GROUP_QUESTIONS and the fact groups disagree on: {sorted(missing)}")
+    combined_qs = {q for qs in GROUP_QUESTIONS.values() for q in qs}
 
     rng = random.Random(0)
     ids = list(facts)
 
     def context(*must):
-        # Mirrors retrieval at inference: the relevant facts plus a few distractors, shuffled.
-        picked = list(must) + rng.sample([i for i in ids if i not in must], 3)
+        # Mirrors retrieval at inference: the relevant facts plus distractors, up to 5 in all.
+        picked = list(must) + rng.sample([i for i in ids if i not in must], max(2, 5 - len(must)))
         rng.shuffle(picked)
         return kb["system_prompt"].replace("{facts}", "\n".join("- " + facts[i]["text"] for i in picked))
 
     examples = []
     for fid, qs in QUESTIONS.items():
         for q in qs:
+            if q in combined_qs:
+                continue  # answered with the whole group below
             for v in rng.sample(variants(q), 3):
                 examples.append([("system", context(fid)), ("user", v), ("assistant", facts[fid]["text"])])
+    # Combined answers: questions that need several facts get all of them, in group order.
+    for gid, qs in GROUP_QUESTIONS.items():
+        answer = " ".join(facts[i]["text"] for i in groups[gid])
+        if len(answer) > MAX_ANSWER_CHARS:
+            raise SystemExit(f"group {gid} answer is too long for the website's answer limit")
+        for q in qs:
+            for v in rng.sample(variants(q), 4):
+                examples.append([("system", context(*groups[gid])), ("user", v), ("assistant", answer)])
     # Multi-turn: a follow-up moves to a related fact on the same topic.
     by_topic = {}
     for f in kb["facts"]:
         by_topic.setdefault(f["topic"], []).append(f["id"])
-    for _ in range(60):
+    for _ in range(100):
         topic = rng.choice([t for t, v in by_topic.items() if len(v) > 1])
         first, second = rng.sample(by_topic[topic], 2)
         examples.append([("system", context(first, second)), ("user", rng.choice(QUESTIONS[first])),
@@ -121,9 +164,8 @@ def main():
             examples.append([("system", context()), ("user", v), ("assistant", UNKNOWN_ANSWER)])
 
     rng.shuffle(examples)
-    if len(examples) < N_TRAIN + N_VALID:
-        raise SystemExit(f"only {len(examples)} examples; add questions")
-    rows = [{"messages": [{"role": r, "content": c} for r, c in ex]} for ex in examples[:N_TRAIN + N_VALID]]
+    rows = [{"messages": [{"role": r, "content": c} for r, c in ex]} for ex in examples]
+    n_valid = max(1, round(len(rows) * VALID_FRACTION))
 
     # The same rules the Lean exporter enforces, rechecked on everything the model is
     # trained to read or say (visitor questions may contain blocked words, like "salary").
@@ -136,11 +178,11 @@ def main():
 
     out = Path(a.out).expanduser()
     out.mkdir(parents=True, exist_ok=True)
-    for name, part in (("train", rows[:N_TRAIN]), ("valid", rows[N_TRAIN:])):
+    for name, part in (("train", rows[n_valid:]), ("valid", rows[:n_valid])):
         with open(out / f"{name}.jsonl", "w") as fh:
             for r in part:
                 fh.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(f"wrote {N_TRAIN} train and {N_VALID} valid examples to {out}")
+    print(f"wrote {len(rows) - n_valid} train and {n_valid} valid examples to {out}")
 
 
 def private_terms():

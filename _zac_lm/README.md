@@ -9,7 +9,9 @@ This folder is not published by GitHub Pages (Jekyll skips folders that start wi
    `lake build` fails if an edit breaks one. The exporter (`Main.lean`, run with
    `lake env lean --run Main.lean`) then checks the text rules
    (no em dashes, no blocked terms, every proved number appears in its fact as written) and
-   only then writes `../zac_kb.json` with `"verifier": "lean"`.
+   only then writes `../zac_kb.json` with `"verifier": "lean"`. `Data.lean` also defines
+   fact groups for broad questions ("Where has Zac worked?"): the site retrieves a matched
+   group's facts first, and the training data answers those questions with the whole group.
 2. **`build_dataset.py`** turns `zac_kb.json` into `train.jsonl` and `valid.jsonl`. Answers
    are copied from verified facts or are fixed refusals. It refuses a fact sheet that did
    not come from Lean.

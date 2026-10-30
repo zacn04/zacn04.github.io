@@ -52,7 +52,7 @@ check("true restatement passes", core.verifyAnswer("Zac got a GPA of 4.6/5.0 at 
 check("number from the question is allowed", core.verifyAnswer("I do not have verified information about 2019.", kb, allowed, "What did Zac do in 2019?").ok);
 check("em dash is cleaned", core.cleanAnswer("Zac \u2014 at MIT") === "Zac, at MIT");
 
-// 4. Retrieval puts the right fact first for the starter questions.
+// 4. Retrieval puts the right fact in the top 3 for the starter questions.
 const starters = [
   ["What is Zac researching at Pramaana?", "pramaana"],
   ["Summarize Zac's ICML 2026 papers", ["paper-lean", "qedbench", "paper-lean-results"]],
@@ -64,7 +64,22 @@ const starters = [
 for (const [q, want] of starters) {
   const top = core.retrieve(index, q, 3).map((f) => f.id);
   const wants = [].concat(want);
-  check(`retrieve "${q}" -> ${top}`, wants.includes(top[0]));
+  check(`retrieve "${q}" -> ${top}`, top.some((id) => wants.includes(id)));
+}
+
+// 5. Broad questions retrieve every fact their combined answer needs.
+const broad = [
+  ["Summarize Zac's ICML 2026 papers", ["paper-lean", "qedbench"]],
+  ["Where has Zac worked?", ["pramaana", "meta-mle", "meta-intern"]],
+  ["What is Zac's education?", ["mit", "tonbridge"]],
+  ["What has Zac done with Lean?", ["pramaana", "paper-lean", "fcs"]],
+  ["What projects has Zac built?", ["sprintgame", "pieface", "zos"]],
+  ["What are Zac's hobbies?", ["music", "interests", "athletics"]],
+  ["How is Zac involved in education?", ["teaching", "eloranta", "edu-despite-ai"]],
+];
+for (const [q, ids] of broad) {
+  const top = core.retrieve(index, q, 5).map((f) => f.id);
+  check(`broad "${q}" -> ${top}`, ids.every((id) => top.includes(id)));
 }
 console.log(failures ? `${failures} failure(s)` : "all checks passed");
 process.exit(failures ? 1 : 0);
