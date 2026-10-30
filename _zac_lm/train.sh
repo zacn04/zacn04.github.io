@@ -8,7 +8,9 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(dirname "$HERE")"
 BUILD="${BUILD:-$HOME/zac-lm-build}"
 PY="${PY:-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3}"
-MLX_BIN="${MLX_BIN:-/Library/Frameworks/Python.framework/Versions/3.12/bin}"
+# MLX runs in its own venv: it needs no torch, so a broken torch/torchvision install in the
+# system Python cannot break training.
+MLX_VENV="${MLX_VENV:-$BUILD/.venv-mlx}"
 BASE="${BASE:-HuggingFaceTB/SmolLM2-360M-Instruct}"
 mkdir -p "$BUILD"
 
@@ -29,6 +31,13 @@ else
 fi
 
 echo "== 4. LoRA fine-tune ($BASE)"
+if [ ! -x "$MLX_VENV/bin/mlx_lm.lora" ]; then
+  echo "Setting up an isolated MLX environment in $MLX_VENV"
+  "$PY" -m venv "$MLX_VENV"
+  "$MLX_VENV/bin/pip" install -q --upgrade pip
+  "$MLX_VENV/bin/pip" install -q mlx-lm
+fi
+MLX_BIN="$MLX_VENV/bin"
 "$MLX_BIN/mlx_lm.lora" \
   --model "$BASE" \
   --train \
@@ -43,9 +52,8 @@ echo "== 5. Fuse the adapter into a standalone model"
 "$MLX_BIN/mlx_lm.fuse" \
   --model "$BASE" \
   --adapter-path "$BUILD/adapters" \
-  --save-path "$BUILD/fused_model" \
-  --de-quantize
+  --save-path "$BUILD/fused_model"
 
 echo "== 6. Sanity check: 5 questions with the real system prompt"
-"$PY" "$HERE/sanity.py" --model "$BUILD/fused_model" --kb "$REPO/zac_kb.json"
+"$MLX_BIN/python" "$HERE/sanity.py" --model "$BUILD/fused_model" --kb "$REPO/zac_kb.json"
 echo "Done. Next: bash $HERE/export_onnx.sh"
