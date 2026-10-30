@@ -3,7 +3,7 @@ import ZacFacts.Basic
 /-
 The verified public fact sheet for Ask Zac AI.
 
-This file is the single source of truth: `lake exe zackb` exports it to `zac_kb.json`,
+This file is the single source of truth: the exporter (`Main.lean`) writes it to `zac_kb.json`,
 which the training data and the website both read. Keep every fact public, and never
 use em dashes. Write about Zac by name rather than with pronouns.
 -/

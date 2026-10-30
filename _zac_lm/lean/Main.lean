@@ -1,7 +1,7 @@
 import ZacFacts.Checks
 
 /-
-Exporter: `lake exe zackb <out.json>`.
+Exporter: `lake build && lake env lean --run Main.lean <out.json>`.
 
 Importing `ZacFacts.Checks` means this program only builds if every theorem holds.
 At run time it also checks the text rules below, and writes nothing if any fails.

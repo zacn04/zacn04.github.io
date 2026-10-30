@@ -6,7 +6,8 @@ This folder is not published by GitHub Pages (Jekyll skips folders that start wi
 
 1. **`lean/`** holds the fact sheet (`ZacFacts/Data.lean`) and the rules it must satisfy
    (`ZacFacts/Checks.lean`). The kernel proves the date and number rules with `decide`, so
-   `lake build` fails if an edit breaks one. `lake exe zackb` then checks the text rules
+   `lake build` fails if an edit breaks one. The exporter (`Main.lean`, run with
+   `lake env lean --run Main.lean`) then checks the text rules
    (no em dashes, no blocked terms, every proved number appears in its fact as written) and
    only then writes `../zac_kb.json` with `"verifier": "lean"`.
 2. **`build_dataset.py`** turns `zac_kb.json` into `train.jsonl` and `valid.jsonl`. Answers

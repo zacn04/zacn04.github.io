@@ -1,6 +1,6 @@
 """Build the LoRA training data for Ask Zac AI from the Lean-checked fact sheet.
 
-Reads zac_kb.json (written by `lake exe zackb`) and writes train.jsonl and valid.jsonl
+Reads zac_kb.json (written by the Lean exporter, Main.lean) and writes train.jsonl and valid.jsonl
 in the chat format mlx_lm.lora expects. Every answer is copied from a verified fact or
 is a fixed refusal, so the model is only ever trained on Lean-checked text.
 
@@ -83,7 +83,7 @@ def main():
     a = ap.parse_args()
     kb = json.loads(Path(a.kb).read_text())
     if kb.get("verifier") != "lean" and not a.allow_unverified:
-        raise SystemExit("zac_kb.json was not written by the Lean exporter. Run `lake exe zackb` first.")
+        raise SystemExit("zac_kb.json was not written by the Lean exporter. Run bash _zac_lm/train.sh first.")
     facts = {f["id"]: f for f in kb["facts"]}
     missing = set(facts) ^ set(QUESTIONS)
     if missing:

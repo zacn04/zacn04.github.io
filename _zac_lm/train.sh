@@ -14,7 +14,9 @@ mkdir -p "$BUILD"
 
 echo "== 1. Lean: prove the fact rules and export zac_kb.json"
 command -v lake >/dev/null || { echo "Install Lean first: https://lean-lang.org/install (elan)"; exit 1; }
-(cd "$HERE/lean" && lake build && lake exe zackb "$REPO/zac_kb.json")
+# `lake build` kernel-checks every theorem. The exporter then runs in Lean's interpreter
+# rather than as a compiled binary, which recent macOS versions can refuse to load.
+(cd "$HERE/lean" && lake build && lake env lean --run Main.lean "$REPO/zac_kb.json")
 
 echo "== 2. Training data from the verified facts"
 "$PY" "$HERE/build_dataset.py" --kb "$REPO/zac_kb.json" --out "$BUILD/data"

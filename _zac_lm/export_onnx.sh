@@ -8,6 +8,11 @@ BUILD="${BUILD:-$HOME/zac-lm-build}"
 PY="${PY:-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3}"
 HF_REPO="${HF_REPO:-zacn04/zac-smollm2-onnx}"
 
+if [ ! -f "$BUILD/fused_model/config.json" ]; then
+  echo "No trained model at $BUILD/fused_model. Run bash _zac_lm/train.sh first, and check it finished."
+  exit 1
+fi
+
 if [ ! -d "$BUILD/.venv" ]; then
   "$PY" -m venv "$BUILD/.venv"
   "$BUILD/.venv/bin/pip" install -q "optimum[onnxruntime]" transformers onnx onnxruntime huggingface_hub
