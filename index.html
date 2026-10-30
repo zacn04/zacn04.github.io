@@ -145,8 +145,7 @@
     }
     @media (max-width: 480px) {
       body { padding-top: 36px; }
-      .dark-toggle { position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; line-height: 30px; font-size: 15px; }
-      .tab-btn { padding: 10px 12px; font-size: 14px; }
+      .tab-btn { padding: 10px 8px; font-size: 14px; }
       .project-img { width: 100%; max-width: 140px; }
     }
     /* Collapsible secondary sections */
@@ -159,6 +158,28 @@
     details.desc { margin-top: -4px; }
     details.desc summary { cursor: pointer; color: var(--link); font-size: 13px; }
     details.desc p { margin-top: 6px; }
+    /* Ask AI */
+    .ai-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .ai-chip { font: inherit; font-size: 14px; color: var(--link); background: none; border: 1px solid var(--border); border-radius: 16px; padding: 5px 12px; cursor: pointer; text-align: left; }
+    .ai-chip:hover { border-color: var(--link); }
+    .ai-log { display: flex; flex-direction: column; gap: 10px; max-height: 420px; overflow-y: auto; margin: 12px 0; }
+    .ai-log:empty { display: none; }
+    .ai-msg { padding: 10px 12px; border-radius: 8px; line-height: 1.5; max-width: 90%; }
+    .ai-msg p { margin: 0 0 6px; }
+    .ai-msg ul { margin: 4px 0; padding-left: 18px; }
+    .ai-user { align-self: flex-end; background: var(--link); color: #fff; }
+    .ai-bot { align-self: flex-start; background: var(--code-bg); }
+    .ai-draft { opacity: 0.6; font-style: italic; }
+    .ai-note { font-size: 13px; color: var(--text-secondary); font-style: normal; margin: 6px 0 0 !important; }
+    .ai-ok::before { content: "\2713  "; }
+    .ai-form { display: flex; gap: 8px; }
+    .ai-form input { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
+    .ai-form button, #ai-load { font: inherit; font-size: 15px; padding: 8px 14px; border: 1px solid var(--link); border-radius: 6px; background: var(--link); color: #fff; cursor: pointer; }
+    #ai-load { background: none; color: var(--link); }
+    .ai-form button:disabled, #ai-load:disabled { opacity: 0.5; cursor: default; }
+    .ai-model { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; font-size: 14px; color: var(--text-secondary); }
+    .ai-model progress { width: 100%; height: 6px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
  
@@ -181,6 +202,10 @@
       transition: background-color 0.3s;
     }
     .dark-toggle:hover { opacity: 0.8; }
+    /* On phones, keep the toggle in its own strip above the header instead of floating over content. */
+    @media (max-width: 480px) {
+      .dark-toggle { position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; line-height: 30px; font-size: 15px; }
+    }
   </style>
 </head>
  
@@ -219,6 +244,7 @@
               <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-research" onclick="switchTab('research', this)">Research</button>
               <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-projects" onclick="switchTab('projects', this)">Projects</button>
               <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-speaking" onclick="switchTab('speaking', this)">Speaking</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-ai" onclick="switchTab('ai', this)">Ask AI</button>
             </div>
  
             <!-- About Tab -->
@@ -539,12 +565,51 @@
                 </tbody>
               </table>
             </div>
+            <!-- Ask AI Tab -->
+            <div id="tab-ai" class="tab-panel" role="tabpanel">
+              <p>
+                Ask a question about Zac. A small language model runs in your browser, and before an answer is shown,
+                every number, date, and link in it is checked against a fact sheet verified in Lean.
+                If an answer fails the check, you see the verified facts instead.
+              </p>
+              <div class="ai-chips">
+                <button type="button" class="ai-chip">What is Zac researching at Pramaana?</button>
+                <button type="button" class="ai-chip">Summarize Zac's ICML 2026 papers</button>
+                <button type="button" class="ai-chip">How does the SPRINT game engine work?</button>
+                <button type="button" class="ai-chip">What classes did Zac take at MIT?</button>
+              </div>
+              <div id="ai-log" class="ai-log" role="log" aria-live="polite"></div>
+              <form id="ai-form" class="ai-form">
+                <label for="ai-input" class="sr-only">Your question</label>
+                <input id="ai-input" type="text" autocomplete="off" placeholder="Ask about Zac's work, research, or projects">
+                <button type="submit">Ask</button>
+              </form>
+              <div class="ai-model">
+                <button id="ai-load" type="button">Load local model</button>
+                <span id="ai-status" role="status">Loading the verified facts...</span>
+                <progress id="ai-progress" max="100" value="0" hidden></progress>
+              </div>
+              <details class="desc" style="margin-top:12px;">
+                <summary>How the check works</summary>
+                <p>
+                  The facts live in a Lean 4 project. The Lean kernel proves rules about them (for example, that every
+                  role ends after it starts and that every trained score in the transfer study is below the base model),
+                  and the exporter refuses to publish the facts unless each checked number appears in the text as written.
+                  The model was fine-tuned only on those facts. In the browser, an answer is shown only if every number,
+                  month and year, link, and listed organisation in it also appears in the verified facts.
+                  A true value used in the wrong context can still slip through, so treat answers as a guide and the
+                  other tabs as the source.
+                </p>
+                <p>Proved in Lean: <span id="ai-theorems"></span>.</p>
+              </details>
+            </div>
           </div>
  
           <p style="text-align:right;font-size:small;padding:0 2.5%;">
             <a href="https://github.com/jonbarron/website">Website Template</a>
           </p>
  
+          <script type="module" src="ask-ai.js"></script>
           <script>
             function switchTab(name, btn) {
               document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });

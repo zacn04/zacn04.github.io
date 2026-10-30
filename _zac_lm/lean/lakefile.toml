@@ -1,0 +1,9 @@
+name = "ZacFacts"
+defaultTargets = ["zackb"]
+
+[[lean_lib]]
+name = "ZacFacts"
+
+[[lean_exe]]
+name = "zackb"
+root = "Main"
