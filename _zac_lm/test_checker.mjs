@@ -50,7 +50,7 @@ for (const [text, culprit] of bad) {
 check("known limitation: real date in wrong context passes", core.verifyAnswer("Zac graduated from MIT in May 2025.", kb, allowed).ok);
 check("true restatement passes", core.verifyAnswer("Zac got a GPA of 4.6/5.0 at MIT and graduated in February 2026.", kb, allowed).ok);
 check("number from the question is allowed", core.verifyAnswer("I do not have verified information about 2019.", kb, allowed, "What did Zac do in 2019?").ok);
-check("em dash is cleaned", core.cleanAnswer("Zac — at MIT") === "Zac, at MIT");
+check("em dash is cleaned", core.cleanAnswer("Zac \u2014 at MIT") === "Zac, at MIT");
 
 // 4. Retrieval puts the right fact first for the starter questions.
 const starters = [
