@@ -145,7 +145,6 @@
     }
     @media (max-width: 480px) {
       body { padding-top: 36px; }
-      .dark-toggle { position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; line-height: 30px; font-size: 15px; }
       .tab-btn { padding: 10px 12px; font-size: 14px; }
       .project-img { width: 100%; max-width: 140px; }
     }
@@ -181,6 +180,10 @@
       transition: background-color 0.3s;
     }
     .dark-toggle:hover { opacity: 0.8; }
+    /* On phones, keep the toggle in its own strip above the header instead of floating over content. */
+    @media (max-width: 480px) {
+      .dark-toggle { position: absolute; top: 6px; right: 8px; width: 30px; height: 30px; line-height: 30px; font-size: 15px; }
+    }
   </style>
 </head>
  
