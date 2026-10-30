@@ -35,9 +35,7 @@ rm -rf "$BUILD/hf_upload"
 
 mkdir -p "$BUILD/hf_upload/onnx"
 "$VPY" "$HERE/quantize_q4.py" "$BUILD/onnx_fp32/model.onnx" "$BUILD/hf_upload/onnx/model_q4.onnx"
-for f in config.json generation_config.json tokenizer.json tokenizer_config.json special_tokens_map.json; do
-  [ -f "$BUILD/onnx_fp32/$f" ] && cp "$BUILD/onnx_fp32/$f" "$BUILD/hf_upload/"
-done
+"$VPY" "$HERE/prepare_upload.py" "$BUILD/onnx_fp32" "$BUILD/fused_model" "$BUILD/hf_upload"
 du -sh "$BUILD/hf_upload"
 
 cat <<MSG
