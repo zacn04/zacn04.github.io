@@ -164,7 +164,7 @@
     .ai-chip:hover { border-color: var(--link); }
     .ai-log { display: flex; flex-direction: column; gap: 10px; max-height: 420px; overflow-y: auto; margin: 12px 0; }
     .ai-log:empty { display: none; }
-    .ai-msg { padding: 10px 12px; border-radius: 8px; line-height: 1.5; max-width: 90%; }
+    .ai-msg { padding: 10px 12px; border-radius: 8px; line-height: 1.5; max-width: 90%; overflow-wrap: anywhere; }
     .ai-msg p { margin: 0 0 6px; }
     .ai-msg ul { margin: 4px 0; padding-left: 18px; }
     .ai-user { align-self: flex-end; background: var(--link); color: #fff; }
@@ -172,6 +172,10 @@
     .ai-draft { opacity: 0.6; font-style: italic; }
     .ai-note { font-size: 13px; color: var(--text-secondary); font-style: normal; margin: 6px 0 0 !important; }
     .ai-ok::before { content: "\2713  "; }
+    .ai-cite { font-size: 12px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 10px; white-space: nowrap; }
+    .ai-proof { margin: 8px 0; }
+    .ai-proof figcaption { font-size: 14px; margin-bottom: 4px; }
+    .ai-proof pre { margin: 0; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
     .ai-form { display: flex; gap: 8px; }
     .ai-form input { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
     .ai-form button, #ai-load { font: inherit; font-size: 15px; padding: 8px 14px; border: 1px solid var(--link); border-radius: 6px; background: var(--link); color: #fff; cursor: pointer; }
@@ -568,9 +572,9 @@
             <!-- Ask AI Tab -->
             <div id="tab-ai" class="tab-panel" role="tabpanel">
               <p>
-                Ask a question about Zac. A small language model runs in your browser, and before an answer is shown,
-                every number, date, and link in it is checked against a fact sheet verified in Lean.
-                If an answer fails the check, you see the verified facts instead.
+                Ask a question about Zac. A small language model runs in your browser and answers by quoting a fact sheet
+                verified in Lean, citing the fact each sentence comes from. Before an answer is shown, every sentence is
+                checked against the fact it cites. If any sentence fails, you see the verified facts instead.
               </p>
               <div class="ai-chips">
                 <button type="button" class="ai-chip">What is Zac researching at Pramaana?</button>
@@ -595,10 +599,11 @@
                   The facts live in a Lean 4 project. The Lean kernel proves rules about them (for example, that every
                   role ends after it starts and that every trained score in the transfer study is below the base model),
                   and the exporter refuses to publish the facts unless each checked number appears in the text as written.
-                  The model was fine-tuned only on those facts. In the browser, an answer is shown only if every number,
-                  month and year, link, and listed organisation in it also appears in the verified facts.
-                  A true value used in the wrong context can still slip through, so treat answers as a guide and the
-                  other tabs as the source.
+                  The model was fine-tuned to answer only by quoting those facts, with the fact's id after each quote.
+                  In the browser, an answer is shown only if every sentence in it appears word for word in the fact it
+                  cites, or is a fixed reply. Ask how something is known (for example, "How do you know Zac left Meta
+                  before Pramaana?") to see the Lean proof itself. The check guarantees each sentence is a verified fact,
+                  not that it is the best answer to your question.
                 </p>
                 <p>Proved in Lean: <span id="ai-theorems"></span>.</p>
               </details>

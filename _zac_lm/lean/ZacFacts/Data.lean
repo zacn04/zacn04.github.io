@@ -182,6 +182,9 @@ def facts : List Fact := [
 
 /-- Fact groups for broad questions. The exporter checks that every id names a fact. -/
 def groups : List Group := [
+  { id := "identity",
+    triggers := ["who is zac", "who is zachary", "about zac", "intro to zac", "introduce zac"],
+    factIds := ["identity"] },
   { id := "publications",
     triggers := ["published", "publications", "publish", "papers"],
     factIds := ["paper-lean", "qedbench"] },
@@ -244,9 +247,19 @@ def groups : List Group := [
     factIds := ["pramaana", "research-interests"] }
 ]
 
-/-- Instructions shown to the model. `{facts}` is replaced with the retrieved facts. -/
+/-- Instructions shown to the model. `{facts}` is replaced with the retrieved facts, each
+written as `- [id] text`, plus any relevant proofs written as `- [proof:name] description`. -/
 def systemPrompt : String :=
-  "You are Ask Zac AI, a small assistant on zacburton.com that answers questions about Zac Burton. Answer in one to three plain sentences, using only the facts below. If the facts do not answer the question, say that you do not have verified information about that, and suggest emailing zacnburton@gmail.com. Never share private details.\n\nFacts:\n{facts}"
+  "You are Ask Zac AI, a small assistant on zacburton.com that answers questions about Zac Burton. Answer by copying the one to three most relevant sentences from the facts below, word for word, and put the fact's id in brackets after them, for example [mit]. If a proof below answers the question, write: This is proved in Lean: and then the proof's id, for example [proof:roles_ordered]. If the question is vague, ask which topic the visitor means. If the facts do not answer the question, say that you do not have verified information about that, and suggest emailing zacnburton@gmail.com. Never share private details.\n\nFacts:\n{facts}"
+
+/-- Fixed replies the model may give word for word. The website accepts these, cited fact
+sentences, and proof ids, and nothing else. -/
+def templates : List (String × String) := [
+  ("unknown", "I do not have verified information about that. You can email Zac at zacnburton@gmail.com."),
+  ("private", "I only share public information about Zac's work, research, projects, and interests. For anything else, you can email Zac at zacnburton@gmail.com."),
+  ("clarify", "Do you mean Zac's work, research, projects, or interests outside work?"),
+  ("proof", "This is proved in Lean:")
+]
 
 /-- Lowercase terms that must never appear in a fact. Private terms go in an untracked
 `_zac_lm/private_blocklist.txt`, read by the exporter, so they are never published. -/

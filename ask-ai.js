@@ -1,6 +1,6 @@
 // Ask AI tab: instant answers from the Lean-checked fact sheet, plus a small language
 // model that runs in the browser. Every model answer is checked before it is shown.
-import { buildIndex, retrieve, buildMessages, allowedClaims, verifyAnswer, cleanAnswer } from "./ask-ai-core.js";
+import { buildIndex, retrieve, retrieveProofs, isVague, buildMessages, verifyAnswer } from "./ask-ai-core.js";
 
 const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3";
 // Tried in order. The first is the fine-tuned model; the rest are base-model fallbacks.
@@ -11,6 +11,19 @@ const MODELS = [
   { id: "onnx-community/Qwen2.5-0.5B-Instruct", dtype: "q4", label: "base Qwen2.5-0.5B" },
 ];
 
+// Which tab each fact lives on, for the "Read more" links.
+const TAB_FOR_TOPIC = { research: "research", projects: "projects" };
+const TAB_FOR_FACT = { talks: "speaking" };
+const TAB_LABEL = { about: "About", research: "Research", projects: "Projects", speaking: "Speaking" };
+
+// Buttons offered when a question is too vague.
+const TOPICS = [
+  ["Work", "Where has Zac worked?"],
+  ["Research", "What does Zac research?"],
+  ["Projects", "What projects has Zac built?"],
+  ["Interests", "What are Zac's hobbies?"],
+];
+
 const $ = (id) => document.getElementById(id);
 const log = $("ai-log");
 const form = $("ai-form");
@@ -19,41 +32,128 @@ const status = $("ai-status");
 const bar = $("ai-progress");
 const loadBtn = $("ai-load");
 
-let kb, index, allowed;
+let kb, index, factById;
 let generator = null;
 let loading = null;
 let lastQuestion = "";
 const history = [];
 
-function bubble(role, text, cls = "") {
-  const div = document.createElement("div");
-  div.className = `ai-msg ai-${role} ${cls}`.trim();
-  if (text) div.textContent = text;
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text) e.textContent = text;
+  return e;
+}
+
+function bubble(role, cls = "") {
+  const div = el("div", `ai-msg ai-${role} ${cls}`.trim());
   log.appendChild(div);
   log.scrollTop = log.scrollHeight;
   return div;
 }
 
-function note(el, text, cls) {
-  const p = document.createElement("p");
-  p.className = `ai-note ${cls}`;
-  p.textContent = text;
-  el.appendChild(p);
+function note(parent, text, cls) {
+  parent.appendChild(el("p", `ai-note ${cls}`, text));
+}
+
+function tabOf(fact) {
+  return TAB_FOR_FACT[fact.id] || TAB_FOR_TOPIC[fact.topic] || "about";
+}
+
+function goToTab(name) {
+  window.switchTab(name, document.querySelector(`[aria-controls="tab-${name}"]`));
+  document.querySelector(".tab-bar").scrollIntoView({ behavior: "smooth" });
+}
+
+function tabLink(name) {
+  const a = el("a", "", `${TAB_LABEL[name]} tab`);
+  a.href = `#tab-${name}`;
+  a.addEventListener("click", (e) => { e.preventDefault(); goToTab(name); });
+  return a;
+}
+
+function readMore(parent, facts) {
+  const tabs = [...new Set(facts.map(tabOf))];
+  const p = el("p", "ai-note", "Read more: ");
+  tabs.forEach((t, i) => { if (i) p.append(", "); p.append(tabLink(t)); });
+  parent.appendChild(p);
+}
+
+function topicButtons(parent) {
+  const row = el("div", "ai-chips");
+  for (const [label, q] of TOPICS) {
+    const b = el("button", "ai-chip", label);
+    b.type = "button";
+    b.addEventListener("click", () => ask(q));
+    row.appendChild(b);
+  }
+  parent.appendChild(row);
+}
+
+function proofFigure(name) {
+  const p = kb.proofs.find((x) => x.name === name);
+  const fig = el("figure", "ai-proof");
+  fig.appendChild(el("figcaption", "", `${p.doc} Checked by the Lean kernel:`));
+  const pre = el("pre");
+  pre.appendChild(el("code", "", p.source));
+  fig.appendChild(pre);
+  return fig;
 }
 
 function factsBubble(facts, lead) {
-  const div = bubble("bot", "");
-  const p = document.createElement("p");
-  p.textContent = lead;
-  div.appendChild(p);
-  const ul = document.createElement("ul");
-  for (const f of facts) {
-    const li = document.createElement("li");
-    li.textContent = f.text;
-    ul.appendChild(li);
-  }
+  const div = bubble("bot");
+  div.appendChild(el("p", "", lead));
+  const ul = el("ul");
+  for (const f of facts) ul.appendChild(el("li", "", f.text));
   div.appendChild(ul);
+  readMore(div, facts);
   return div;
+}
+
+function proofsBubble(proofs, lead) {
+  const div = bubble("bot");
+  div.appendChild(el("p", "", lead));
+  for (const p of proofs) div.appendChild(proofFigure(p.name));
+  return div;
+}
+
+function clarify() {
+  const div = bubble("bot");
+  div.appendChild(el("p", "", kb.templates.clarify));
+  topicButtons(div);
+}
+
+// Render an answer that passed verifyAnswer: quoted sentences with their citations,
+// proofs with their Lean source, and template replies.
+function renderChecked(parts) {
+  const div = bubble("bot");
+  const cited = [];
+  let p = el("p");
+  for (const part of parts) {
+    if (part.type === "proof") {
+      if (p.childNodes.length) div.appendChild(p);
+      div.appendChild(proofFigure(part.name));
+      p = el("p");
+      continue;
+    }
+    if (p.childNodes.length) p.append(" ");
+    p.append(part.sentences.join(" "));
+    if (part.type === "cite") {
+      const f = factById.get(part.id);
+      cited.push(f);
+      const c = el("a", "ai-cite", part.id);
+      c.href = `#tab-${tabOf(f)}`;
+      c.title = f.text;
+      c.addEventListener("click", (e) => { e.preventDefault(); goToTab(tabOf(f)); });
+      p.append(" ", c);
+    }
+  }
+  if (p.childNodes.length) div.appendChild(p);
+  if (parts.some((x) => x.type === "text" && x.sentences.join(" ") === kb.templates.clarify)) topicButtons(div);
+  if (cited.length || parts.some((x) => x.type === "proof")) {
+    note(div, "Checked: every sentence is quoted word for word from a cited Lean-verified fact.", "ai-ok");
+  }
+  if (cited.length) readMore(div, cited);
 }
 
 async function init() {
@@ -62,12 +162,12 @@ async function init() {
     if (kb.verifier !== "lean") throw new Error("not verified");
   } catch {
     status.textContent = "The verified fact sheet is not available yet, so Ask AI is turned off.";
-    form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
+    form.querySelectorAll("input, button").forEach((e) => (e.disabled = true));
     loadBtn.disabled = true;
     return;
   }
   index = buildIndex(kb);
-  allowed = allowedClaims(kb);
+  factById = new Map(kb.facts.map((f) => [f.id, f]));
   $("ai-theorems").textContent = kb.theorems.join(", ");
   status.textContent = "Instant answers come from the verified facts. Load the model for written answers.";
 }
@@ -112,60 +212,60 @@ function loadModel() {
   return loading;
 }
 
-async function modelAnswer(question, facts) {
+async function modelAnswer(question, facts, proofs) {
   const { pipe, TextStreamer } = generator;
-  const div = bubble("bot", "", "ai-draft");
-  const label = document.createElement("p");
-  label.className = "ai-note";
-  label.textContent = "Unchecked draft";
-  const body = document.createElement("p");
-  div.append(label, body);
+  const div = bubble("bot", "ai-draft");
+  const body = el("p");
+  div.append(el("p", "ai-note", "Unchecked draft"), body);
   let draft = "";
   const streamer = new TextStreamer(pipe.tokenizer, {
     skip_prompt: true,
     skip_special_tokens: true,
     callback_function: (t) => { draft += t; body.textContent = draft; log.scrollTop = log.scrollHeight; },
   });
-  const out = await pipe(buildMessages(kb, facts, history.slice(-4), question), {
+  const out = await pipe(buildMessages(kb, facts, proofs, history.slice(-4), question), {
     max_new_tokens: 320, do_sample: false, streamer,
   });
-  const answer = cleanAnswer(out[0].generated_text.at(-1).content || draft);
-  const v = verifyAnswer(answer, kb, allowed, question);
+  const answer = (out[0].generated_text.at(-1).content || draft).trim();
+  const v = verifyAnswer(answer, kb);
   div.remove();
   if (v.ok) {
-    const done = bubble("bot", answer);
-    note(done, "Checked: every number, date, and link matches the Lean-verified facts.", "ai-ok");
+    renderChecked(v.parts);
     history.push({ role: "user", content: question }, { role: "assistant", content: answer });
   } else {
-    const shown = factsBubble(facts.slice(0, 3), "I could not verify my answer, so here is what the verified facts say:");
-    const why = [...v.unverified, ...v.blocked].join(", ");
-    note(shown, `Withheld: the draft mentioned ${why}, which is not in the verified facts.`, "ai-bad");
+    const shown = proofs.length && !facts.length
+      ? proofsBubble(proofs, "I could not verify my answer, so here are the relevant Lean proofs:")
+      : factsBubble(facts.slice(0, 3), "I could not verify my answer, so here is what the verified facts say:");
+    note(shown, "Withheld: the draft was not quoted word for word from the facts it cited.", "ai-bad");
   }
 }
 
 async function ask(question) {
   question = question.trim();
   if (!question || !kb) return;
-  bubble("user", question);
+  bubble("user").textContent = question;
   input.value = "";
   // Short follow-ups ("tell me more") reuse the previous question for retrieval.
   let facts = retrieve(index, question, 5);
   if (facts.length < 2 && lastQuestion) facts = retrieve(index, question + " " + lastQuestion, 5);
+  const proofs = retrieveProofs(kb, question);
   lastQuestion = question;
-  if (!facts.length) {
-    bubble("bot", "I do not have verified information about that. You can email Zac at zacnburton@gmail.com.");
+  if (!facts.length && !proofs.length) {
+    if (isVague(question)) clarify();
+    else bubble("bot").textContent = kb.templates.unknown;
     return;
   }
   if (!generator) {
-    factsBubble(facts.slice(0, 3), "From the verified facts:");
+    if (proofs.length) proofsBubble(proofs, "From the Lean proofs:");
+    else factsBubble(facts.slice(0, 3), "From the verified facts:");
     try { await loadModel(); } catch { return; }
   }
   try {
     form.querySelector("button").disabled = true;
-    await modelAnswer(question, facts);
+    await modelAnswer(question, facts, proofs);
   } catch (e) {
     console.warn("Ask AI: generation failed", e);
-    bubble("bot", "Something went wrong while writing an answer. The verified facts above still apply.");
+    bubble("bot").textContent = "Something went wrong while writing an answer. The verified facts above still apply.";
   } finally {
     form.querySelector("button").disabled = false;
   }

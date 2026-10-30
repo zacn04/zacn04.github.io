@@ -20,9 +20,12 @@ This folder is not published by GitHub Pages (Jekyll skips folders that start wi
    it 5 questions (`sanity.py`).
 4. **`export_onnx.sh`** exports the fused model to 4-bit ONNX for transformers.js and
    prints the Hugging Face upload command.
-5. On the site, **`ask-ai.js`** retrieves relevant facts, runs the model in the browser, and
-   shows an answer only if every number, month and year, link, and watched organisation in
-   it appears in `zac_kb.json` (logic in `ask-ai-core.js`). Otherwise it shows the facts.
+5. On the site, **`ask-ai.js`** retrieves relevant facts (and, for "how do you know"
+   questions, Lean proofs), runs the model in the browser, and shows an answer only if it
+   is made entirely of sentences copied word for word from the facts they cite
+   (`... [mit]`), proof ids (`[proof:name]`, shown with the theorem's source), or fixed
+   template replies (logic in `ask-ai-core.js`). Otherwise it shows the facts. Vague
+   questions get topic buttons without calling the model.
 
 ## Run it on the Mac
 
@@ -42,5 +45,5 @@ the text together, or the build stops.
 
 ## What the check does not catch
 
-A true value used in the wrong context, for example a real date attached to the wrong role,
-passes. So does a wrong claim with no number, date, link, or watched organisation in it.
+Every sentence shown is a verified fact, but the check does not judge relevance: a correct,
+correctly cited fact that does not answer the question would still be shown.

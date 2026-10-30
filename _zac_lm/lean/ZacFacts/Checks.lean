@@ -6,13 +6,13 @@ so `lake build` fails if an edit to `Data.lean` breaks it.
 -/
 namespace ZacFacts
 
-/-- Every month is a real month. -/
+/-- Every month in Zac's dated roles is a real calendar month. -/
 theorem months_valid :
     (roles.all fun r =>
       decide (1 ≤ r.start.month ∧ r.start.month ≤ 12 ∧ 1 ≤ r.stop.month ∧ r.stop.month ≤ 12)) = true := by
   decide
 
-/-- Every role ends on or after it starts. -/
+/-- Every one of Zac's roles ends on or after the month it starts. -/
 theorem roles_ordered : (roles.all fun r => decide (r.start.idx ≤ r.stop.idx)) = true := by
   decide
 
@@ -20,48 +20,50 @@ theorem roles_ordered : (roles.all fun r => decide (r.start.idx ≤ r.stop.idx))
 theorem roles_not_in_future : (roles.all fun r => decide (r.start.idx ≤ asOf.idx)) = true := by
   decide
 
-/-- The Meta internship and the CSAIL research happened while Zac was at MIT. -/
+/-- Zac's Meta internship happened while Zac was a student at MIT. -/
 theorem intern_during_mit :
     mit.start.idx ≤ metaIntern.start.idx ∧ metaIntern.stop.idx ≤ mit.stop.idx := by
   decide
 
+/-- Zac's CSAIL research happened while Zac was a student at MIT. -/
 theorem csail_during_mit : mit.start.idx ≤ csail.start.idx ∧ csail.stop.idx ≤ mit.stop.idx := by
   decide
 
-/-- Zac graduated before starting full-time at Meta, and left Meta before joining Pramaana. -/
+/-- Zac graduated from MIT before starting full-time at Meta. -/
 theorem graduated_before_meta : mit.stop.idx ≤ metaMLE.start.idx := by
   decide
 
+/-- Zac left Meta before joining Pramaana Labs. -/
 theorem meta_before_pramaana : metaMLE.stop.idx < pramaana.start.idx := by
   decide
 
-/-- Pramaana is the only current role. -/
+/-- Pramaana Labs is Zac's only current role. -/
 theorem only_pramaana_current :
     (roles.filter (·.current)).length = 1 ∧ pramaana.current = true := by
   decide
 
-/-- "All conditions showed negative transfer": the best trained score is below the base. -/
+/-- In the transfer study, even the best trained model scored below the base model, so every condition showed negative transfer. -/
 theorem neg_transfer_all_negative :
     negTransfer.lo ≤ negTransfer.hi ∧ negTransfer.hi < negTransfer.base := by
   decide
 
-/-- "Doubling the sampling budget": k went from 32 to 64. -/
+/-- In the Lean provers paper, going from k=32 to k=64 doubles the sampling budget. -/
 theorem prover_budget_doubled : proverStudy.kAfter = 2 * proverStudy.kBefore := by
   decide
 
-/-- "Solves 0 additional theorems" at the doubled budget. -/
+/-- In the Lean provers paper, the doubled sampling budget solved 0 additional theorems. -/
 theorem prover_plateau : proverStudy.extraSolved = 0 := by
   decide
 
-/-- "Breaks the plateau": the mean gain exceeds one standard deviation. -/
+/-- In the Lean provers paper, the mean gain from tactic skeletons is larger than its standard deviation. -/
 theorem prover_gain_exceeds_sd : proverStudy.sd < proverStudy.gain := by
   decide
 
-/-- "In 3 of 3 seeds": every seed improved. -/
+/-- In the Dyck pretraining experiment, every seed improved. -/
 theorem dyck_all_seeds : dyck.seedsBetter = dyck.seeds ∧ 0 < dyck.seeds := by
   decide
 
-/-- The GPA is on a 5.0 scale. -/
+/-- Zac's GPA is within the 5.0 scale. -/
 theorem gpa_in_range : gpa ≤ 50 := by
   decide
 

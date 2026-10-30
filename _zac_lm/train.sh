@@ -54,6 +54,6 @@ echo "== 5. Fuse the adapter into a standalone model"
   --adapter-path "$BUILD/adapters" \
   --save-path "$BUILD/fused_model"
 
-echo "== 6. Sanity check: 7 questions with the real system prompt"
+echo "== 6. Sanity check: 8 questions with the real system prompt"
 "$MLX_BIN/python" "$HERE/sanity.py" --model "$BUILD/fused_model" --kb "$REPO/zac_kb.json"
 echo "Done. Next: bash $HERE/export_onnx.sh"

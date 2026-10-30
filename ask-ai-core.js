@@ -4,14 +4,12 @@
 
 const STOP = new Set(("a an and are as at be by did do does for from has have he her his how i in " +
   "is it its me my of on or she so tell that the their them they this to was were what when where " +
-  "which who why with you your zac zac's zachary burton about").split(" "));
+  "which who why with you your zac zac's zachary burton about s t re ll ve d m").split(" "));
 
-// Organisations a small model might invent. Mentioning one is only allowed if the fact
-// sheet (or the question) mentions it too.
-const WATCHLIST = ["google", "deepmind", "openai", "anthropic", "microsoft", "apple", "amazon",
-  "nvidia", "harmonic", "stanford", "harvard", "oxford", "cambridge", "princeton", "yale",
-  "berkeley", "caltech", "imperial", "goldman", "jane street", "two sigma", "citadel", "netflix",
-  "tesla", "spacex", "ibm", "intel", "uber", "airbnb", "stripe"];
+// Words that carry no topic. A question made only of these is too vague to answer.
+const VAGUE = new Set(("anything something stuff things thing interesting highlights give start " +
+  "should can could would up else hi hello hey know more much lot like want tell everything all " +
+  "doing done").split(" "));
 
 export function words(text) {
   return text.toLowerCase().match(/[a-z0-9][a-z0-9.+*/-]*[a-z0-9+*]|[a-z0-9]/g) || [];
@@ -19,6 +17,23 @@ export function words(text) {
 
 function terms(text) {
   return words(text).filter((w) => !STOP.has(w));
+}
+
+// True when every word is topic-free ("What did Zac do?", "Hi"). Callers should only treat
+// a question as vague when retrieval also found no facts for it.
+export function isVague(query) {
+  return terms(query).every((w) => VAGUE.has(w));
+}
+
+// Sentences, split the same way as in _zac_lm/build_dataset.py: after . ! or ? (but not
+// "..."), before a capital letter or a quote.
+export function splitSentences(text) {
+  return text.trim().split(/(?<=[^.][.!?])\s+(?=[A-Z"])/).filter(Boolean);
+}
+
+function norm(s) {
+  return s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s*\u2014\s*/g, ", ")
+    .replace(/\s+/g, " ").trim();
 }
 
 // BM25 index over each fact's text and keywords (keywords count twice).
@@ -76,77 +91,69 @@ function bm25(index, query, k) {
   return scored.filter((x) => x.score > 0).sort((a, b) => b.score - a.score).slice(0, k).map((x) => x.fact);
 }
 
-export function systemMessage(kb, facts) {
-  return kb.system_prompt.replace("{facts}", facts.map((f) => "- " + f.text).join("\n"));
+// Questions asking how something is known get the most relevant Lean proofs.
+const PROOF_INTENT = /\b(prove[sd]?|proofs?|proven|verif(?:y|ied|ies)|how do (?:you|we) know|formally)\b/i;
+
+export function retrieveProofs(kb, query, k = 3) {
+  if (!PROOF_INTENT.test(query)) return [];
+  const q = new Set(terms(query));
+  return (kb.proofs || [])
+    .map((p) => ({ p, score: terms(p.doc + " " + p.name.replace(/_/g, " ")).filter((t) => q.has(t)).length }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, k)
+    .map((x) => x.p);
 }
 
-// Chat messages for the model: system prompt with retrieved facts, prior turns, question.
-export function buildMessages(kb, facts, history, question) {
-  return [{ role: "system", content: systemMessage(kb, facts) }, ...history, { role: "user", content: question }];
+export function systemMessage(kb, facts, proofs = []) {
+  const lines = [...facts.map((f) => `- [${f.id}] ${f.text}`), ...proofs.map((p) => `- [proof:${p.name}] ${p.doc}`)];
+  return kb.system_prompt.replace("{facts}", lines.join("\n"));
 }
 
-const URL_RE = /\bhttps?:\/\/[^\s<>()"']+/gi;
-const EMAIL_RE = /\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/gi;
-const BARE_DOMAIN_RE = /\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|ai|net|org|edu|io|me)\b(?:\/[^\s<>()"']*)?/gi;
-const NUM_RE = /\d+(?:[.,]\d+)*/g;
-const MONTH_YEAR_RE = /\b(?:january|february|march|april|may|june|july|august|september|october|november|december) \d{4}\b/gi;
-
-function normLink(s) {
-  return s.toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/[.,;:!?)\]'"]+$/, "").replace(/\/$/, "");
+// Chat messages for the model: system prompt with retrieved facts and proofs, prior
+// turns, then the question.
+export function buildMessages(kb, facts, proofs, history, question) {
+  return [{ role: "system", content: systemMessage(kb, facts, proofs) }, ...history, { role: "user", content: question }];
 }
 
-function normNum(s) {
-  return s.replace(/,(?=\d{3}\b)/g, "").replace(/[.,]$/, "");
-}
+const TAG_RE = /\[(proof:)?([a-z0-9_-]+)\]/g;
 
-// Claims in a piece of text: links, emails, month-year dates, and numbers. Links are
-// removed before numbers are read, so the digits inside a URL are not counted twice.
-export function extractClaims(text) {
-  const links = new Set();
-  const dates = new Set((text.match(MONTH_YEAR_RE) || []).map((d) => d.toLowerCase()));
-  let rest = text.replace(URL_RE, (m) => { links.add(normLink(m)); return " "; });
-  rest = rest.replace(EMAIL_RE, (m) => { links.add(m.toLowerCase()); return " "; });
-  rest = rest.replace(BARE_DOMAIN_RE, (m) => { links.add(normLink(m)); return " "; });
-  const numbers = new Set((rest.match(NUM_RE) || []).map(normNum));
-  return { links, numbers, dates };
-}
-
-// Everything the fact sheet allows an answer to say.
-export function allowedClaims(kb) {
-  const links = new Set();
-  const numbers = new Set();
-  const dates = new Set();
-  for (const f of kb.facts) {
-    const c = extractClaims(f.text);
-    c.links.forEach((l) => links.add(l));
-    c.numbers.forEach((n) => numbers.add(n));
-    c.dates.forEach((d) => dates.add(d));
+// The check. An answer is accepted only if it is made entirely of:
+//   - sentences copied word for word from a Lean-verified fact, followed by that fact's
+//     id in brackets, like "... in February 2026. [mit]";
+//   - the proof template followed by the id of a theorem the Lean kernel checked;
+//   - one of the fixed template replies.
+// Anything else (a paraphrase, a wrong citation, an invented sentence) fails.
+// Returns the answer split into parts so the page can render citations and proofs.
+export function verifyAnswer(answer, kb) {
+  const text = norm(answer);
+  const factSentences = new Map(kb.facts.map((f) => [f.id, new Set(splitSentences(f.text).map(norm))]));
+  const proofNames = new Set((kb.proofs || []).map((p) => p.name));
+  const templateSentences = new Set(Object.values(kb.templates || {}).flatMap((t) => splitSentences(t).map(norm)));
+  const sentencesOf = (s) => splitSentences(s).map(norm).filter(Boolean);
+  const parts = [];
+  const problems = [];
+  const needTemplates = (sents) => {
+    for (const s of sents) if (!templateSentences.has(s)) problems.push(s);
+    if (sents.length) parts.push({ type: "text", sentences: sents });
+  };
+  let last = 0;
+  for (const m of text.matchAll(TAG_RE)) {
+    const before = sentencesOf(text.slice(last, m.index));
+    last = m.index + m[0].length;
+    if (m[1]) {
+      needTemplates(before);
+      if (proofNames.has(m[2])) parts.push({ type: "proof", name: m[2] });
+      else problems.push(m[0]);
+      continue;
+    }
+    const allowed = factSentences.get(m[2]);
+    if (!allowed) { problems.push(m[0]); continue; }
+    if (!before.length) problems.push(`${m[0]} cites nothing`);
+    for (const s of before) if (!allowed.has(s)) problems.push(s);
+    parts.push({ type: "cite", id: m[2], sentences: before });
   }
-  const haystack = kb.facts.map((f) => f.text.toLowerCase()).join(" \n ");
-  return { links, numbers, dates, haystack };
-}
-
-export function cleanAnswer(text) {
-  return text.replace(/\s*\u2014\s*/g, ", ").trim();
-}
-
-// An answer passes if every number, link, month-year date, and watched organisation in
-// it appears in the Lean-checked facts (or in the visitor's own question), and it avoids
-// blocked terms. A true value used in the wrong context (a real date attached to the wrong
-// role) is not caught.
-export function verifyAnswer(answer, kb, allowed, question = "") {
-  const fromQuestion = extractClaims(question);
-  const c = extractClaims(answer);
-  const unverified = [];
-  for (const n of c.numbers) if (!allowed.numbers.has(n) && !fromQuestion.numbers.has(n)) unverified.push(n);
-  for (const l of c.links) if (!allowed.links.has(l) && !fromQuestion.links.has(l)) unverified.push(l);
-  for (const d of c.dates) if (!allowed.dates.has(d) && !fromQuestion.dates.has(d)) unverified.push(d);
-  const low = answer.toLowerCase();
-  const q = question.toLowerCase();
-  for (const org of WATCHLIST) {
-    const re = new RegExp("\\b" + org + "\\b");
-    if (re.test(low) && !re.test(allowed.haystack) && !re.test(q)) unverified.push(org);
-  }
-  const blocked = kb.blocklist.filter((b) => low.includes(b));
-  return { ok: unverified.length === 0 && blocked.length === 0, unverified, blocked };
+  needTemplates(sentencesOf(text.slice(last)));
+  if (!parts.length) problems.push("(empty answer)");
+  return { ok: problems.length === 0, parts, problems };
 }
