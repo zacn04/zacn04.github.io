@@ -55,6 +55,15 @@ structure DyckStudy where
 
 def dyck : DyckStudy := { paramsM := 162, warmupPct := 1, cut := 123, seedsBetter := 3, seeds := 3 }
 
+/-- CSAIL hardness-reduction agent: percent of instances solved, and run times. -/
+structure CsailAgent where
+  ppoSolvedPct : Nat
+  randomSolvedPct : Nat
+  ppoMs : Nat
+  exhaustiveS : Nat
+
+def csailAgent : CsailAgent := { ppoSolvedPct := 85, randomSolvedPct := 2, ppoMs := 3, exhaustiveS := 100 }
+
 /-- MIT GPA in tenths, on a 5.0 scale. -/
 def gpa : Nat := 46
 
@@ -64,6 +73,9 @@ def facts : List Fact := [
   { id := "identity", topic := "about",
     keywords := ["who", "zac", "zachary", "burton", "about", "background", "intro", "bio"],
     text := "Zac Burton (Zachary Burton) is a research engineer at Pramaana Labs. Zac graduated from MIT in February 2026 with a B.S. in Mathematics, was born in New York City, was raised in the UK, and is based in Brooklyn, New York." },
+  { id := "skills", topic := "about",
+    keywords := ["skills", "languages", "programming", "python", "c++", "typescript", "sql", "lean 4", "pytorch", "vllm", "trl", "tools", "tech stack", "stack"],
+    text := "Zac programs in Python, C++, TypeScript, SQL, and Lean 4, and works with PyTorch, vLLM, TRL, and Hugging Face Transformers." },
   { id := "pramaana", topic := "work",
     keywords := ["pramaana", "job", "current", "work", "role", "now", "research engineer", "member of technical staff", "verification", "formalization"],
     text := "Since September 2026, Zac has been a Research Engineer (Member of Technical Staff, ML Research) at Pramaana Labs, which builds formal verification for high-stakes AI. Zac works on training models for theorem proving and autoformalization." },
@@ -77,8 +89,8 @@ def facts : List Fact := [
     keywords := ["mit", "education", "degree", "college", "university", "gpa", "grades", "mathematics", "course 18", "graduate", "graduated"],
     text := "Zac studied at MIT from September 2022 to February 2026 and earned a B.S. in Mathematics (Course 18) with a GPA of 4.6/5.0." },
   { id := "tonbridge", topic := "education",
-    keywords := ["tonbridge", "school", "high school", "a-levels", "a levels", "uk", "secondary"],
-    text := "Before MIT, Zac attended Tonbridge School in the UK from 2017 to 2022, earning A* grades in A-Level Mathematics, Further Mathematics, Physics, and Chemistry." },
+    keywords := ["tonbridge", "school", "high school", "a-levels", "a levels", "uk", "secondary", "afro-caribbean", "society"],
+    text := "Before MIT, Zac attended Tonbridge School in the UK from 2017 to 2022, earning A* grades in A-Level Mathematics, Further Mathematics, Physics, and Chemistry. At Tonbridge, Zac founded the school's Afro-Caribbean Society in 2020." },
   { id := "contact", topic := "contact",
     keywords := ["contact", "email", "reach", "github", "linkedin", "website", "links", "get in touch"],
     text := "You can email Zac at zacnburton@gmail.com or zburton@mit.edu. GitHub: https://github.com/zacn04. LinkedIn: https://linkedin.com/in/zac-burton. Website: https://zacburton.com." },
@@ -96,13 +108,13 @@ def facts : List Fact := [
     text := "For QEDBench, Zac produced gold-standard PhD-level correctness judgments, error taxonomies, and partial-credit assessments in probability, discrete mathematics, and algorithms. The failure modes Zac identified in LLM proofs include forcing in false inequalities labelled as elementary, presenting unmotivated formulaic identities such as alternating sums without explaining why they matter, skipping non-trivial steps, and appending unproved remarks." },
   { id := "neg-transfer", topic := "research",
     keywords := ["negative transfer", "visual reasoning", "qwen", "raven", "i-raven", "math-500", "grpo", "sft", "transfer", "pre-registered"],
-    text := "Negative Transfer is the Default: Visual Reasoning to Math on Qwen2.5-VL-7B (2026) is a pre-registered study of whether post-training on abstract visual reasoning (I-RAVEN, Raven's progressive matrices) transfers to mathematical reasoning. All 8 matched-eval SFT and GRPO conditions showed negative transfer on MATH-500: the base model scored 66.8% and the trained models scored between 44.0% and 61.6%. The drop comes from completion compression rather than format failure." },
+    text := "Negative Transfer is the Default: Visual Reasoning to Math on Qwen2.5-VL-7B (2026) is a pre-registered study of whether post-training on abstract visual reasoning (I-RAVEN, Raven's progressive matrices) transfers to mathematical reasoning. All 8 matched-eval SFT and GRPO conditions showed negative transfer on MATH-500: the base model scored 66.8% and the trained models scored between 44.0% and 61.6%. The drop comes from completion compression rather than format failure: a text-only SFT control kept the answer-format rate at about 92% while mean completion length halved." },
   { id := "dyck", topic := "research",
     keywords := ["dyck", "pretraining", "from scratch", "162m", "formal language", "warm-up", "compositional algebra"],
     text := "Zac extended the transfer study to from-scratch pretraining of a 162M-parameter model, where a 1% formal-language (Dyck) warm-up cut tokens-to-threshold on compositional algebra by 12.3% against a scrambled control, in 3 of 3 seeds." },
   { id := "collision", topic := "research",
-    keywords := ["collision", "random walks", "lattices", "poissonization", "preprint", "probability", "bessel", "laplace"],
-    text := "Zac wrote Poissonization-Based Collision Threshold Derivation for Random Walks on Lattices (arXiv 2505.02973, https://arxiv.org/abs/2505.02973), an expository derivation that uses Poissonization, Laplace asymptotics, and Bessel asymptotics to quantify multi-walk collision behaviour on Z^d lattices." },
+    keywords := ["collision", "random walks", "lattices", "poissonization", "preprint", "probability", "bessel", "laplace", "18.604", "seminar"],
+    text := "Zac wrote Poissonization-Based Collision Threshold Derivation for Random Walks on Lattices (arXiv 2505.02973, https://arxiv.org/abs/2505.02973), an expository derivation that uses Poissonization, Laplace asymptotics, and Bessel asymptotics to quantify multi-walk collision behaviour on Z^d lattices. It grew out of Zac's final paper for MIT 18.604 (Seminar in Probability on Random Walks on Graphs), which surveyed the expected number of collisions between two independent random walkers on Z^3." },
   { id := "tabular-rl", topic := "research",
     keywords := ["tabular", "reinforcement learning", "blog", "post", "symbolic algebra", "high school"],
     text := "When Does Tabular RL Actually Break? is a 2025 blog post by Zac (https://zacburton.com/tabular_rl.html) that systematically studies representation bottlenecks in symbolic algebra, testing where tabular reinforcement learning fails on high-school algebra." },
@@ -110,8 +122,8 @@ def facts : List Fact := [
     keywords := ["interests", "research interests", "focus", "exploring", "verifier", "autoformalization", "search", "what does zac research"],
     text := "Zac's research interests include verifier-based reinforcement learning, theorem proving, autoformalization, inference-time search, and optimization. Zac's research asks what LLMs can and cannot do in mathematics." },
   { id := "csail", topic := "research",
-    keywords := ["csail", "futuretech", "undergraduate research", "urop", "gadgets", "reductions", "pspace", "complexity"],
-    text := "From November 2024 to August 2025, Zac was an undergraduate researcher at MIT CSAIL in the FutureTech group, investigating RL-guided search over symbolic gadget construction for PSPACE and NL complexity-theoretic reductions, and building annotation, evaluation, and data pipelines from scratch." },
+    keywords := ["csail", "futuretech", "undergraduate research", "urop", "gadgets", "reductions", "pspace", "complexity", "jayson lynch", "ppo", "hardness", "research engineer"],
+    text := "From November 2024 to August 2025, Zac was a research engineer at MIT CSAIL in the FutureTech group, advised by Jayson Lynch. Zac trained a PPO agent to replace exhaustive search in automated hardness reductions for PSPACE and NL, treating gadget simulation as a Markov decision process with action masking: it solved 85% of instances in under 3 ms, compared with 2% for random search and over 100 s for exhaustive search. Zac also integrated reward model training into distributed PPO rollouts and built annotation, evaluation, and data pipelines from scratch." },
   { id := "cfar", topic := "research",
     keywords := ["singapore", "cfar", "a*star", "sipga", "continual learning", "chess", "grid worlds", "summer"],
     text := "In summer 2023, after freshman year, Zac received the Singapore International Pre-Graduate Award (SIPGA) to research continual reinforcement learning on grid worlds and chess at the A*STAR Centre for Frontier AI Research (CFAR) in Singapore." },
@@ -155,8 +167,8 @@ def facts : List Fact := [
     keywords := ["courses", "classes", "coursework", "computer science", "machine learning", "acting", "psychology", "game design", "graduate"],
     text := "Zac's other MIT courses include Introduction to Algorithms (6.1210), graduate Reinforcement Learning (6.7920), graduate Program Synthesis (6.5130), Computational Photography (6.8371), Introduction to Machine Learning (6.3900), Political Misinformation (17.279), Introduction to Psychological Science (9.00), Introduction to Acting (21M.600), Acting with the Camera (21T.201), and Game Design Methods (CMS.301). Zac also took Political Psychology (PSY1024) at Harvard." },
   { id := "teaching", topic := "teaching",
-    keywords := ["teaching", "taught", "ta", "grader", "mentor", "peru", "misti", "instructor", "lab assistant"],
-    text := "Zac taught a 5-day reinforcement learning course in Peru in January 2026 as an instructor for MISTI GTL-AI Peru. At MIT, Zac graded for 18.600 (Probability), mentored students in 18.100 (Real Analysis), was a lab assistant for 6.100, and was an undergraduate TA for 6.0001 with about 200 students." },
+    keywords := ["teaching", "taught", "ta", "grader", "mentor", "peru", "misti", "instructor", "lab assistant", "tutor", "tutoring", "easya"],
+    text := "Zac taught a 5-day reinforcement learning course in Peru in January 2026 as an instructor for MISTI GTL-AI Peru. At MIT, Zac graded for 18.600 (Probability), mentored students in 18.100 (Real Analysis), was a lab assistant for 6.100, and was an undergraduate TA for 6.0001 with about 200 students. Before MIT, Zac tutored maths on the EasyA app." },
   { id := "eloranta", topic := "teaching",
     keywords := ["eloranta", "proposal", "learning platform", "math education", "traffic light", "spaced repetition"],
     text := "Zac proposed a personalised online learning platform for MIT's introductory maths classes for the Eloranta Fellowship, built around traffic-light self-assessment and spaced repetition." },
@@ -167,8 +179,8 @@ def facts : List Fact := [
     keywords := ["honors", "awards", "olympiad", "physics", "nsbe", "prizes"],
     text := "Zac's honors include British Physics Olympiad Gold (2022), a Cambridge Senior Physics Challenge Diamond Award (top 30), NSBE Boston Scholar (2025), and the Singapore International Pre-Graduate Award (2023)." },
   { id := "athletics", topic := "activities",
-    keywords := ["track", "athletics", "sprinting", "100m", "60m", "varsity", "soccer", "sports", "running"],
-    text := "Zac won bronze in the 60m at the England U17 Indoor Championships (2020), ran varsity track and field at MIT (All-New England in the 100m), and played intramural soccer in the A League." },
+    keywords := ["track", "athletics", "sprinting", "100m", "60m", "varsity", "soccer", "sports", "running", "personal best", "pb", "kent", "county"],
+    text := "Zac's 100m personal best is 10.75, run at MIT, where Zac competed in varsity track and field and was All-New England in the 100m. Earlier, Zac won bronze in the 60m at the British U17 Indoor Championships (2020), finished 3rd at the British U15 Indoor Championships (2018), and was Kent County Champion 7 times. Zac also played intramural soccer in the A League." },
   { id := "talks", topic := "activities",
     keywords := ["talks", "speaking", "youtube", "tonbridge", "videos", "lecture"],
     text := "Zac's talks include Being Black at Tonbridge (2021), Why White People Shouldn't Say the N-Word (2022), and a physics microlecture on the magnetic Gauss law, all on YouTube." },
@@ -176,8 +188,8 @@ def facts : List Fact := [
     keywords := ["music", "singing", "choir", "musical theatre", "piano", "dj", "djing", "hamilton", "hadestown", "hobbies"],
     text := "Zac sings, with a choral background and musical theatre including Tick, Tick... Boom!, and would love to play Washington in Hamilton and Hades in Hadestown. Zac also has ABRSM Grade 5 piano and DJs." },
   { id := "interests", topic := "interests",
-    keywords := ["interests", "hobbies", "outside work", "fun", "sociology", "politics", "languages", "games"],
-    text := "Outside research, Zac is interested in sociology, politics, language learning, building games, and how maths is taught." }
+    keywords := ["interests", "hobbies", "outside work", "fun", "sociology", "politics", "languages", "games", "writing", "stories", "fiction", "chess"],
+    text := "Outside research, Zac is interested in sociology, politics, language learning, building games, and how maths is taught. Zac also writes fantasy and science fiction stories and plays chess." }
 ]
 
 /-- Fact groups for broad questions. The exporter checks that every id names a fact. -/
@@ -291,7 +303,11 @@ def bindings : List (String × String) :=
     ("dyck", s!"{dyck.warmupPct}%"),
     ("dyck", s!"{tenths dyck.cut}%"),
     ("dyck", s!"{dyck.seedsBetter} of {dyck.seeds} seeds"),
-    ("mit", s!"{tenths gpa}/5.0")
+    ("mit", s!"{tenths gpa}/5.0"),
+    ("csail", s!"solved {csailAgent.ppoSolvedPct}% of instances"),
+    ("csail", s!"under {csailAgent.ppoMs} ms"),
+    ("csail", s!"{csailAgent.randomSolvedPct}% for random search"),
+    ("csail", s!"over {csailAgent.exhaustiveS} s for exhaustive search")
   ]
 
 end ZacFacts

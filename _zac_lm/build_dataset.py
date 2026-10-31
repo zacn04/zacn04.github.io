@@ -21,11 +21,12 @@ MAX_ANSWER_CHARS = 1100  # about 320 tokens, the answer limit on the website
 # ones listed in SENTENCES for that question.
 QUESTIONS = {
     "identity": ["Who is Zac?", "Tell me about Zac Burton.", "Who is Zachary Burton?", "Give me a quick intro to Zac.", "What's Zac's background?", "Where is Zac from?"],
+    "skills": ["What languages does Zac program in?", "What is Zac's tech stack?", "Does Zac know C++?", "What ML tools does Zac use?"],
     "pramaana": ["What does Zac do now?", "Where does Zac work?", "What is Zac researching at Pramaana?", "What is Zac's current job?", "What is Pramaana Labs?", "When did Zac join Pramaana?", "What does Zac work on at Pramaana?"],
     "meta-mle": ["What did Zac do at Meta?", "Did Zac work at Meta full time?", "What was Zac's job before Pramaana?", "What did Zac work on in Reels?", "When was Zac at Meta as an engineer?", "What was Zac's role at Meta in 2026?"],
     "meta-intern": ["Did Zac intern anywhere?", "What was Zac's Meta internship?", "What did Zac do on Rights Manager?", "Tell me about the copyright work at Meta.", "When did Zac intern at Meta?"],
     "mit": ["Where did Zac go to college?", "What did Zac study at MIT?", "What was Zac's GPA?", "What grades did Zac get?", "When did Zac graduate?", "What degree does Zac have?"],
-    "tonbridge": ["Where did Zac go to school before MIT?", "What A-Levels did Zac take?", "Tell me about Tonbridge.", "What were Zac's A-Level grades?"],
+    "tonbridge": ["Where did Zac go to school before MIT?", "What A-Levels did Zac take?", "Tell me about Tonbridge.", "What were Zac's A-Level grades?", "What did Zac do at school?"],
     "contact": ["How can I contact Zac?", "What is Zac's email?", "Is Zac on GitHub?", "Where can I find Zac online?", "What's Zac's LinkedIn?", "What is Zac's website?"],
     "paper-lean": ["Summarize Zac's ICML 2026 workshop paper.", "What is Zac's first-author paper?", "Where can I read the Lean provers paper?", "Is there code for the Lean paper?", "What did Zac publish at the AI4Math workshop?"],
     "paper-lean-results": ["What did the Lean provers paper find?", "What is mode collapse in Lean provers?", "What happens when you double the sampling budget?", "How do tactic skeletons help?", "What were the miniF2F results?"],
@@ -33,10 +34,10 @@ QUESTIONS = {
     "qedbench-role": ["What did Zac do on QEDBench?", "What proof mistakes do LLMs make?", "What failure modes did Zac find in LLM proofs?", "What areas did Zac grade for QEDBench?"],
     "neg-transfer": ["Does visual reasoning training help math?", "What is the negative transfer study?", "What happened on MATH-500?", "Tell me about the Qwen2.5-VL-7B study.", "Why did math scores drop?"],
     "dyck": ["What did the pretraining experiment show?", "What is the Dyck warm-up result?", "Did Zac pretrain a model from scratch?"],
-    "collision": ["What is Zac's random walks paper?", "Tell me about the collision threshold preprint.", "Has Zac done pure math research?"],
+    "collision": ["What is Zac's random walks paper?", "Tell me about the collision threshold preprint.", "Has Zac done pure math research?", "Where did the collision paper come from?"],
     "tabular-rl": ["What is the tabular RL blog post?", "Does Zac have a blog?", "Where does tabular RL break?"],
     "research-interests": ["What are Zac's research interests?", "What does Zac research?", "What topics is Zac exploring?"],
-    "csail": ["What did Zac do at CSAIL?", "Did Zac do undergraduate research?", "What was the FutureTech project?"],
+    "csail": ["What did Zac do at CSAIL?", "Did Zac do undergraduate research?", "What was the FutureTech project?", "Who advised Zac at CSAIL?", "How well did the PPO agent work?"],
     "cfar": ["What did Zac do in Singapore?", "What is SIPGA?", "Where did Zac research after freshman year?"],
     "service": ["Does Zac review papers?", "What academic service does Zac do?"],
     "sprintgame": ["What is the sprintgame?", "Tell me about SPRINT.", "Did Zac make a game?", "How many people play the sprintgame?"],
@@ -55,10 +56,10 @@ QUESTIONS = {
     "eloranta": ["What was Zac's Eloranta proposal?", "Has Zac worked on math education?"],
     "leadership": ["What clubs was Zac in at MIT?", "What leadership roles did Zac have?", "Was Zac on the class council?"],
     "honors": ["What awards has Zac won?", "What are Zac's honors?"],
-    "athletics": ["Does Zac run track?", "What sports does Zac play?", "How fast is Zac?"],
+    "athletics": ["Does Zac run track?", "What sports does Zac play?", "How fast is Zac?", "What is Zac's 100m personal best?"],
     "talks": ["Has Zac given talks?", "Where can I watch Zac speak?"],
     "music": ["Does Zac sing?", "What are Zac's musical interests?", "Does Zac play an instrument?"],
-    "interests": ["What does Zac do for fun?", "What is Zac interested in outside work?"],
+    "interests": ["What does Zac do for fun?", "What is Zac interested in outside work?", "Does Zac play chess?", "Does Zac write fiction?"],
 }
 
 # Short answers: for these questions, cite only the listed sentences (0-based) of the fact.
@@ -82,6 +83,11 @@ SENTENCES = {
     "Did Zac take classes at Harvard?": [1],
     "What did Zac teach in Peru?": [0], "Was Zac a TA?": [1],
     "Was Zac on the class council?": [0],
+    "Who advised Zac at CSAIL?": [0], "How well did the PPO agent work?": [1],
+    "Where did the collision paper come from?": [1],
+    "What is Zac's 100m personal best?": [0], "How fast is Zac?": [0],
+    "What did Zac do at school?": [1],
+    "Does Zac play chess?": [1], "Does Zac write fiction?": [1],
     "Does Zac sing?": [0], "Does Zac play an instrument?": [1],
 }
 
@@ -130,6 +136,7 @@ PROOF_QUESTIONS = {
     "prover_plateau": ["How do you know doubling the budget solved nothing new?", "Prove the doubled budget solved 0 additional theorems."],
     "prover_gain_exceeds_sd": ["How do you know the tactic skeleton gain is real?", "Prove the gain is larger than its standard deviation."],
     "dyck_all_seeds": ["How do you know every Dyck seed improved?", "Prove the Dyck warm-up helped in every seed."],
+    "ppo_beats_baselines": ["How do you know the CSAIL agent beat random search?", "Prove the PPO agent was faster than exhaustive search."],
     "gpa_in_range": ["How do you know Zac's GPA is valid?", "Prove Zac's GPA is on the 5.0 scale."],
 }
 

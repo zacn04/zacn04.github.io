@@ -63,6 +63,11 @@ theorem prover_gain_exceeds_sd : proverStudy.sd < proverStudy.gain := by
 theorem dyck_all_seeds : dyck.seedsBetter = dyck.seeds ∧ 0 < dyck.seeds := by
   decide
 
+/-- In the CSAIL hardness-reduction work, the PPO agent solved more instances than random search and ran faster than exhaustive search. -/
+theorem ppo_beats_baselines :
+    csailAgent.randomSolvedPct < csailAgent.ppoSolvedPct ∧ csailAgent.ppoMs < csailAgent.exhaustiveS * 1000 := by
+  decide
+
 /-- Zac's GPA is within the 5.0 scale. -/
 theorem gpa_in_range : gpa ≤ 50 := by
   decide
@@ -72,6 +77,6 @@ def theoremNames : List String :=
   ["months_valid", "roles_ordered", "roles_not_in_future", "intern_during_mit",
    "csail_during_mit", "graduated_before_meta", "meta_before_pramaana", "only_pramaana_current",
    "neg_transfer_all_negative", "prover_budget_doubled", "prover_plateau",
-   "prover_gain_exceeds_sd", "dyck_all_seeds", "gpa_in_range"]
+   "prover_gain_exceeds_sd", "dyck_all_seeds", "ppo_beats_baselines", "gpa_in_range"]
 
 end ZacFacts
