@@ -127,9 +127,12 @@ def facts : List Fact := [
   { id := "future", topic := "about",
     keywords := ["future", "next", "goals", "plans", "ambitions", "next few years", "want to work on", "looking for", "long term"],
     text := "In the next few years, Zac wants to work on AI for formal verification and on educational technology." },
+  { id := "work-style", topic := "about",
+    keywords := ["working style", "work style", "how does zac work", "work with", "known for", "strengths", "strength", "speed", "fast", "notice"],
+    text := "What people notice most about how Zac works is speed: Zac moves fast." },
   { id := "path", topic := "about",
-    keywords := ["how did zac get into", "path", "journey", "story", "why ai", "origin", "started", "alphatensor", "imo", "olympiad", "got into"],
-    text := "Zac came to AI for formal reasoning through AlphaTensor, then AI results at the International Mathematical Olympiad, and then Lean." },
+    keywords := ["how did zac get into", "path", "journey", "story", "why ai", "origin", "started", "alphatensor", "alphaproof", "imo", "olympiad", "got into"],
+    text := "Zac came to AI for formal reasoning through AlphaTensor, then AlphaProof's results at the International Mathematical Olympiad, and then Lean." },
   { id := "csail", topic := "research",
     keywords := ["csail", "futuretech", "undergraduate research", "urop", "gadgets", "reductions", "pspace", "complexity", "jayson lynch", "ppo", "hardness", "research engineer"],
     text := "From November 2024 to August 2025, Zac was a research engineer at MIT CSAIL in the FutureTech group, advised by Jayson Lynch. Zac trained a PPO agent to replace exhaustive search in automated hardness reductions for PSPACE and NL, treating gadget simulation as a Markov decision process with action masking: it solved 85% of instances in under 3 ms, compared with 2% for random search and over 100 s for exhaustive search. Zac also integrated reward model training into distributed PPO rollouts and built annotation, evaluation, and data pipelines from scratch." },
@@ -140,8 +143,8 @@ def facts : List Fact := [
     keywords := ["reviewer", "reviewing", "service", "peer review"],
     text := "Zac is a reviewer for the ICML AI4Math Workshop (2025 and 2026)." },
   { id := "sprintgame", topic := "projects",
-    keywords := ["sprintgame", "sprint", "game", "track and field", "athletics", "rpg", "career"],
-    text := "The sprintgame (https://sprintgame.net, game title SPRINT) is a browser-based track and field career RPG that Zac built solo. Players go from age 13 to 40 on a calendar based on the real UK athletics season, including English Schools, Loughborough, Bedford, Alexander Stadium, the Diamond League, the World Championships, and the Olympics. Over 200 players have run more than 40,000 races." },
+    keywords := ["sprintgame", "sprint", "game", "track and field", "athletics", "rpg", "career", "why", "built", "sports games"],
+    text := "The sprintgame (https://sprintgame.net, game title SPRINT) is a browser-based track and field career RPG that Zac built solo. Players go from age 13 to 40 on a calendar based on the real UK athletics season, including English Schools, Loughborough, Bedford, Alexander Stadium, the Diamond League, the World Championships, and the Olympics. Over 200 players have run more than 40,000 races. Zac built it because Zac grew up playing sports games, but there was never one for track." },
   { id := "sprintgame-engine", topic := "projects",
     keywords := ["engine", "game engine", "simulation", "splits", "bolt", "replay", "3d", "genetic", "training points", "how does"],
     text := "The sprintgame simulates races with 10m splits calibrated against Usain Bolt's 9.58s Berlin splits, and shows each race as a 1x real-time over-the-shoulder 3D replay. Each athlete has 5 hidden genetic dials and a monthly training points budget." },
@@ -194,11 +197,11 @@ def facts : List Fact := [
     keywords := ["talks", "speaking", "youtube", "tonbridge", "videos", "lecture"],
     text := "Zac's talks include Being Black at Tonbridge (2021), Why White People Shouldn't Say the N-Word (2022), and a physics microlecture on the magnetic Gauss law, all on YouTube." },
   { id := "music", topic := "interests",
-    keywords := ["music", "singing", "choir", "musical theatre", "piano", "dj", "djing", "hamilton", "hadestown", "hobbies"],
-    text := "Zac sings, with a choral background and musical theatre including Tick, Tick... Boom!, and would love to play Washington in Hamilton and Hades in Hadestown. Zac also has ABRSM Grade 5 piano and DJs." },
+    keywords := ["music", "singing", "choir", "musical theatre", "piano", "dj", "djing", "hamilton", "hadestown", "hobbies", "rock", "listen", "listening", "bands"],
+    text := "Zac sings, with a choral background and musical theatre including Tick, Tick... Boom!, and would love to play Washington in Hamilton and Hades in Hadestown. Zac also has ABRSM Grade 5 piano and DJs. Outside work, Zac listens to 1970s and 1980s rock." },
   { id := "interests", topic := "interests",
-    keywords := ["interests", "hobbies", "outside work", "fun", "sociology", "politics", "languages", "games", "writing", "stories", "fiction", "chess"],
-    text := "Outside research, Zac is interested in sociology, politics, language learning, building games, and how maths is taught. Zac also writes fantasy and science fiction stories and plays chess." }
+    keywords := ["interests", "hobbies", "outside work", "fun", "sociology", "politics", "languages", "games", "writing", "stories", "fiction", "chess", "reading", "books", "book", "spqr"],
+    text := "Outside research, Zac is interested in sociology, politics, language learning, building games, and how maths is taught. Zac also writes fantasy and science fiction stories and plays chess. Zac is currently reading SPQR by Mary Beard." }
 ]
 
 /-- Fact groups for broad questions. The exporter checks that every id names a fact. -/

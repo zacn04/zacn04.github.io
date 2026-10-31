@@ -4,7 +4,7 @@
 
 const STOP = new Set(("a an and are as at be by did do does for from has have he her his how i in " +
   "is it its me my of on or she so tell that the their them they this to was were what when where " +
-  "which who why with you your zac zac's zachary burton about s t re ll ve d m").split(" "));
+  "which who why with you your zac zac's zachary burton about up s t re ll ve d m").split(" "));
 
 // Words that carry no topic. A question made only of these is too vague to answer.
 const VAGUE = new Set(("anything something stuff things thing interesting highlights give start " +

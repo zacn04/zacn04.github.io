@@ -39,11 +39,12 @@ QUESTIONS = {
     "research-interests": ["What are Zac's research interests?", "What does Zac research?", "What topics is Zac exploring?"],
     "rl-sequences": ["What was Zac's 6.7920 final project?", "Can RL agents learn number sequences?", "What did Zac find about PPO and arithmetic?", "Does PPO need a language model prior?"],
     "future": ["What does Zac want to work on next?", "What are Zac's goals?", "What is Zac looking for in the next few years?", "What are Zac's long term plans?"],
+    "work-style": ["What is Zac like to work with?", "What is Zac's biggest strength?", "How does Zac work?", "What is Zac known for?"],
     "path": ["How did Zac get into AI?", "How did Zac get into formal reasoning?", "Why did Zac move from maths to AI?", "What got Zac into Lean?"],
     "csail": ["What did Zac do at CSAIL?", "Did Zac do undergraduate research?", "What was the FutureTech project?", "Who advised Zac at CSAIL?", "How well did the PPO agent work?"],
     "cfar": ["What did Zac do in Singapore?", "What is SIPGA?", "Where did Zac research after freshman year?"],
     "service": ["Does Zac review papers?", "What academic service does Zac do?"],
-    "sprintgame": ["What is the sprintgame?", "Tell me about SPRINT.", "Did Zac make a game?", "How many people play the sprintgame?"],
+    "sprintgame": ["What is the sprintgame?", "Tell me about SPRINT.", "Did Zac make a game?", "How many people play the sprintgame?", "Why did Zac build the sprintgame?"],
     "sprintgame-engine": ["How does the SPRINT game engine work?", "How are races simulated in the sprintgame?", "What are the genetic dials?"],
     "pieface": ["What is PIEFACE?", "Tell me about Zac's RLHF platform.", "What is PIEFACE built with?"],
     "zos": ["What is zOS?", "What has Zac built in Rust?"],
@@ -61,8 +62,8 @@ QUESTIONS = {
     "honors": ["What awards has Zac won?", "What are Zac's honors?"],
     "athletics": ["Does Zac run track?", "What sports does Zac play?", "How fast is Zac?", "What is Zac's 100m personal best?"],
     "talks": ["Has Zac given talks?", "Where can I watch Zac speak?"],
-    "music": ["Does Zac sing?", "What are Zac's musical interests?", "Does Zac play an instrument?"],
-    "interests": ["What does Zac do for fun?", "What is Zac interested in outside work?", "Does Zac play chess?", "Does Zac write fiction?"],
+    "music": ["Does Zac sing?", "What are Zac's musical interests?", "Does Zac play an instrument?", "What music does Zac listen to?"],
+    "interests": ["What does Zac do for fun?", "What is Zac interested in outside work?", "Does Zac play chess?", "Does Zac write fiction?", "What is Zac reading?"],
 }
 
 # Short answers: for these questions, cite only the listed sentences (0-based) of the fact.
@@ -90,7 +91,8 @@ SENTENCES = {
     "Where did the collision paper come from?": [1],
     "What is Zac's 100m personal best?": [0], "How fast is Zac?": [0],
     "What did Zac do at school?": [1],
-    "Does Zac play chess?": [1], "Does Zac write fiction?": [1],
+    "Does Zac play chess?": [1], "Does Zac write fiction?": [1], "What is Zac reading?": [2],
+    "Why did Zac build the sprintgame?": [3], "What music does Zac listen to?": [2],
     "Does Zac sing?": [0], "Does Zac play an instrument?": [1],
 }
 
