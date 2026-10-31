@@ -37,6 +37,9 @@ QUESTIONS = {
     "collision": ["What is Zac's random walks paper?", "Tell me about the collision threshold preprint.", "Has Zac done pure math research?", "Where did the collision paper come from?"],
     "tabular-rl": ["What is the tabular RL blog post?", "Does Zac have a blog?", "Where does tabular RL break?"],
     "research-interests": ["What are Zac's research interests?", "What does Zac research?", "What topics is Zac exploring?"],
+    "rl-sequences": ["What was Zac's 6.7920 final project?", "Can RL agents learn number sequences?", "What did Zac find about PPO and arithmetic?", "Does PPO need a language model prior?"],
+    "future": ["What does Zac want to work on next?", "What are Zac's goals?", "What is Zac looking for in the next few years?", "What are Zac's long term plans?"],
+    "path": ["How did Zac get into AI?", "How did Zac get into formal reasoning?", "Why did Zac move from maths to AI?", "What got Zac into Lean?"],
     "csail": ["What did Zac do at CSAIL?", "Did Zac do undergraduate research?", "What was the FutureTech project?", "Who advised Zac at CSAIL?", "How well did the PPO agent work?"],
     "cfar": ["What did Zac do in Singapore?", "What is SIPGA?", "Where did Zac research after freshman year?"],
     "service": ["Does Zac review papers?", "What academic service does Zac do?"],
@@ -151,7 +154,7 @@ PRIVATE = ["What is Zac's home address?", "How much does Zac earn?", "What is Za
            "How much student debt does Zac have?", "Who does Zac text the most?", "Where is Zac interviewing?"]
 UNKNOWN = ["What is Bellman?", "Is Zac building a startup?", "What is Baller?", "What is Zac's favourite food?",
            "Will Zac do a PhD?", "What is Zac's opinion on Python vs Rust?", "Who is Zac's manager?",
-           "Is Zac moving?", "What is Zac working on next year?", "Does Zac have a pet?"]
+           "Is Zac moving?", "What is Zac's favourite colour?", "Does Zac have a pet?"]
 
 
 def split_sentences(text):
